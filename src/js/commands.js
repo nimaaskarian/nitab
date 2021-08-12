@@ -70,7 +70,7 @@ const defaultCommands = {
       his: "history",
       ext: "extensions",
       set: "settings",
-      [""]: "extensions",
+      [""]: "version",
     };
     return async ({ altKey }) => {
       const url = "chrome://" + (sums[input] || input);
