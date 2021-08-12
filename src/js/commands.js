@@ -557,9 +557,24 @@ const regex = (identifier) => {
   const replace = new RegExp("^" + identifier, "g");
   return { main, replace };
 };
+const noCommand = (string) => {
+  let name, args;
+  if (isUrl(string)) {
+    name = "url";
+    args = string;
+  } else {
+    if (/^chrome:\/\//.test(string)) {
+      name = "c";
+      args = string.replace(/^chrome:\/\//, "");
+    } else {
+      name = "search";
+      args = string;
+    }
+  }
+  return [name, args];
+};
 export const termToCommand = (string, identifier, commands) => {
-  let name;
-  let args;
+  let name, args;
   const { main, replace } = regex(identifier);
   if (main.test(string)) {
     let values = string.replace(replace, "").split(" ");
@@ -571,22 +586,10 @@ export const termToCommand = (string, identifier, commands) => {
       args += args ? " " + value : "" + value;
     }
     if (!commands[name]) {
-      if (isUrl(string)) {
-        name = "url";
-        args = string;
-      } else {
-        name = "search";
-        args = string;
-      }
+      [name, args] = noCommand(string);
     }
   } else if (string) {
-    if (isUrl(string)) {
-      name = "url";
-      args = string;
-    } else {
-      name = "search";
-      args = string;
-    }
+    [name, args] = noCommand(string);
   }
   return { name, args };
 };

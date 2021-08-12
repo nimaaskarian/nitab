@@ -96,7 +96,9 @@ span.js:before {
 .fontawe.stack:before {
   content: "\f16c";
 }
-
+.fontawe.c:before {
+  content: "\f268";
+}
 .fontawe.b:before {
   content: "\f02e";
 }
