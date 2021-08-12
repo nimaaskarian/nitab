@@ -319,6 +319,7 @@ const defaultCommands = {
           text: input,
         });
       };
+    else return this.g(input);
   },
   g(input) {
     return () => {
