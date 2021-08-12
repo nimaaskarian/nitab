@@ -1,0 +1,93 @@
+.add-taskbar {
+  background-color: #333;
+  width: 400px;
+  padding: 15px;
+  -webkit-box-shadow: 0px 6px 49px 5px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 6px 49px 5px rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
+  margin-bottom: 40px;
+  z-index: 3;
+}
+.add-taskbar a {
+  color: #36b0c3;
+}
+.add-taskbar .close {
+  position: relative;
+  top: -5px;
+  left: calc(100% - 10px);
+  cursor: pointer;
+}
+.add-taskbar .sketch-picker {
+  background: rgb(66, 66, 66) !important;
+  margin-left: auto;
+  margin-right: 0 !important;
+}
+.add-taskbar .sketch-picker label {
+  color: #d3d3d3 !important;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.add-taskbar .sketch-picker input {
+  color: #d3d3d3;
+  box-shadow: none !important;
+}
+.add-taskbar .sketch-picker > div:last-child {
+  display: none !important;
+}
+.add-taskbar input,
+.add-taskbar .label {
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 5px;
+}
+.add-taskbar .label {
+  display: block;
+  color: #828282;
+}
+.add-taskbar .close {
+  color: #fff;
+}
+.add-taskbar input {
+  margin: 0;
+  width: 100%;
+  color: #fff;
+  border: none;
+  background-color: rgba(51, 51, 51, 0);
+  box-shadow: none;
+}
+.add-taskbar input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.add-taskbar input::selection {
+  background-color: #fff;
+  color: rgb(25 42 60);
+}
+.add-taskbar .icon {
+  font-size: 35px;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  height: 35px;
+}
+.add-taskbar .space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.add-taskbar .field {
+  padding: 5px;
+  margin-bottom: 5px;
+  border: #3e3e3e 1px solid;
+}
+.add-taskbar .button {
+  margin-bottom: 5px;
+}

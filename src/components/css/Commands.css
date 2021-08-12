@@ -1,0 +1,90 @@
+.commands *,
+.commands {
+  color: white;
+  user-select: none;
+}
+.commands {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.menu .fontawe.angle-left::before {
+  content: "\f104";
+}
+
+.commands .command {
+  overflow: hidden;
+  border: 1px solid rgb(90, 90, 90);
+  margin: 10px;
+  padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu {
+  position: sticky;
+  top: 0;
+  padding: 10px;
+  justify-content: space-between;
+  background-color: rgba(51, 51, 51, 0.65);
+}
+
+.menu > * {
+  color: white;
+  text-decoration: none;
+  font-size: 40px;
+}
+.commands .command .input {
+  color: yellow;
+}
+.commands .command .cmdName {
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px white solid;
+  margin-right: 20px;
+}
+.commands .command .cmd {
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 55vw;
+  z-index: 2;
+  margin: auto 0;
+}
+.command .cmd > div {
+  margin: 10px;
+  background-color: #3a3a3a;
+  border: 2px #505050 solid;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.commands .cmd:active {
+  background-color: #333;
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.ui.button {
+  font-family: "Inconsolata" !important;
+}
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #2f2f2f;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(66, 66, 66);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(77, 77, 77);
+}

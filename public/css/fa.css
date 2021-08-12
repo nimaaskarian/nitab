@@ -1,0 +1,117 @@
+.fontawe.w3::before {
+  content: "\e822";
+  font-family: fa-w3;
+}
+
+.fontawe {
+  font-family: "Font Awesome 5 Brands", "Font Awesome 5 Pro" !important;
+}
+@font-face {
+  font-family: "Font Awesome 5 Brands";
+  font-display: block;
+  src: url(../font-awesome/webfonts/fa-brands-400.eot);
+  src: url(../font-awesome/webfonts/fa-brands-400.eot?#iefix)
+      format("embedded-opentype"),
+    url(../font-awesome/webfonts/fa-brands-400.woff2) format("woff2"),
+    url(../font-awesome/webfonts/fa-brands-400.woff) format("woff"),
+    url(../font-awesome/webfonts/fa-brands-400.ttf) format("truetype"),
+    url(../font-awesome/webfonts/fa-brands-400.svg#fontawesome) format("svg");
+}
+@font-face {
+  font-family: "Font Awesome 5 Pro";
+  src: url("../font-awesome/webfonts/fa-solid-900.eot");
+  src: url("../font-awesome/webfonts/fa-solid-900.eot?#iefix")
+      format("embedded-opentype"),
+    url("../font-awesome/webfonts/fa-solid-900.woff2") format("woff2"),
+    url("../font-awesome/webfonts/fa-solid-900.woff") format("woff"),
+    url("../font-awesome/webfonts/fa-solid-900.ttf") format("truetype"),
+    url("../font-awesome/webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+.fab {
+  font-family: "Font Awesome 5 Brands";
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: fa-w3;
+  src: url(../fonts/fa-w3.woff);
+}
+
+.fontawe.st:before {
+  content: "\f1b6";
+}
+.fontawe.des:before {
+  content: "\f661";
+}
+.fontawe.url:before {
+  content: "\f0ac";
+}
+.fontawe.wa:before {
+  content: "\f232";
+}
+.fontawe.fa:before {
+  content: "\f425";
+}
+.fontawe.yt:before {
+  content: "\f167";
+}
+.fontawe.g:before {
+  content: "\f1a0";
+}
+.fontawe.sch:before {
+  content: "\f2fe";
+}
+span.js:before {
+  content: "\f3b8";
+}
+.fontawe.y:before {
+  content: "\f19e";
+}
+.fontawe.tr:before,
+.fontawe.dic:before {
+  content: "\f1ab";
+}
+.fontawe.search:before {
+  content: "\f002";
+}
+
+.fontawe.sp:before {
+  content: "\f1bc";
+}
+.fontawe.r:before {
+  content: "\f1a1";
+}
+.fontawe.imdb:before {
+  content: "\f2d8";
+}
+.fontawe.dis:before {
+  content: "\f392";
+}
+.fontawe.math:before {
+  content: "\f64c";
+}
+.fontawe.git:before {
+  content: "\f09b";
+}
+.fontawe.stack:before {
+  content: "\f16c";
+}
+
+.fontawe.b:before {
+  content: "\f02e";
+}
+.fontawe.history:before {
+  content: "\f1da";
+}
+.fontawe:before {
+  content: "\f120";
+}
+.fontawe.exp:before {
+  content: "\f56e";
+}
+.fontawe.imp:before {
+  content: "\f56f";
+}
+.fontawe.iden:before {
+  content: "\f69f";
+}

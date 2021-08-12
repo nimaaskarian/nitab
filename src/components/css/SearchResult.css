@@ -1,0 +1,41 @@
+.search-result {
+  font-size: 24px;
+  padding: 10px;
+  width: 40%;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+.search-result h1 {
+  margin: 0;
+  font-size: 30px !important;
+}
+.search-result p {
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+.search-result:hover {
+  text-overflow: clip;
+  transition: 500ms ease-out;
+  display: absolut;
+  overflow: overlay !important;
+}
+.search-result::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.search-result::-webkit-scrollbar-track {
+  background: #f1f1f100;
+}
+
+/* Handle */
+.search-result::-webkit-scrollbar-thumb {
+  background: #fff0;
+}
+
+/* Handle on hover */
+.search-result::-webkit-scrollbar-thumb:hover {
+  background: #5550;
+}

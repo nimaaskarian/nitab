@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Newtab",
+
+  "version": "3.0",
+  "description": "custom Nima Askarian new tab. dont you dare copying it",
+
+  "chrome_url_overrides": {
+    "newtab": "focus.html"
+  },
+  "permissions": [
+    "tabs",
+    "history",
+    "storage",
+    "bookmarks",
+    "browsingData",
+    "notifications",
+    "http://*/",
+    "https://*/",
+    "webRequest",
+    "webRequestBlocking",
+    "\u003Call_urls>",
+    "*://*.google.com/"
+  ],
+  "content_security_policy": "script-src 'self' 'sha256-9cGtkXd1eLJ0YtEabGvhgfOaF1vNm/T1XOKso5aJzrA='"
+}
