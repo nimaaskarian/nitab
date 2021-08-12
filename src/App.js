@@ -379,51 +379,37 @@ const App = ({ onClockPosChange }) => {
     } else setResults([]);
   }, [isHistory, term]);
 
-  const chromeHistory = (input) => {
+  const chromeHistory = (term) => {
+    const searchSuggest = (term) => {
+      if (termToCommand(term, identifier, commands).name !== "search")
+        return {
+          url: commands["search"](term),
+          header: {
+            className: "fontawe search",
+          },
+          title: term,
+        };
+    };
     const onSearchComplete = (e) => {
-      setResults([
-        (() => {
-          if (termToCommand(term, identifier, commands).name !== "search")
-            return {
-              url: commands["search"](input),
-              header: {
-                className: "fontawe search",
-              },
-              title: input,
-            };
-        })(),
-        ...e,
-      ]);
+      setResults([searchSuggest(term), ...e]);
     };
     if (isHistory === 2) {
-      chrome.bookmarks.search({ query: input }, (res) => {
-        onSearchComplete(res.slice(0, 3 + !isUrl(input)));
+      chrome.bookmarks.search({ query: term }, (res) => {
+        onSearchComplete(res.slice(0, 3 + !isUrl(term)));
       });
     } else if (isHistory === 1) {
       if (chrome.history)
         chrome.history.search(
           {
-            text: input,
+            text: term,
             startTime: new Date().getTime() - 14 * 24 * 3600 * 1000,
-            maxResults: 3 + !isUrl(input),
+            maxResults: 3 + !isUrl(term),
           },
           (res) => {
             onSearchComplete(res);
           }
         );
-    } else
-      setResults([
-        (() => {
-          if (termToCommand(term, identifier, commands).name !== "search")
-            return {
-              url: commands["search"](term),
-              header: {
-                className: "fontawe search",
-              },
-              title: term,
-            };
-        })(),
-      ]);
+    } else setResults([searchSuggest(term)]);
   };
   useEffect(() => {
     if (isTaskbarEdit) {
