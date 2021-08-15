@@ -473,7 +473,7 @@ const App = () => {
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
         appended = true;
-      }, 350);
+      }, 250);
 
       chromeHistory(term);
     } else {

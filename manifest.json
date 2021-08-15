@@ -8,5 +8,5 @@
     "newtab": "focus.html"
   },
   "permissions": ["history", "storage", "bookmarks", "search"],
-  "content_security_policy": "script-src 'self' https://duckduckgo.com 'sha256-xUUNsM/ivvRfQe09BGmzlgiboh496n5ZWi0BsEm2IZk='"
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://duckduckgo.com 'sha256-xUUNsM/ivvRfQe09BGmzlgiboh496n5ZWi0BsEm2IZk='"
 }

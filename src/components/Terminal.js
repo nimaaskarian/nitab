@@ -85,6 +85,11 @@ const Terminal = React.forwardRef(
                 className={`item ${
                   isHighlighted ? "selected" : "not-selected"
                 }`}
+                style={{ background: isHighlighted?`linear-gradient(
+                  ${/^[\u0600-\u06FF\s]+/.test(term) ? "90" : "270"}deg,
+                  rgba(0, 0, 0, 0) 50%,
+                  rgba(0, 0, 0, 0.1) 100%
+                )`:null}}
               >
                 {item.phrase}
               </div>
