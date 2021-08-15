@@ -1,6 +1,6 @@
 import React from "react";
 import "./css/SearchResult.css";
-const SearchResults = ({ children, key, header, onClick }) => {
+const SearchResult = ({ children, key, header, onClick }) => {
   return (
     <div
       key={key}
@@ -19,4 +19,4 @@ const SearchResults = ({ children, key, header, onClick }) => {
   );
 };
 
-export default SearchResults;
+export default SearchResult;

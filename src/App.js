@@ -10,7 +10,7 @@ import "localforage-observable/dist/localforage-observable.es6";
 import AddTaskbar from "./components/AddTaskbar";
 import Terminal from "./components/Terminal";
 import Clock from "./components/Clock";
-import SearchResults from "./components/SearchResult";
+import SearchResult from "./components/SearchResult";
 import TaskbarIcon from "./components/TaskbarIcon";
 import Commands from "./components/Commands";
 import commandsDefault, { termToCommand } from "./js/commands";
@@ -696,7 +696,7 @@ const App = () => {
               .filter((e) => !!e)
               .map((e, i) => {
                 return (
-                  <SearchResults
+                  <SearchResult
                     onClick={() => {
                       if (typeof e.url === "string") {
                         if (!altNewtab) window.open(e.url);
@@ -712,7 +712,7 @@ const App = () => {
                     }}
                   >
                     {e.url}
-                  </SearchResults>
+                  </SearchResult>
                 );
               })}
           </div>
