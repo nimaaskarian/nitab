@@ -1,5 +1,72 @@
 import localforage from "localforage";
 import isUrl from "./isUrl";
+const s = {
+  iden: {
+    des: "Changes command identifier",
+    def: "/",
+    current: () => {},
+  },
+  clock: {
+    des: "Changes clock position and align",
+    def: "center center",
+    current: () => {},
+  },
+  font: {
+    des: "Changes font of newtab's texts",
+    def: "Inconsolata",
+    current: () => {},
+  },
+  par: {
+    des: "Toggles Background's Mouse Parallex effect (use par [number] to set zoom percentage",
+    def: "off",
+    current: () => {},
+  },
+  c: {
+    des: "Short term for 'chrome://'. ext: extension, set: settings, his: history",
+  },
+  exp: {
+    des: "Exports your newtab settings as a .JSON file. (backgrounds except for urls and colors(solid and gradient) cannot be saved",
+  },
+  imp: {
+    des: "Opens a file selection menu to select your exported .JSON file and import its settings",
+  },
+  mag: {
+    des: "Toggles magnification of your Taskbar",
+    def: "on",
+    current: () => {},
+  },
+  gr: {
+    des: "Toggles Taskbar and Result-Mode background, and Terminals background gradient",
+    def: "on",
+    current: () => {},
+  },
+  bl: {
+    des: "Changes blur of background. bl [Main:number] [Terminal:number] [SettingGUI:number]",
+    def: "0 0 10",
+    current: () => {},
+  },
+  br: {
+    des: "Changes brightness of background. (1 or 100% = normal) br [Main:number] [Terminal:number] [SettingGUI:number]",
+    def: "1 1 0.8",
+    current: () => {},
+  },
+  bg: {
+    des: "Changes background. bg [background:cssColor,rgb,hsl,hex,gradient,url('example.com/path/to/background.jpg')",
+    def: "#333",
+    current: () => {},
+  },
+  fg: {
+    des: "Changes foreground color. ovr will make color to never change. fg ovr(optional) [color:cssColor,rgb,hsl,hex]",
+    def: "white",
+    current: () => {},
+  },
+  commandCl: {
+    des: "Clears all commands that you've added. commandCL CONFIRM (CONFIRM needs to be in Capital letters)",
+  },
+  command: {
+    des: "For Adding, Deleting or changing a command. command [commandName:string] [URL(s)]",
+  },
+};
 const getAll = async () => {
   let output = {};
   const keys = await localforage.keys();
@@ -26,43 +93,47 @@ const defaultCommands = {
       const [type, value] = input.toLowerCase().split(/\s/);
       if (type && value)
         return () => {
-          switch (type) {
-            case "align":
-              localforage.setItem(
-                "clockAlign",
-                ["end", "start"].includes(value) ? "flex-" + value : value
-              );
-            case "pos":
-              localforage.setItem("clockPos", value);
-              break;
-
-            default:
-              {
-                localforage.setItem("clockPos", type);
+          return () => {
+            switch (type) {
+              case "align":
                 localforage.setItem(
                   "clockAlign",
                   ["end", "start"].includes(value) ? "flex-" + value : value
                 );
-              }
-              break;
-          }
+              case "pos":
+                localforage.setItem("clockPos", value);
+                break;
+
+              default:
+                {
+                  localforage.setItem("clockPos", type);
+                  localforage.setItem(
+                    "clockAlign",
+                    ["end", "start"].includes(value) ? "flex-" + value : value
+                  );
+                }
+                break;
+            }
+          };
         };
     }
   },
   font(input) {
-    return async () => {
+    return () => async () => {
       localforage.setItem("font", input || "Inconsolata");
     };
   },
   par(input) {
     if (!input)
-      return async () => {
-        const res = await localforage.getItem("parallex");
-        console.log(res, !res);
-        localforage.setItem("parallex", !res);
+      return () => {
+        return async () => {
+          const res = await localforage.getItem("parallex");
+
+          localforage.setItem("parallex", !res);
+        };
       };
     return () => {
-      localforage.setItem("parallex-factor", parseInt(input));
+      return () => localforage.setItem("parallex-factor", parseInt(input));
     };
   },
   c(input) {
@@ -72,132 +143,152 @@ const defaultCommands = {
       set: "settings",
       [""]: "version",
     };
-    return async ({ altKey }) => {
-      const url = "chrome://" + (sums[input] || input);
-      if (altKey) {
-        const { id, index } = await chrome.tabs.getCurrent();
-        chrome.tabs.create({
-          url,
-          index,
-        });
-        chrome.tabs.remove(id);
-      } else chrome.tabs.create({ url });
-    };
+    return () =>
+      async ({ altKey }) => {
+        const url = "chrome://" + (sums[input] || input);
+        if (altKey) {
+          const { id, index } = await chrome.tabs.getCurrent();
+          chrome.tabs.create({
+            url,
+            index,
+          });
+          chrome.tabs.remove(id);
+        } else chrome.tabs.create({ url });
+      };
   },
   iden(input) {
-    if (input.trim()) return () => localforage.setItem("indetifier", input);
+    if (input.trim())
+      return () => () => localforage.setItem("indetifier", input);
   },
   exp() {
-    return async () => {
-      const data = await getAll();
+    return () => {
+      return async () => {
+        const data = await getAll();
 
-      const type = "text/json";
-      const filename = "Exported-data.json";
-      var file = new Blob([JSON.stringify(data)], { type });
-      if (window.navigator.msSaveOrOpenBlob)
-        // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-      else {
-        // Others
-        var a = document.createElement("a"),
-          url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        }, 0);
-      }
+        const type = "text/json";
+        const filename = "Exported-data.json";
+        var file = new Blob([JSON.stringify(data)], { type });
+        if (window.navigator.msSaveOrOpenBlob)
+          // IE10+
+          window.navigator.msSaveOrOpenBlob(file, filename);
+        else {
+          // Others
+          var a = document.createElement("a"),
+            url = URL.createObjectURL(file);
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 0);
+        }
+      };
     };
   },
   imp() {
-    return async () => {
-      const [handle] = await window.showOpenFilePicker();
-      const file = await handle.getFile();
-      const fileReader = new window.FileReader();
+    return () => {
+      return async () => {
+        const [handle] = await window.showOpenFilePicker();
+        const file = await handle.getFile();
+        const fileReader = new window.FileReader();
 
-      fileReader.readAsText(file);
-      fileReader.onload = ({ target }) => {
-        setAll(JSON.parse(target.result));
+        fileReader.readAsText(file);
+        fileReader.onload = ({ target }) => {
+          setAll(JSON.parse(target.result));
+        };
       };
     };
   },
   mag() {
-    return async () => {
-      const magnify = await localforage.getItem("magnify");
-      localforage.setItem("magnify", !magnify);
+    return () => {
+      return async () => {
+        const magnify = await localforage.getItem("magnify");
+        localforage.setItem("magnify", !magnify);
+      };
     };
   },
   gr() {
-    return async () => {
-      const gr = await localforage.getItem("gradient");
-      console.log(gr);
-      localforage.setItem("gradient", !gr);
+    return () => {
+      return async () => {
+        const gr = await localforage.getItem("gradient");
+
+        localforage.setItem("gradient", !gr);
+      };
     };
   },
   bl(input) {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
-
-    return () =>
-      localforage.setItem("blur", {
-        terminal: terminal || 0,
-        notTerminal: notTerminal || 0,
-        setting: setting || "10",
-      });
+    return () => {
+      return () =>
+        localforage.setItem("blur", {
+          terminal: terminal || 0,
+          notTerminal: notTerminal || 0,
+          setting: setting || "10",
+        });
+    };
   },
   br(input) {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
-
-    return () =>
-      localforage.setItem("brightness", {
-        terminal: terminal || 1,
-        notTerminal: notTerminal || 1,
-        setting: setting || ".8",
-      });
+    return () => {
+      return () =>
+        localforage.setItem("brightness", {
+          terminal: terminal || 1,
+          notTerminal: notTerminal || 1,
+          setting: setting || ".8",
+        });
+    };
   },
   bg(input) {
-    if (input) return () => localforage.setItem("background", input);
+    if (input) return () => () => localforage.setItem("background", input);
   },
   fg(input) {
     if (input) {
+      if (input === "auto")
+        return () => {
+          return () => {
+            localforage.setItem("isForegroundAuto", true);
+          };
+        };
+      localforage.setItem("isForegroundAuto", false);
       if (input === "default")
         return () => {
-          localforage.setItem("foreground", "white");
+          return () => {
+            localforage.setItem("foreground", "white");
+          };
         };
-      else {
-        const [first, second] = input.split(/\s/g);
-        if (first && second && first === "ovr")
-          return () =>
-            localforage.setItem("foreground", second + " !important");
-        return () => localforage.setItem("foreground", input);
-      }
+
+      const [first, second] = input.split(/\s/g);
+      if (first && second && first === "ovr")
+        return () => () =>
+          localforage.setItem("foreground", second + " !important");
+      return () => () => localforage.setItem("foreground", input);
     }
   },
   commandCl(input) {
-    if (input === "CONFIRM") return () => localforage.setItem("commands", {});
+    if (input === "CONFIRM")
+      return () => () => localforage.setItem("commands", {});
   },
   command(input) {
     const [commandName, ...commandFunctions] = input.split(/\s/g);
-    console.log(commandName, commandFunctions);
+
     if (["command", "commandCl"].includes(commandName)) return;
     if (!commandFunctions.length)
-      return () => {
-        window.location = "./index.html?command=true";
-      };
+      return () => () => (window.location = "./index.html?command=true");
+
     var _commands;
     (async () => {
       _commands = await localforage.getItem("commands");
     })();
 
     if (commandFunctions[0] === "DELETE")
-      return () => {
+      return () => () => {
         delete _commands[commandName];
         localforage.setItem("commands", _commands);
       };
     if (commandFunctions[0].toLowerCase() === "add")
-      return () => {
+      return () => () => {
         if (!_commands[commandName]) return;
         _commands[commandName] = [
           ..._commands[commandName],
@@ -206,12 +297,11 @@ const defaultCommands = {
         localforage.setItem("commands", _commands);
       };
     if (commandFunctions[0].toLowerCase() === "remove")
-      return () => {
+      return () => () => {
         if (!_commands[commandName]) return;
 
         let index = -1;
         commandFunctions.slice(1).forEach((e) => {
-          console.log(parseInt(e) - 1);
           if (parseInt(e) + index >= 0) {
             _commands[commandName].splice(parseInt(e) + index, 1);
             index--;
@@ -219,8 +309,7 @@ const defaultCommands = {
         });
         localforage.setItem("commands", _commands);
       };
-    return () => {
-      console.log(_commands);
+    return () => () => {
       _commands[commandName] = commandFunctions;
       localforage.setItem("commands", _commands);
     };
@@ -313,13 +402,14 @@ const defaultCommands = {
   },
   search(input) {
     if (chrome.search)
-      return ({ altKey }) => {
-        chrome.search.query({
-          disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-          text: input,
-        });
-      };
-    else return this.g(input);
+      return () =>
+        ({ altKey }) => {
+          chrome.search.query({
+            disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+            text: input,
+          });
+        };
+    return this.g(input);
   },
   g(input) {
     return () => {
@@ -429,7 +519,7 @@ const defaultCommands = {
         parentId: parentId || "1",
       };
     }
-    return () => {
+    return () => () => {
       chrome.bookmarks.create(tempObj);
     };
   },

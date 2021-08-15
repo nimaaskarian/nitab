@@ -7,13 +7,13 @@ const SearchResults = ({ children, key, header, onClick }) => {
       onClick={onClick}
       className="search-result foreground-change"
     >
-      <h1>
+      <h3>
         <span
           style={{ marginRight: header.className ? "20px" : "0px" }}
           className={header.className}
         ></span>
         {header.text}
-      </h1>
+      </h3>
       <p>{children}</p>
     </div>
   );

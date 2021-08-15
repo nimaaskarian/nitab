@@ -3,11 +3,9 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 
 import { useAlert } from "react-alert";
 import axios from "axios";
-import { Helmet } from "react-helmet";
 import { useDropzone } from "react-dropzone";
 import { isDark } from "./js/isdark-min";
 import localforage from "localforage";
-
 import "localforage-observable/dist/localforage-observable.es6";
 import AddTaskbar from "./components/AddTaskbar";
 import Terminal from "./components/Terminal";
@@ -15,8 +13,8 @@ import Clock from "./components/Clock";
 import SearchResults from "./components/SearchResult";
 import TaskbarIcon from "./components/TaskbarIcon";
 import Commands from "./components/Commands";
-import isUrl from "./js/isUrl";
 import commandsDefault, { termToCommand } from "./js/commands";
+
 const getAll = async () => {
   let output = {};
   const keys = await localforage.keys();
@@ -26,8 +24,7 @@ const getAll = async () => {
   }
   return output;
 };
-const defaultTitle = "New Tab !";
-const App = ({ onClockPosChange }) => {
+const App = () => {
   const [results, setResults] = useState([]);
   const [isHistory, setIsHistory] = useState(1); //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
@@ -45,6 +42,7 @@ const App = ({ onClockPosChange }) => {
   const [font, setFont] = useState("Inconsolata");
   const [clockAlign, setClockAlign] = useState("center");
   const [clockPos, setClockPos] = useState("center");
+  const [ac, setAc] = useState([]);
 
   const [isParallex, setIsParallex] = useState(false);
 
@@ -62,6 +60,7 @@ const App = ({ onClockPosChange }) => {
   });
   const [term, setTerm] = useState("");
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
+  const [isForegroundAuto, setIsForegroundAuto] = useState(null);
 
   const terminal = useRef();
   const alert = useAlert();
@@ -117,9 +116,9 @@ const App = ({ onClockPosChange }) => {
     const onNewCommand = (newValue) => {
       let temp = {};
       for (let command in newValue) {
-        temp[command] = () => {
+        temp[command] = (input) => {
           if (newValue[command].length === 1)
-            return ({ input }) => {
+            return () => {
               const [hasntInput, hasInput] = newValue[command][0]
                 .replace("%input%", input)
                 .split("%?%");
@@ -130,18 +129,19 @@ const App = ({ onClockPosChange }) => {
               return commands.url(hasntInput)();
             };
           else
-            return (input) => {
-              newValue[command].forEach((element) => {
-                const [hasntInput, hasInput] = element
-                  .replace("%input%", input)
-                  .split("%?%");
+            return () =>
+              ({ input }) => {
+                newValue[command].forEach((element) => {
+                  const [hasntInput, hasInput] = element
+                    .replace("%input%", input)
+                    .split("%?%");
 
-                if (hasInput) {
-                  if (input) window.open(commands.url(hasInput)());
-                  else window.open(commands.url(hasntInput)());
-                } else window.open(commands.url(hasntInput)());
-              });
-            };
+                  if (hasInput) {
+                    if (input) window.open(commands.url(hasInput)());
+                    else window.open(commands.url(hasntInput)());
+                  } else window.open(commands.url(hasntInput)());
+                });
+              };
         };
       }
       setCommands({ ...commands, ...temp });
@@ -282,6 +282,7 @@ const App = ({ onClockPosChange }) => {
       commands: onNewCommand,
       search: setIsHistory,
       taskbarIcons: setTaskbarIcons,
+      isForegroundAuto: setIsForegroundAuto,
       brightness: setBrightness,
       blur: setBlur,
       altNewtab: setAltNewtab,
@@ -309,10 +310,92 @@ const App = ({ onClockPosChange }) => {
         if (stateToSet[key]) stateToSet[key](value);
       });
     })();
+    const myEventHandler = ({ ac }) => {
+      setAc(ac);
+    };
+    document.addEventListener("autocomplete", myEventHandler, false);
   }, []);
+  useEffect(() => {
+    function getImageLightness(imageSrc, callback) {
+      var img = document.createElement("img");
+      img.src = imageSrc;
+      img.style.display = "none";
+      document.body.appendChild(img);
 
+      var colorSum = 0;
+
+      img.onload = function () {
+        // create canvas
+        var canvas = document.createElement("canvas");
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(this, 0, 0);
+
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var r, g, b, avg;
+
+        for (var x = 0, len = data.length; x < len; x += 4) {
+          r = data[x];
+          g = data[x + 1];
+          b = data[x + 2];
+
+          avg = Math.floor((r + g + b) / 3);
+          colorSum += avg;
+        }
+
+        var brightness = Math.floor(colorSum / (this.width * this.height));
+        callback(brightness);
+      };
+      callback(null);
+    }
+    if (background === "unsplash") {
+      alert.show(
+        <div className="alert">Your Unsplash image is loading...</div>
+      );
+      axios
+        .get("https://api.unsplash.com/photos/random", {
+          params: {
+            collections: "9389477,908506,219941",
+            client_id: "Oi5eeseZ0KatuzRuE5P1HFP7bk7UIUC-jIFXY5nS154",
+          },
+        })
+        .then(async ({ data }) => {
+          let blob = await fetch(data.urls.full).then((r) => r.blob());
+          alert.show(
+            <div className="alert">Your Unsplash image is loaded.</div>
+          );
+          localforage.setItem("background", blob);
+        });
+    } else {
+      if (background && isForegroundAuto) {
+        getImageLightness(
+          background.replace(/^url\('|^url\("/g, "").replace(/"\)|'\)/g, ""),
+          (br) => {
+            if (br !== null)
+              localforage.setItem(
+                "foreground",
+                `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
+                  br < 127.5 ? 255 : 0
+                })`
+              );
+            else
+              localforage.setItem(
+                "foreground",
+                `rgb(${isDark(background) ? 255 : 0},${
+                  isDark(background) ? 255 : 0
+                },${isDark(background) ? 255 : 0})`
+              );
+          }
+        );
+      }
+    }
+  }, [background, isForegroundAuto]);
   useEffect(() => {
     const onKeydown = (e) => {
+      if (e.code === "Space" && !term) return;
       e.stopPropagation();
       if (e.ctrlKey && e.code === "KeyB") {
         alert.show(
@@ -326,8 +409,7 @@ const App = ({ onClockPosChange }) => {
         localforage.setItem("altNewtab", !altNewtab);
       }
       if (e.ctrlKey && e.code === "KeyQ") {
-        setIsHistory(isHistory + 1 > 2 ? 0 : isHistory + 1);
-        localforage.setItem("search", isHistory);
+        localforage.setItem("search", isHistory + 1 > 2 ? 0 : isHistory + 1);
       }
       if (e.key === "Escape") {
         setIsTerminal(false);
@@ -374,14 +456,35 @@ const App = ({ onClockPosChange }) => {
   }, [isTerminal, isHistory, isTaskbarEdit]);
 
   useEffect(() => {
+    const command = termToCommand(term, identifier, commands);
+    let input;
+    if (command.name && command.name !== "search") {
+      if (commands[command.name](command.args))
+        if (typeof commands[command.name](command.args)() === "string")
+          input = commands[command.name](command.args)();
+    }
+    if (!input) input = term;
+    const url =
+      "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
+    const script = document.createElement("script");
+    script.src = url;
     if (term) {
+      document.body.appendChild(script);
       chromeHistory(term);
-    } else setResults([]);
+    } else {
+      setResults([]);
+      setAc([]);
+    }
+    return () => {
+      if (term) document.body.removeChild(script);
+    };
   }, [isHistory, term]);
 
   const chromeHistory = (term) => {
+    const isNameSearch =
+      termToCommand(term, identifier, commands).name === "search";
     const searchSuggest = (term) => {
-      if (termToCommand(term, identifier, commands).name !== "search")
+      if (!isNameSearch)
         return {
           url: commands["search"](term),
           header: {
@@ -393,23 +496,29 @@ const App = ({ onClockPosChange }) => {
     const onSearchComplete = (e) => {
       setResults([searchSuggest(term), ...e]);
     };
-    if (isHistory === 2) {
-      chrome.bookmarks.search({ query: term }, (res) => {
-        onSearchComplete(res.slice(0, 3 + !isUrl(term)));
-      });
-    } else if (isHistory === 1) {
-      if (chrome.history)
+
+    switch (isHistory) {
+      case 2:
+        chrome.bookmarks.search({ query: term }, (res) => {
+          onSearchComplete(res.slice(0, 3 + isNameSearch));
+        });
+        break;
+      case 1:
         chrome.history.search(
           {
             text: term,
             startTime: new Date().getTime() - 14 * 24 * 3600 * 1000,
-            maxResults: 3 + !isUrl(term),
+            maxResults: 3 + isNameSearch,
           },
           (res) => {
             onSearchComplete(res);
           }
         );
-    } else setResults([searchSuggest(term)]);
+        break;
+      default:
+        setResults([searchSuggest(term)]);
+        break;
+    }
   };
   useEffect(() => {
     if (isTaskbarEdit) {
@@ -453,14 +562,10 @@ const App = ({ onClockPosChange }) => {
       localforage.setItem("taskbarIcons", _taskbarIcons);
     })();
   };
-
   if (window.location.search === "?command=true") return <Commands />;
   const renderedNoTerminal = () => {
     return (
       <React.Fragment>
-        <Helmet>
-          <title>{defaultTitle}</title>
-        </Helmet>
         <div
           {...getRootProps()}
           style={{
@@ -472,7 +577,7 @@ const App = ({ onClockPosChange }) => {
             e.stopPropagation();
           }}
         >
-          <input {...getInputProps()} id="image-input" />
+          <input {...getInputProps()} />
           {/* <div
             className={`input-label-wrapper ${gradient ? "" : "no-gradient"}`}
           >
@@ -552,9 +657,6 @@ const App = ({ onClockPosChange }) => {
   const renderedTerminal = () => {
     return (
       <React.Fragment>
-        <Helmet>
-          <title>{term}</title>
-        </Helmet>
         <div style={{ display: `${isTerminal ? "block" : "none"}` }}>
           {isHistory ? (
             <div
@@ -562,11 +664,21 @@ const App = ({ onClockPosChange }) => {
                 gradient ? "" : "no-gradient"
               }`}
             >
-              {isHistory === 1 ? "History" : "Bookmark"}
+              {(() => {
+                switch (isHistory) {
+                  case 1:
+                    return "History";
+                  case 2:
+                    return "Bookmark";
+                  default:
+                    break;
+                }
+              })()}
             </div>
           ) : null}
 
           <Terminal
+            ac={ac.filter((e) => e.phrase !== term).slice(0, 5)}
             identifier={identifier}
             commands={commands}
             term={term}

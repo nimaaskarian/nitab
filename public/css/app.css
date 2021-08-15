@@ -108,7 +108,7 @@
   font-size: 72px;
 }
 
-.terminal-input {
+.terminal input {
   font-family: inherit !important;
   margin: 0;
   width: calc(100% - 55px);
@@ -131,115 +131,115 @@
   padding: 0 5vw;
 }
 
-.js {
+.js * {
   color: rgb(250, 223, 28) !important;
 }
-.js::selection {
+.js *::selection {
   background-color: rgb(250, 223, 28) !important;
   color: #333;
 }
-.rgx {
+.rgx * {
   color: #70b0e0 !important;
 }
-.rgx::selection {
+.rgx *::selection {
   background-color: #70b0e0 !important;
 }
-.w3 {
+.w3 * {
   color: #04aa6d !important;
 }
-.w3::selection {
+.w3 *::selection {
   background-color: #04aa6d !important;
 }
-.sp {
+.sp * {
   color: #1db954 !important;
 }
-.sp::selection {
+.sp *::selection {
   background-color: #1db954 !important;
 }
-.wa {
+.wa * {
   color: rgb(37, 211, 102) !important;
 }
-.wa::selection {
+.wa *::selection {
   background-color: rgb(37, 211, 102) !important;
   color: #333;
 }
 
-.imdb {
+.imdb * {
   color: #f5c518 !important;
 }
-.imdb::selection {
+.imdb *::selection {
   background-color: #f5c518 !important;
   color: #333;
 }
-.dis {
+.dis * {
   color: #7772bd !important;
 }
-.dis::selection {
+.dis *::selection {
   background-color: #7772bd !important;
 }
-.stack {
+.stack * {
   color: rgb(254, 135, 0) !important;
 }
 
-.stack::selection {
+.stack *::selection {
   background-color: rgb(254, 135, 0) !important;
 }
-.git {
+.git * {
   color: rgb(184, 184, 184) !important;
   color: #333;
 }
-.git::selection {
+.git *::selection {
   background-color: rgb(184, 184, 184) !important;
   color: #333;
 }
 .yt {
   color: rgb(254, 0, 0) !important;
 }
-.yt::selection {
+.yt *::selection {
   background-color: rgb(254, 0, 0) !important;
 }
-.sch {
+.sch * {
   color: rgb(122, 65, 0) !important;
 }
-.sch::selection {
+.sch *::selection {
   background-color: rgb(122, 65, 0) !important;
 }
-.y {
+.y * {
   color: #a357ff !important;
 }
-.y::selection {
+.y *::selection {
   background-color: #a357ff !important;
 }
-.r {
+.r * {
   color: #fda025 !important;
 }
-.r::selection {
+.r *::selection {
   background-color: #fda025 !important;
 }
-.terminal .fa {
+.terminal .fa * {
   color: #1c7ed6;
 }
-.fa::selection {
+.fa *::selection {
   background-color: #1c7ed6 !important;
 }
-.url {
+.url * {
   color: #005eb1 !important;
 }
-.url::selection {
+.url *::selection {
   background-color: #005eb1 !important;
 }
-.fg {
+.fg * {
   color: #aaf5ff !important;
 }
-.fg::selection {
+.fg *::selection {
   background-color: #aaf5ff !important;
   color: #333;
 }
 
-.bg {
+.bg * {
   color: #e7aaff !important;
 }
-.bg::selection {
+.bg *::selection {
   background-color: #e7aaff !important;
   color: #333;
 }
@@ -256,6 +256,16 @@
   transition: 200ms ease-out;
   cursor: pointer;
 }
+.item {
+  transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), margin 300ms ease-out;
+}
+.item.selected {
+  background: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
 
 .terminal-output {
   border: none;
@@ -263,7 +273,7 @@
   box-shadow: none;
   font-size: 36px;
 }
-.terminal-input:focus {
+.terminal input:focus {
   outline: none;
   box-shadow: none;
 }
@@ -322,7 +332,7 @@
   transition: opacity 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
   opacity: 0 !important;
 }
-.terminal > *,
+.terminal *,
 .ctrl-item,
 .search-results > * {
   transition: color 450ms cubic-bezier(0.65, 0.05, 0.36, 1),

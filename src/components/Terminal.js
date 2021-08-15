@@ -1,27 +1,48 @@
 /*global chrome*/
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Autocomplete from "react-autocomplete";
 import { termToCommand } from "../js/commands";
 import "localforage-observable/dist/localforage-observable.es6";
 const Terminal = React.forwardRef(
-  ({ onChange, altNewtab, setIsTaskbar, term, commands, identifier }, ref) => {
+  (
+    { onChange, altNewtab, setIsTaskbar, term, commands, identifier, ac },
+    ref
+  ) => {
     const [onSubmit, setOnSubmit] = useState(() => {});
+
     const termClass = () => {
       const { name } = termToCommand(term, identifier, commands);
       return name === "taskbar" ? "" : name;
     };
     useEffect(() => {
+      const onkeydown = (e) => {
+        const selected = document.querySelector(".item.selected");
+        if (e.code === "Tab") {
+          if (selected) {
+            onChange(selected.innerText);
+          }
+        }
+      };
+      window.addEventListener("keydown", onkeydown);
+      return () => {
+        window.removeEventListener("keydown", onkeydown);
+      };
+    }, [ac]);
+    useEffect(() => {
       const onSubmitHelper = (e) => {
         const { name, args } = termToCommand(term, identifier, commands);
-        if (e.code === "Enter") {
+        if (e.code === "Enter" && onSubmit.f) {
           if (name === "taskbar") setIsTaskbar(true);
           else {
-            let _output = onSubmit.f({
-              altKey: e.altKey !== altNewtab,
-              input: args,
-            });
+            let _output = onSubmit.f(args);
+
             if (typeof _output === "string") {
               if (e.altKey !== altNewtab) document.location = _output;
               else window.open(_output);
+            } else {
+              _output({
+                altKey: e.altKey !== altNewtab,
+              });
             }
           }
         }
@@ -45,17 +66,37 @@ const Terminal = React.forwardRef(
         style={{
           direction: `${/^[\u0600-\u06FF\s]+/.test(term) ? "rtl" : "ltr"}`,
         }}
-        className="terminal foreground-change"
+        className={"terminal foreground-change " + termClass()}
       >
-        <input
-          ref={ref}
+        <Autocomplete
+          menuStyle={{
+            fontSize: "16px",
+            backgroundColor: "rgba(0,0,0,0)",
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+          }}
+          getItemValue={(item) => item.phrase}
+          items={ac}
+          renderItem={(item, isHighlighted) => {
+            return (
+              <div
+                key={item.phrase}
+                className={`item ${
+                  isHighlighted ? "selected" : "not-selected"
+                }`}
+              >
+                {item.phrase}
+              </div>
+            );
+          }}
           autoFocus
           value={term}
           onChange={(e) => {
             onChange(e.target.value.trimStart());
           }}
-          type="text"
-          className={"terminal-input " + termClass()}
+          ref={ref}
+          selectOnBlur={true}
         />
         <span
           className={`terminal-output ${
