@@ -111,7 +111,7 @@
 .terminal input {
   font-family: inherit !important;
   margin: 0;
-  width: calc(100% - 55px);
+  width: calc(90vw - 55px);
   border: none;
   background-color: rgba(51, 51, 51, 0);
   box-shadow: none;
@@ -192,7 +192,7 @@
   background-color: rgb(184, 184, 184) !important;
   color: #333;
 }
-.yt {
+.yt * {
   color: rgb(254, 0, 0) !important;
 }
 .yt *::selection {
