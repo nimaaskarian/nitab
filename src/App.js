@@ -468,15 +468,23 @@ const App = () => {
       "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
     const script = document.createElement("script");
     script.src = url;
+    let timeoutId, appended;
     if (term) {
-      document.body.appendChild(script);
+      timeoutId = setTimeout(() => {
+        document.body.appendChild(script);
+        appended = true;
+      }, 350);
+
       chromeHistory(term);
     } else {
       setResults([]);
       setAc([]);
     }
     return () => {
-      if (term) document.body.removeChild(script);
+      if (term) {
+        clearTimeout(timeoutId);
+        if (appended) document.body.removeChild(script);
+      }
     };
   }, [isHistory, term]);
 
