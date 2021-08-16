@@ -281,6 +281,38 @@ const App = () => {
       },
       commands: onNewCommand,
       search: setIsHistory,
+      todo: (r) => {
+        alert.removeAll();
+        r.forEach((e, i) => {
+          alert.show(
+            <div
+              style={{
+                direction: `${/^[\u0600-\u06FF\s]+/.test(e) ? "rtl" : "ltr"}`,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+              className="alert"
+            >
+              <div>{e}</div>
+              <a
+                style={{ marginRight: "5px" }}
+                className="fal fa-circle"
+                onClick={async (e) => {
+                  e.target.className = "fal fa-check-circle";
+                  const r = await localforage.getItem("todo");
+                  setTimeout(() => {
+                    r.splice(i, 1);
+                    localforage.setItem("todo", r);
+                  }, 200);
+                }}
+              />
+            </div>,
+            { timeout: 0 }
+          );
+        });
+      },
       taskbarIcons: setTaskbarIcons,
       isForegroundAuto: setIsForegroundAuto,
       brightness: setBrightness,

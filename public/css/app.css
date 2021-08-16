@@ -372,7 +372,8 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 .alert {
-  font-family: "Inconsolata";
+  text-transform: initial !important;
+  font-family: "Inconsolata","IranSans";
   font-size: 1.5rem;
 }
 .ctrl-item {

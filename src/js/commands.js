@@ -123,6 +123,12 @@ const defaultCommands = {
       localforage.setItem("font", input || "Inconsolata");
     };
   },
+  todo(input) {
+    return () => async () => {
+      const r = await localforage.getItem("todo");
+      localforage.setItem("todo", [...(r || []), input]);
+    };
+  },
   par(input) {
     if (!input)
       return () => {
