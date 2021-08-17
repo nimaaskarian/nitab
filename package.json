@@ -1,6 +1,6 @@
 {
   "name": "newtab",
-  "version": "3.13.1",
+  "version": "3.13.5",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
