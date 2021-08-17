@@ -1,1 +1,1 @@
-Advanced newtab extension for Google Chrome
+A Neat, advanced and customizable start page for your chrome
