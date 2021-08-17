@@ -3,6 +3,7 @@ A Neat, advanced and customizable start page for your chrome. written in JavaScr
 
 ## Features
 - **Adding commands** will make your life easier !
+- **Changing default command identifier** so it fits your style !
 - **Adding Todo** to never forget what you wanted to-do !
 - **Customizing clock position and align** so it will seat where you're comfortable !
 - **Customizing background** to fully enjoy your neatness.
