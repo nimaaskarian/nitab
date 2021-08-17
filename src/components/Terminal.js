@@ -20,6 +20,8 @@ const Terminal = React.forwardRef(
         if (e.code === "Tab") {
           if (selected) {
             onChange(selected.innerText);
+          } else{
+            onChange(ac[0].phrase)
           }
         }
       };
