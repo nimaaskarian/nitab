@@ -494,7 +494,6 @@ const App = () => {
       if (commands[command.name](command.args))
         if (typeof commands[command.name](command.args)() === "string")
           input = commands[command.name](command.args)();
-        else input = command.args;
     }
     if (!input) input = term;
     const url =
