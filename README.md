@@ -14,7 +14,9 @@ A Neat, advanced and customizable start page for your chrome. written in JavaScr
 
 ## Commands
 you can add your own command or override existing commands.
-then you can use the added command using `[iden]`
+<br/>
+then you can run the added command using `[iden][commandName] [commandArgs]`.
+<br/>
 replace `[iden]` with your command [identifier](#identifier) (default:/).
 
 
@@ -36,8 +38,11 @@ to add a Multiple URL command, `[iden]command commandName URL1 URL2 URL3 URLN`
 ### Advanced
 #### Including command arguments
 look at this example: `[iden]commandName commandArguments`.
+<br/>
 if you want to use command arguments in your command, you can use %input% keyword in your URL.
+<br/>
 for example, and you made a command like this: `[iden]utube www.youtube.com/results?search_query=%input%`
+<br/>
 `[iden]utube mosh hamedani` will open www.youtube.com/results?search_query=mosh%20hamedani for you.
 
 
