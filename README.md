@@ -1,7 +1,7 @@
 # Nitab
 A Neat, advanced and customizable start page for your chrome. written in JavaScript and React.
 
-## Features
+# Features
 - **Adding [commands](#commands)** will make your life easier !
 - **Changing default command [identifier](#identifier)** so it fits your style !
 - **Adding [Todo](#todo)** to never forget what you wanted to-do !
@@ -12,26 +12,23 @@ A Neat, advanced and customizable start page for your chrome. written in JavaScr
 - **[Autocomplete](#Autocomplete)** will speed up your internet browsing.
 
 
-## Commands
+# Commands
 you can add your own command or override existing commands.
 <br/>
 then you can run the added command using `[iden][commandName] [commandArgs]`.
 <br/>
 replace `[iden]` with your command [identifier](#identifier) (default:/).
 
-
+## Adding a command
 ### Single URL
 to add a single URL command, `[iden]command [commandName:string] URL`
-
 ##### Example: 
 * `/command git https://github.com/`
 * `command ig instagram.com`
 * `-command rt https://www.rottentomatoes.com/`
 
-
 ### Multiple URL
 to add a Multiple URL command, `[iden]command commandName URL1 URL2 URL3 URLN`
-
 ##### Example: 
 * `/command web cssgradient.io www.w3schools.com https://developer.mozilla.org/en-US/docs/ stackoverflow.com github.com`
 
@@ -44,12 +41,21 @@ if you want to use command arguments in your command, you can use %input% keywor
 for example, and you made a command like this: `[iden]utube www.youtube.com/results?search_query=%input%`
 <br/>
 `[iden]utube mosh hamedani` will open www.youtube.com/results?search_query=mosh%20hamedani for you.
+<br/>
+you can use this in all type of commands
+
+#### determine if arguments exist or not
+if you want your command to detect if you have typed a command argument or not, you can use %?% keyword between your two urls.
+<br/>
+`[iden]commandName `
+<br/>
+for example, if you have a command like this: `[iden]ytOrIg youtube.com%?%instagram.com` and you type `[iden]ytOrIg` 
 
 
-## Identifier
-## Todo
-## Clock
-## Background
-## Foreground
-## Taskbar 
-## Autocomplete
+# Identifier
+# Todo
+# Clock
+# Background
+# Foreground
+# Taskbar 
+# Autocomplete
