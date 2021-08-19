@@ -274,7 +274,8 @@ const defaultCommands = {
   command(input) {
     const [commandName, ...commandFunctions] = input.split(/\s/g);
 
-    if (["command", "commandCl"].includes(commandName)) return;
+    if (["command", "commandCl"].includes(commandName) || !commandFunctions.length) return;
+
     var _commands;
     (async () => {
       _commands = await localforage.getItem("commands");
