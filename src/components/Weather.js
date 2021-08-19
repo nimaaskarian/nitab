@@ -49,8 +49,9 @@ export default ({ data }) => {
     return (
       <div className="weather" style={{ marginTop: ".5rem", fontSize: "1rem" }}>
         <span style={{ marginRight: "5px" }}>{data.name}</span>
-        {Math.round(data.main.temp)}&#176;
+        {Math.round(data.main.temp)}&#176;C
         <i
+          style={{ marginLeft: "5px" }}
           className={
             "fa " +
             icons[data.weather[0].description][

@@ -526,7 +526,7 @@ const App = () => {
     const searchSuggest = (term) => {
       if (!isNameSearch)
         return {
-          url: commands["search"](term),
+          url: commands["search"](term)(),
           header: {
             className: "fontawe search",
           },

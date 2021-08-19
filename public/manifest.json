@@ -1,12 +1,17 @@
 {
   "manifest_version": 2,
-  "name": "Newtab",
-  "version": "3.0",
-  "description": "custom Nima Askarian new tab. dont you dare copying it",
-
+  "name": "Nitab",
+  "version": "3.16.5",
+  "description": "A Neat, advanced and customizable start page for your chrome.",
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
   "chrome_url_overrides": {
     "newtab": "focus.html"
   },
   "permissions": ["history", "storage", "bookmarks", "search"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://duckduckgo.com 'sha256-xUUNsM/ivvRfQe09BGmzlgiboh496n5ZWi0BsEm2IZk='"
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://duckduckgo.com 'sha256-sUnRGwEFv/uRubj+MLa+X2Au/bhzdbFTCA9VXASfyJM='"
 }
