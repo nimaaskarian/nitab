@@ -174,22 +174,17 @@ const defaultCommands = {
         const type = "text/json";
         const filename = "Exported-data.json";
         var file = new Blob([JSON.stringify(data)], { type });
-        if (window.navigator.msSaveOrOpenBlob)
-          // IE10+
-          window.navigator.msSaveOrOpenBlob(file, filename);
-        else {
-          // Others
-          var a = document.createElement("a"),
-            url = URL.createObjectURL(file);
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function () {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          }, 0);
-        }
+
+        var a = document.createElement("a"),
+          url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 0);
       };
     };
   },
@@ -280,9 +275,6 @@ const defaultCommands = {
     const [commandName, ...commandFunctions] = input.split(/\s/g);
 
     if (["command", "commandCl"].includes(commandName)) return;
-    if (!commandFunctions.length)
-      return () => () => (window.location = "./index.html?command=true");
-
     var _commands;
     (async () => {
       _commands = await localforage.getItem("commands");

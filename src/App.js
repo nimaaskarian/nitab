@@ -12,7 +12,6 @@ import Terminal from "./components/Terminal";
 import Clock from "./components/Clock";
 import SearchResult from "./components/SearchResult";
 import TaskbarIcon from "./components/TaskbarIcon";
-import Commands from "./components/Commands";
 import commandsDefault, { termToCommand } from "./js/commands";
 
 const getAll = async () => {
@@ -603,7 +602,6 @@ const App = () => {
       localforage.setItem("taskbarIcons", _taskbarIcons);
     })();
   };
-  if (window.location.search === "?command=true") return <Commands />;
   const renderedNoTerminal = () => {
     return (
       <React.Fragment>
