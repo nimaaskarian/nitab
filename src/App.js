@@ -346,6 +346,7 @@ const App = () => {
       setAc(ac);
     };
     document.addEventListener("autocomplete", myEventHandler, false);
+    onForegroundChange(document.styleSheets[5], foreground);
   }, []);
   useEffect(() => {
     function getImageLightness(imageSrc, callback) {
@@ -767,9 +768,8 @@ const App = () => {
           style={{
             marginLeft: isParallex ? `${parallex.x * parallexFactor}vw` : "0",
             marginTop: isParallex ? `${parallex.y * parallexFactor}vh` : "0",
-            color: foreground,
             transform: isParallex ? `scale(${1 + parallexFactor / 100})` : null,
-            background: background || "#333",
+            background: background || "#222",
             filter: `blur(${
               isTaskbarEdit
                 ? blur.setting
