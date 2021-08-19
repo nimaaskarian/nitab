@@ -43,7 +43,7 @@ export default ({ data }) => {
   };
   const isDay = (t) => {
     return new Date(t).getHours() > 6 && new Date(t).getHours() < 20;
-  };
+  };fafasdfdsafsadfasddssadfasdfs
 
   if (data)
     return (
