@@ -1,3 +1,5 @@
+import { openWeather } from "../apis";
+
 export function addCommand(name, args) {
   return {
     type: "ADD_COMMAND",
@@ -132,8 +134,9 @@ export function editEmptyTaskbarIcon(iconConfig) {
   };
 }
 export function setWeatherData(weatherData) {
-  return {
-    type: "SET_WEATHER_DATA",
-    payload: weatherData,
-  };
+  return (dispatch,getState)=>{
+    if(getState().weatherData)
+      if(getState().weatherData.time )
+  }
+  
 }
