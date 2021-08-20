@@ -1,6 +1,7 @@
 import localforage from "localforage";
 import isUrl from "./isUrl";
 import { addCommand } from "../actions";
+import { store } from "../store";
 
 const s = {
   iden: {
@@ -274,12 +275,16 @@ const defaultCommands = {
       return () => () => localforage.setItem("commands", {});
   },
   command(input) {
-    console.log("ng")
+    console.log("ng");
     const [commandName, ...commandFunctions] = input.split(/\s/g);
-    return () => ()=> addCommand(commandName, commandFunctions)
-    
+    return () => () =>
+      store.dispatch(addCommand(commandName, commandFunctions));
 
-    if (["command", "commandCl"].includes(commandName) || !commandFunctions.length) return;
+    if (
+      ["command", "commandCl"].includes(commandName) ||
+      !commandFunctions.length
+    )
+      return;
 
     var _commands;
     (async () => {

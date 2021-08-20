@@ -4,16 +4,16 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useAlert } from "react-alert";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import { isDark } from "./js/isdark-min";
+import { isDark } from "../js/isdark-min";
 import localforage from "localforage";
 import "localforage-observable/dist/localforage-observable.es6";
-import AddTaskbar from "./components/AddTaskbar";
-import Terminal from "./components/Terminal";
-import Clock from "./components/Clock";
-import SearchResult from "./components/SearchResult";
-import TaskbarIcon from "./components/TaskbarIcon";
-import commandsDefault, { termToCommand } from "./js/commands";
-
+import AddTaskbar from "./AddTaskbar";
+import Terminal from "./Terminal";
+import Clock from "./Clock";
+import SearchResult from "./SearchResult";
+import TaskbarIcon from "./TaskbarIcon";
+import defaultCommands, { termToCommand } from "../js/commands";
+import { connect } from "react-redux";
 const getAll = async () => {
   let output = {};
   const keys = await localforage.keys();
@@ -23,7 +23,7 @@ const getAll = async () => {
   }
   return output;
 };
-const App = () => {
+const App = (props) => {
   const [results, setResults] = useState([]);
   const [isHistory, setIsHistory] = useState(1); //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
@@ -101,6 +101,9 @@ const App = () => {
       multiple: false,
     });
   useEffect(() => {
+    console.log(props.data);
+  }, [props.data]);
+  useEffect(() => {
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
       const y = 0.5 - Math.round((e.clientY / window.innerHeight) * 10) / 10;
@@ -112,39 +115,6 @@ const App = () => {
     };
   }, [isParallex]);
   useEffect(() => {
-    const onNewCommand = (newValue) => {
-      let temp = {};
-      for (let command in newValue) {
-        temp[command] = (input) => {
-          if (newValue[command].length === 1)
-            return () => {
-              const [hasntInput, hasInput] = newValue[command][0]
-                .replace("%input%", input)
-                .split("%?%");
-              if (hasInput) {
-                if (input) return commands.url(hasInput)();
-                return commands.url(hasntInput)();
-              }
-              return commands.url(hasntInput)();
-            };
-          else
-            return () =>
-              ({ input }) => {
-                newValue[command].forEach((element) => {
-                  const [hasntInput, hasInput] = element
-                    .replace("%input%", input)
-                    .split("%?%");
-
-                  if (hasInput) {
-                    if (input) window.open(commands.url(hasInput)());
-                    else window.open(commands.url(hasntInput)());
-                  } else window.open(commands.url(hasntInput)());
-                });
-              };
-        };
-      }
-      setCommands({ ...commands, ...temp });
-    };
     localforage.ready(function () {
       var observable = localforage.newObservable();
       var subscription = observable.subscribe({
@@ -582,14 +552,17 @@ const App = () => {
       const realIndex = _taskbarIcons.length;
       if (index === -1)
         _taskbarIcons.push({ icon, url, color, index: realIndex });
+      //addTaskbarIcon({ icon, url, color, index: realIndex })
       else {
         if (icon === "empty")
+          //editTaskbarIcon()
           _taskbarIcons.splice(index, 0, {
             icon,
             url,
             color,
             index: index,
           });
+        //editEmptyTaskbarIcon()
         else
           _taskbarIcons[index] = {
             icon,
@@ -794,5 +767,40 @@ const App = () => {
     </React.Fragment>
   );
 };
+const mapStateToProp = ({ data }) => {
+  const dataToCommand = (data) => {
+    let temp = {};
+    for (let command in data) {
+      temp[command] = (input) => {
+        if (data[command].length === 1)
+          return () => {
+            const [hasntInput, hasInput] = data[command][0]
+              .replace("%input%", input)
+              .split("%?%");
+            if (hasInput) {
+              if (input) return commands.url(hasInput)();
+              return commands.url(hasntInput)();
+            }
+            return commands.url(hasntInput)();
+          };
+        else
+          return () =>
+            ({ input }) => {
+              data[command].forEach((element) => {
+                const [hasntInput, hasInput] = element
+                  .replace("%input%", input)
+                  .split("%?%");
 
-export default App;
+                if (hasInput) {
+                  if (input) window.open(commands.url(hasInput)());
+                  else window.open(commands.url(hasntInput)());
+                } else window.open(commands.url(hasntInput)());
+              });
+            };
+      };
+    }
+    return temp
+  };
+  return { ...data, commands: { ...commandsDefault,...dataToCommand() } };
+};
+export default connect(mapStateToProp, {})(App);
