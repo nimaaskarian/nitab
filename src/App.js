@@ -296,7 +296,7 @@ const App = () => {
             >
               <div>{e}</div>
               <a
-                style={{ marginRight: "5px" }}
+                style={{ marginLeft: "5px" }}
                 className="fal fa-circle"
                 onClick={async (e) => {
                   e.target.className = "fal fa-check-circle";
