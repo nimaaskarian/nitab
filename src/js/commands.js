@@ -1,5 +1,7 @@
 import localforage from "localforage";
 import isUrl from "./isUrl";
+import { addCommand } from "../actions";
+
 const s = {
   iden: {
     des: "Changes command identifier",
@@ -272,7 +274,10 @@ const defaultCommands = {
       return () => () => localforage.setItem("commands", {});
   },
   command(input) {
+    console.log("ng")
     const [commandName, ...commandFunctions] = input.split(/\s/g);
+    return () => ()=> addCommand(commandName, commandFunctions)
+    
 
     if (["command", "commandCl"].includes(commandName) || !commandFunctions.length) return;
 
