@@ -14,53 +14,17 @@ import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 import defaultCommands, { termToCommand } from "../js/commands";
 import { connect } from "react-redux";
-const getAll = async () => {
-  let output = {};
-  const keys = await localforage.keys();
-  for (let key of keys) {
-    const value = await localforage.getItem(key);
-    if (![undefined, null].includes(value)) output[key] = value;
-  }
-  return output;
-};
+
 const App = (props) => {
   const [results, setResults] = useState([]);
-  const [isHistory, setIsHistory] = useState(1); //bookmark === 0, history === 1, nothing === 0
+  //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
-  const [altNewtab, setAltNewtab] = useState(false);
-  const [taskbarIcons, setTaskbarIcons] = useState([]);
+
   const [isTaskbarEdit, setIsTaskbarEdit] = useState(false);
-  const [weatherData, setWeatherData] = useState(null);
-  const [background, setBackground] = useState(null);
-  const [commands, setCommands] = useState(commandsDefault);
-  const [foreground, setForeground] = useState("white");
-  const [gradient, setGradient] = useState(true);
-  const [magnify, setMagnify] = useState(true);
-  const [parallex, setParallex] = useState({ x: 0, y: 0 });
-  const [parallexFactor, setParallexFactor] = useState(5);
-  const [font, setFont] = useState("Inconsolata");
-  const [clockAlign, setClockAlign] = useState("center");
-  const [clockPos, setClockPos] = useState("center");
   const [ac, setAc] = useState([]);
-
-  const [isParallex, setIsParallex] = useState(false);
-
-  const [identifier, setIndentifier] = useState("/");
-
-  const [blur, setBlur] = useState({
-    terminal: "0",
-    notTerminal: "0",
-    setting: "10",
-  });
-  const [brightness, setBrightness] = useState({
-    terminal: "1",
-    notTerminal: "1",
-    setting: ".8",
-  });
   const [term, setTerm] = useState("");
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
-  const [isForegroundAuto, setIsForegroundAuto] = useState(null);
-
+  const [parallex, setParallex] = useState({ x: 0, y: 0 });
   const terminal = useRef();
   const alert = useAlert();
   const onForegroundChange = (stylesheet, color) => {
@@ -82,7 +46,6 @@ const App = (props) => {
       </div>
     );
     const bgBlob = new Blob([files[0]], { type: "image/*" });
-    localforage.setItem("background", bgBlob);
   }, []);
   const onDropRejected = useCallback((files, e) => {
     alert.error(
@@ -109,213 +72,17 @@ const App = (props) => {
       const y = 0.5 - Math.round((e.clientY / window.innerHeight) * 10) / 10;
       setParallex({ x, y });
     };
-    if (isParallex) window.addEventListener("mousemove", mouseOver);
+    if (props.isParallex) window.addEventListener("mousemove", mouseOver);
     return () => {
       window.removeEventListener("mousemove", mouseOver);
     };
-  }, [isParallex]);
+  }, [props.isParallex]);
   useEffect(() => {
-    localforage.ready(function () {
-      var observable = localforage.newObservable();
-      var subscription = observable.subscribe({
-        next: function ({ key, oldValue, newValue }) {
-          switch (key) {
-            case "brightness":
-            case "blur":
-              alert.show(
-                <div className="alert">
-                  You've changed background {key}
-                  <br />
-                  Main: {newValue.notTerminal}
-                  {key === "blur" ? "px" : null}
-                  <br />
-                  Terminal: {newValue.terminal}
-                  {key === "blur" ? "px" : null}
-                  <br />
-                  Taskbar Menu: {newValue.setting}
-                  {key === "blur" ? "px" : null}
-                </div>,
-                { timeout: 4500 }
-              );
-              stateToSet[key](newValue);
-              break;
-            case "magnfiy": {
-              setMagnify(newValue);
-              alert.show(
-                <div className="alert">
-                  Taskbar magnification is now{" "}
-                  {newValue ? "enabled" : "disabled"}
-                </div>
-              );
-              break;
-            }
-            case "foreground": {
-              if (oldValue) {
-                document.styleSheets[5].deleteRule(
-                  document.styleSheets[5].cssRules.length - 2
-                );
-                document.styleSheets[5].deleteRule(
-                  document.styleSheets[5].cssRules.length - 1
-                );
-              }
-              onForegroundChange(document.styleSheets[5], newValue);
-
-              setForeground(newValue);
-              break;
-            }
-            case "commands": {
-              let updates = [];
-              Object.keys(newValue).forEach((e) => {
-                if (!Object.keys(oldValue).includes(e))
-                  updates.push({ key: e, type: "add" });
-              });
-              Object.keys(oldValue).forEach((e) => {
-                if (!Object.keys(newValue).includes(e))
-                  updates.push({ key: e, type: "remove" });
-              });
-              if (updates.length)
-                updates.forEach((e) => {
-                  alert.show(
-                    <div className="alert">
-                      {e.type === "add"
-                        ? `You've added "${e.key}" to your commands`
-                        : `You've deleted "${e.key}" from your commands`}
-                    </div>
-                  );
-                });
-              else
-                alert.show(
-                  <div className="alert">
-                    You've made some changes to your commands
-                  </div>
-                );
-              onNewCommand(newValue);
-              break;
-            }
-            default:
-              stateToSet[key](newValue);
-              break;
-          }
-        },
-      });
-    });
-    const getWeather = async () => {
-      axios
-        .get("https://api.openweathermap.org/data/2.5/weather", {
-          params: {
-            q: "Tehran",
-            appid: "a5de1d16384b2eff27f46fdb71b4ff4e",
-            units: "metric",
-          },
-        })
-        .then(({ data }) => {
-          setWeatherData({ ...data, time: new Date().getTime() });
-          localforage.setItem("weather", {
-            data,
-            time: new Date().getTime(),
-          });
-        });
-    };
-    const stateToSet = {
-      background: (result) => {
-        if (typeof result === "object") {
-          try {
-            setBackground(`url("${URL.createObjectURL(result)}")`);
-          } catch (error) {}
-        } else {
-          setBackground(result);
-        }
-      },
-      parallex: setIsParallex,
-      "parallex-factor": setParallexFactor,
-      gradient: setGradient,
-      indetifier: (result) => {
-        if (![undefined, null].includes(result)) setIndentifier(result);
-
-        const _iden = result || identifier;
-        alert.show(
-          <div className="alert">
-            Command Identifier: {_iden === "NONE" ? "none" : `"${_iden}"`}
-          </div>,
-          {
-            timeout: 3000,
-          }
-        );
-      },
-      font: setFont,
-      magnify: setMagnify,
-      foreground: (result) => {
-        onForegroundChange(document.styleSheets[5], result);
-        setForeground(result);
-      },
-      commands: onNewCommand,
-      search: setIsHistory,
-      todo: (r) => {
-        alert.removeAll();
-        r.forEach((e, i) => {
-          alert.show(
-            <div
-              style={{
-                direction: `${/^[\u0600-\u06FF\s]+/.test(e) ? "rtl" : "ltr"}`,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-              className="alert"
-            >
-              <div>{e}</div>
-              <a
-                style={{ marginLeft: "5px" }}
-                className="fal fa-circle"
-                onClick={async (e) => {
-                  e.target.className = "fal fa-check-circle";
-                  const r = await localforage.getItem("todo");
-                  setTimeout(() => {
-                    r.splice(i, 1);
-                    localforage.setItem("todo", r);
-                  }, 200);
-                }}
-              />
-            </div>,
-            { timeout: 0 }
-          );
-        });
-      },
-      taskbarIcons: setTaskbarIcons,
-      isForegroundAuto: setIsForegroundAuto,
-      brightness: setBrightness,
-      blur: setBlur,
-      altNewtab: setAltNewtab,
-      weather: (result) => {
-        if (!result.time || !result.data) return getWeather();
-        if (new Date().getTime() - result.time > 3600 * 1000)
-          return getWeather();
-        setWeatherData({ ...result.data, time: result.time });
-      },
-      clockAlign: (result) => {
-        setClockAlign(result);
-        setIsTerminal(false);
-        setTerm("");
-      },
-      clockPos: (result) => {
-        setClockPos(result);
-        setIsTerminal(false);
-        setTerm("");
-      },
-    };
-    (async () => {
-      const data = await getAll();
-      Object.keys(data).forEach((key) => {
-        const value = data[key];
-        if (stateToSet[key]) stateToSet[key](value);
-      });
-    })();
     const myEventHandler = ({ ac }) => {
       setAc(ac);
     };
     document.addEventListener("autocomplete", myEventHandler, false);
-    onForegroundChange(document.styleSheets[5], foreground);
+    onForegroundChange(document.styleSheets[5], props.foreground);
   }, []);
   useEffect(() => {
     function getImageLightness(imageSrc, callback) {
@@ -353,7 +120,7 @@ const App = (props) => {
       };
       callback(null);
     }
-    if (background === "unsplash") {
+    if (props.background === "unsplash") {
       alert.show(
         <div className="alert">Your Unsplash image is loading...</div>
       );
@@ -369,32 +136,10 @@ const App = (props) => {
           alert.show(
             <div className="alert">Your Unsplash image is loaded.</div>
           );
-          localforage.setItem("background", blob);
         });
     } else {
-      if (background && isForegroundAuto) {
-        getImageLightness(
-          background.replace(/^url\('|^url\("/g, "").replace(/"\)|'\)/g, ""),
-          (br) => {
-            if (br !== null)
-              localforage.setItem(
-                "foreground",
-                `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
-                  br < 127.5 ? 255 : 0
-                })`
-              );
-            else
-              localforage.setItem(
-                "foreground",
-                `rgb(${isDark(background) ? 255 : 0},${
-                  isDark(background) ? 255 : 0
-                },${isDark(background) ? 255 : 0})`
-              );
-          }
-        );
-      }
     }
-  }, [background, isForegroundAuto]);
+  }, [props.background, props.isForegroundAuto]);
   useEffect(() => {
     const onKeydown = (e) => {
       if (e.code === "Space" && !term) return;
@@ -402,16 +147,14 @@ const App = (props) => {
       if (e.ctrlKey && e.code === "KeyB") {
         alert.show(
           <div className="alert">
-            {altNewtab
+            {props.altNewtab
               ? "Default enter behaviour is now new tab"
               : "Default enter behaviour is now current tab"}
           </div>
         );
-        setAltNewtab(!altNewtab);
-        localforage.setItem("altNewtab", !altNewtab);
+        //setAltNewtab
       }
       if (e.ctrlKey && e.code === "KeyQ") {
-        localforage.setItem("search", isHistory + 1 > 2 ? 0 : isHistory + 1);
       }
       if (e.key === "Escape") {
         setIsTerminal(false);
@@ -455,15 +198,15 @@ const App = (props) => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, isHistory, isTaskbarEdit]);
+  }, [isTerminal, props.isHistory, isTaskbarEdit]);
 
   useEffect(() => {
-    const command = termToCommand(term, identifier, commands);
+    const command = termToCommand(term, props.identifier, props.commands);
     let input;
     if (command.name && command.name !== "search") {
-      if (commands[command.name](command.args))
-        if (typeof commands[command.name](command.args)() === "string")
-          input = commands[command.name](command.args)();
+      if (props.commands[command.name](command.args))
+        if (typeof props.commands[command.name](command.args)() === "string")
+          input = props.commands[command.name](command.args)();
     }
     if (!input) input = term;
     const url =
@@ -488,15 +231,15 @@ const App = (props) => {
         if (appended) document.body.removeChild(script);
       }
     };
-  }, [isHistory, term]);
+  }, [props.isHistory, term]);
 
   const chromeHistory = (term) => {
     const isNameSearch =
-      termToCommand(term, identifier, commands).name === "search";
+      termToCommand(term, props.identifier, props.commands).name === "search";
     const searchSuggest = (term) => {
       if (!isNameSearch)
         return {
-          url: commands["search"](term)(),
+          url: props.commands["search"](term)(),
           header: {
             className: "fontawe search",
           },
@@ -507,27 +250,31 @@ const App = (props) => {
       setResults([searchSuggest(term), ...e]);
     };
 
-    switch (isHistory) {
-      case 2:
-        chrome.bookmarks.search({ query: term }, (res) => {
-          onSearchComplete(res.slice(0, 3 + isNameSearch));
-        });
-        break;
-      case 1:
-        chrome.history.search(
-          {
-            text: term,
-            startTime: new Date().getTime() - 14 * 24 * 3600 * 1000,
-            maxResults: 3 + isNameSearch,
-          },
-          (res) => {
-            onSearchComplete(res);
-          }
-        );
-        break;
-      default:
-        setResults([searchSuggest(term)]);
-        break;
+    try {
+      switch (props.isHistory) {
+        case 2:
+          chrome.bookmarks.search({ query: term }, (res) => {
+            onSearchComplete(res.slice(0, 3 + isNameSearch));
+          });
+          break;
+        case 1:
+          chrome.history.search(
+            {
+              text: term,
+              startTime: new Date().getTime() - 14 * 24 * 3600 * 1000,
+              maxResults: 3 + isNameSearch,
+            },
+            (res) => {
+              onSearchComplete(res);
+            }
+          );
+          break;
+        default:
+          setResults([searchSuggest(term)]);
+          break;
+      }
+    } catch (error) {
+      
     }
   };
   useEffect(() => {
@@ -537,7 +284,7 @@ const App = (props) => {
     }
   }, [isTaskbarEdit]);
   const onTaskbarMouseMove = (e) => {
-    if (!isTaskbarEdit && magnify)
+    if (!isTaskbarEdit && props.magnify)
       document.querySelectorAll(".taskbar-icon:not(.empty)").forEach((i) => {
         const { left } = i.getBoundingClientRect();
         let distance = Math.abs(e.clientX - left - i.offsetWidth / 2) / 30;
@@ -548,31 +295,14 @@ const App = (props) => {
   };
   const onAddtaskbarSubmit = ({ icon, color, url, index }) => {
     (async () => {
-      let _taskbarIcons = (await localforage.getItem("taskbarIcons")) || [];
-      const realIndex = _taskbarIcons.length;
-      if (index === -1)
-        _taskbarIcons.push({ icon, url, color, index: realIndex });
-      //addTaskbarIcon({ icon, url, color, index: realIndex })
-      else {
-        if (icon === "empty")
-          //editTaskbarIcon()
-          _taskbarIcons.splice(index, 0, {
-            icon,
-            url,
-            color,
-            index: index,
-          });
-        //editEmptyTaskbarIcon()
-        else
-          _taskbarIcons[index] = {
-            icon,
-            url,
-            color,
-            index: index,
-          };
-      }
-
-      localforage.setItem("taskbarIcons", _taskbarIcons);
+      // if (index === -1)
+      // addTaskbarIcon({ icon, url, color, index: realIndex })
+      // else {
+      //   if (icon === "empty")
+      //     editTaskbarIcon()
+      //   else
+      //    editEmptyTaskbarIcon()
+      // }
     })();
   };
   const renderedNoTerminal = () => {
@@ -605,7 +335,7 @@ const App = (props) => {
             <AddTaskbar
               setIsTaskbar={setIsTaskbarEdit}
               onSubmit={onAddtaskbarSubmit}
-              taskbarIcons={taskbarIcons}
+              taskbarIcons={props.taskbarIcons}
               selectedIndex={addtaskbarIndex}
               onIndexChange={() => setAddtaskbarIndex(null)}
             />
@@ -613,18 +343,18 @@ const App = (props) => {
             <h1 className="foreground-change">Drop the picture...</h1>
           ) : (
             <Clock
-              weatherData={weatherData}
+              weatherData={props.weatherData}
               style={{
-                position: clockPos !== "center" ? "absolute" : null,
-                top: clockPos !== "center" ? "20px" : null,
-                [clockPos]: "5vw",
-                alignItems: clockAlign,
+                position: props.clockPos !== "center" ? "absolute" : null,
+                top: props.clockPos !== "center" ? "20px" : null,
+                [props.clockPos]: "5vw",
+                alignItems: props.clockAlign,
               }}
             />
           )}
-          {taskbarIcons && taskbarIcons.length ? (
+          {props.taskbarIcons && props.taskbarIcons.length ? (
             <div
-              className={`taskbar ${gradient ? "" : "no-gradient"}`}
+              className={`taskbar ${props.gradient ? "" : "no-gradient"}`}
               onMouseEnter={onTaskbarMouseMove}
               onMouseMove={onTaskbarMouseMove}
               onMouseOut={() => {
@@ -635,7 +365,7 @@ const App = (props) => {
                   });
               }}
             >
-              {taskbarIcons.map((e, i) => {
+              {props.taskbarIcons.map((e, i) => {
                 return (
                   <TaskbarIcon
                     onClick={setAddtaskbarIndex}
@@ -647,15 +377,11 @@ const App = (props) => {
                     }
                     index={e.index}
                     color={e.color}
-                    isBlank={!altNewtab}
+                    isBlank={!props.altNewtab}
                     icon={e.icon}
                     url={isTaskbarEdit ? "" : e.url}
                     onDblClick={(e) => {
-                      if (isTaskbarEdit)
-                        localforage.getItem("taskbarIcons", (err, result) => {
-                          result.splice(i, 1);
-                          localforage.setItem("taskbarIcons", result);
-                        });
+                      //if (isTaskbarEdit) result.splice(i, 1);
                     }}
                   />
                 );
@@ -670,14 +396,14 @@ const App = (props) => {
     return (
       <React.Fragment>
         <div style={{ display: `${isTerminal ? "block" : "none"}` }}>
-          {isHistory ? (
+          {props.isHistory ? (
             <div
               className={`ctrl-item foreground-change ${
-                gradient ? "" : "no-gradient"
+                props.gradient ? "" : "no-gradient"
               }`}
             >
               {(() => {
-                switch (isHistory) {
+                switch (props.isHistory) {
                   case 1:
                     return "History";
                   case 2:
@@ -691,11 +417,11 @@ const App = (props) => {
 
           <Terminal
             ac={ac.filter((e) => e.phrase !== term).slice(0, 5)}
-            identifier={identifier}
-            commands={commands}
+            identifier={props.identifier}
+            commands={props.commands}
             term={term}
             setIsTaskbar={setIsTaskbarEdit}
-            altNewtab={altNewtab}
+            altNewtab={props.altNewtab}
             ref={terminal}
             onChange={(input) => {
               setTerm(input);
@@ -711,10 +437,10 @@ const App = (props) => {
                   <SearchResult
                     onClick={() => {
                       if (typeof e.url === "string") {
-                        if (!altNewtab) window.open(e.url);
+                        if (!props.altNewtab) window.open(e.url);
                         else document.location = e.url;
                       } else {
-                        e.url(altNewtab);
+                        e.url(props.altNewtab);
                       }
                     }}
                     key={i}
@@ -737,37 +463,46 @@ const App = (props) => {
       <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
         <div
           style={{
-            marginLeft: isParallex ? `${parallex.x * parallexFactor}vw` : "0",
-            marginTop: isParallex ? `${parallex.y * parallexFactor}vh` : "0",
-            transform: isParallex ? `scale(${1 + parallexFactor / 100})` : null,
-            background: background || "#222",
+            marginLeft: props.isParallex
+              ? `${parallex.x * props.parallexFactor}vw`
+              : "0",
+            marginTop: props.isParallex
+              ? `${parallex.y * props.parallexFactor}vh`
+              : "0",
+            transform: props.isParallex
+              ? `scale(${1 + props.parallexFactor / 100})`
+              : null,
+            background: props.background || "#222",
             filter: `blur(${
               isTaskbarEdit
-                ? blur.setting
+                ? props.blur.setting
                 : isTerminal
-                ? blur.terminal
-                : blur.notTerminal
+                ? props.blur.terminal
+                : props.blur.notTerminal
             }px) brightness(${
               isTaskbarEdit
-                ? brightness.setting
+                ? props.brightness.setting
                 : isTerminal
-                ? brightness.terminal
-                : brightness.notTerminal
+                ? props.brightness.terminal
+                : props.brightness.notTerminal
             })`,
           }}
           className={`background ${isTerminal ? "isTerminal" : ""} ${
-            gradient ? "" : "no-gradient"
+            props.gradient ? "" : "no-gradient"
           } ${isTaskbarEdit ? "super-blured" : ""}`}
         />
       </div>
 
-      <div className="keepcentered" style={{ fontFamily: `${font}, IranSans` }}>
+      <div
+        className="keepcentered"
+        style={{ fontFamily: `${props.font}, IranSans` }}
+      >
         {isTerminal ? renderedTerminal() : renderedNoTerminal()}
       </div>
     </React.Fragment>
   );
 };
-const mapStateToProp = ({ data }) => {
+const mapStateToProp = ({ data }, { commands }) => {
   const dataToCommand = (data) => {
     let temp = {};
     for (let command in data) {
@@ -799,8 +534,8 @@ const mapStateToProp = ({ data }) => {
             };
       };
     }
-    return temp
+    return temp;
   };
-  return { ...data, commands: { ...commandsDefault,...dataToCommand() } };
+  return { ...data, commands: { ...defaultCommands, ...dataToCommand() } };
 };
 export default connect(mapStateToProp, {})(App);

@@ -113,6 +113,12 @@ export function addTaskbarIcon(iconConfig) {
     payload: iconConfig,
   };
 }
+export function deleteTaskbarIcon(iconConfig) {
+  return {
+    type: "ADD_TASKBAR",
+    payload: iconConfig,
+  };
+}
 export function editTaskbarIcon(iconConfig) {
   return {
     type: "ADD_TASKBAR",
@@ -123,5 +129,11 @@ export function editEmptyTaskbarIcon(iconConfig) {
   return {
     type: "EDIT_EMPTY_TASKBAR",
     payload: iconConfig,
+  };
+}
+export function setWeatherData(weatherData) {
+  return {
+    type: "SET_WEATHER_DATA",
+    payload: weatherData,
   };
 }

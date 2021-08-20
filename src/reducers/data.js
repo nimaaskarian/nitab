@@ -1,6 +1,31 @@
+import defaultCommands from "../js/commands";
 const INITIAL_STATE = {
   isHistory: 1,
   altNewtab: false,
+  taskbarIcons: [],
+  weatherData: null,
+  background: null,
+  foreground: "white",
+  gradient: true,
+  magnify: { x: 0, y: 0 },
+  parallexFactor: 5,
+  isParallex: false,
+  identifier: "/",
+  commands: defaultCommands,
+  font: "Inconsolata",
+  clockPos: "center",
+  clockAlign: "center",
+  blur: {
+    terminal: "0",
+    notTerminal: "0",
+    setting: "10",
+  },
+  brightness: {
+    terminal: "1",
+    notTerminal: "1",
+    setting: ".8",
+  },
+  isForegroundAuto: false,
 };
 Array.prototype.before = function (index, item) {
   return this.flatMap((e, i) => {
@@ -14,9 +39,6 @@ Array.prototype.before = function (index, item) {
 Array.prototype.replace = function (index, item) {
   return this.map((e, i) => (i === index ? item : e));
 };
-
-setCommands({ ...commands, ...temp });
-
 
 export const data = (state = INITIAL_STATE, { payload, type }) => {
   console.log({ ...state });
