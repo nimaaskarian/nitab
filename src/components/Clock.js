@@ -16,7 +16,7 @@ const Clock = ({ style, isDate, weatherData }) => {
         time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
       }`}</div>
       <div className="clock-date">{new Date().toDateString(time)}</div>
-      <Weather data={weatherData} />
+      <Weather />
     </div>
   );
 };

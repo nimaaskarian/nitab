@@ -4,25 +4,31 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useAlert } from "react-alert";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import { isDark } from "../js/isdark-min";
-import localforage from "localforage";
+import { isDark } from "../utils/isdark-min";
 import "localforage-observable/dist/localforage-observable.es6";
 import AddTaskbar from "./AddTaskbar";
 import Terminal from "./Terminal";
 import Clock from "./Clock";
 import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
-import defaultCommands, { termToCommand } from "../js/commands";
+import { termToCommand } from "../js/commands";
 import { connect } from "react-redux";
+
+import { setBackground } from "../utils/setBackground";
+
+import {
+  setWeatherData,
+  resetStorage,
+  addIsHistory,
+  deleteTaskbarIcon,
+} from "../actions";
 
 const App = (props) => {
   const [results, setResults] = useState([]);
   //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
 
-  const [isTaskbarEdit, setIsTaskbarEdit] = useState(false);
   const [ac, setAc] = useState([]);
-  const [term, setTerm] = useState("");
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
   const [parallex, setParallex] = useState({ x: 0, y: 0 });
   const terminal = useRef();
@@ -46,6 +52,7 @@ const App = (props) => {
       </div>
     );
     const bgBlob = new Blob([files[0]], { type: "image/*" });
+    setBackground(bgBlob);
   }, []);
   const onDropRejected = useCallback((files, e) => {
     alert.error(
@@ -63,9 +70,7 @@ const App = (props) => {
       accept: "image/*",
       multiple: false,
     });
-  useEffect(() => {
-    console.log(props.data);
-  }, [props.data]);
+
   useEffect(() => {
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
@@ -78,10 +83,12 @@ const App = (props) => {
     };
   }, [props.isParallex]);
   useEffect(() => {
-    const myEventHandler = ({ ac }) => {
-      setAc(ac);
-    };
-    document.addEventListener("autocomplete", myEventHandler, false);
+   
+  }, [props]);
+
+  useEffect(() => {
+    setBackground();
+    props.setWeatherData();
     onForegroundChange(document.styleSheets[5], props.foreground);
   }, []);
   useEffect(() => {
@@ -142,7 +149,7 @@ const App = (props) => {
   }, [props.background, props.isForegroundAuto]);
   useEffect(() => {
     const onKeydown = (e) => {
-      if (e.code === "Space" && !term) return;
+      if (e.code === "Space" && !props.term) return;
       e.stopPropagation();
       if (e.ctrlKey && e.code === "KeyB") {
         alert.show(
@@ -154,8 +161,8 @@ const App = (props) => {
         );
         //setAltNewtab
       }
-      if (e.ctrlKey && e.code === "KeyQ") {
-      }
+      if (e.ctrlKey && e.code === "KeyQ") props.addIsHistory();
+
       if (e.key === "Escape") {
         setIsTerminal(false);
         return;
@@ -185,7 +192,7 @@ const App = (props) => {
       if (["Meta", "Control", "Shift"].includes(e.key)) {
         return;
       }
-      if (e.key === "Backspace" && !term) return;
+      if (e.key === "Backspace" && !props.term) return;
       if (!e.altKey) {
         setIsTerminal(true);
         terminal.current.focus();
@@ -193,45 +200,16 @@ const App = (props) => {
         e.preventDefault();
       }
     };
-    if ("?command=true" !== window.location.search && !isTaskbarEdit)
-      window.addEventListener("keydown", onKeydown);
+    if (!props.isTaskbarEdit) window.addEventListener("keydown", onKeydown);
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, props.isHistory, isTaskbarEdit]);
+  }, [isTerminal, props.isHistory, props.isTaskbarEdit]);
 
   useEffect(() => {
-    const command = termToCommand(term, props.identifier, props.commands);
-    let input;
-    if (command.name && command.name !== "search") {
-      if (props.commands[command.name](command.args))
-        if (typeof props.commands[command.name](command.args)() === "string")
-          input = props.commands[command.name](command.args)();
-    }
-    if (!input) input = term;
-    const url =
-      "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
-    const script = document.createElement("script");
-    script.src = url;
-    let timeoutId, appended;
-    if (term) {
-      timeoutId = setTimeout(() => {
-        document.body.appendChild(script);
-        appended = true;
-      }, 250);
-
-      chromeHistory(term);
-    } else {
-      setResults([]);
-      setAc([]);
-    }
-    return () => {
-      if (term) {
-        clearTimeout(timeoutId);
-        if (appended) document.body.removeChild(script);
-      }
-    };
-  }, [props.isHistory, term]);
+    if (props.term) chromeHistory(props.term);
+    else setResults([]);
+  }, [props.isHistory, props.term]);
 
   const chromeHistory = (term) => {
     const isNameSearch =
@@ -273,18 +251,16 @@ const App = (props) => {
           setResults([searchSuggest(term)]);
           break;
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
   useEffect(() => {
-    if (isTaskbarEdit) {
+    if (props.isTaskbarEdit) {
       setIsTerminal(false);
-      setTerm("");
+      props.setTerm("");
     }
-  }, [isTaskbarEdit]);
+  }, [props.isTaskbarEdit]);
   const onTaskbarMouseMove = (e) => {
-    if (!isTaskbarEdit && props.magnify)
+    if (!props.isTaskbarEdit && props.magnify)
       document.querySelectorAll(".taskbar-icon:not(.empty)").forEach((i) => {
         const { left } = i.getBoundingClientRect();
         let distance = Math.abs(e.clientX - left - i.offsetWidth / 2) / 30;
@@ -292,18 +268,6 @@ const App = (props) => {
 
         i.style.fontSize = parseInt((35 + 17.5 / distance) * 10) / 10 + "px";
       });
-  };
-  const onAddtaskbarSubmit = ({ icon, color, url, index }) => {
-    (async () => {
-      // if (index === -1)
-      // addTaskbarIcon({ icon, url, color, index: realIndex })
-      // else {
-      //   if (icon === "empty")
-      //     editTaskbarIcon()
-      //   else
-      //    editEmptyTaskbarIcon()
-      // }
-    })();
   };
   const renderedNoTerminal = () => {
     return (
@@ -331,11 +295,8 @@ const App = (props) => {
         </div>
 
         <div style={{ display: `${isTerminal ? "none" : "contents"}` }}>
-          {isTaskbarEdit ? (
+          {props.isTaskbarEdit ? (
             <AddTaskbar
-              setIsTaskbar={setIsTaskbarEdit}
-              onSubmit={onAddtaskbarSubmit}
-              taskbarIcons={props.taskbarIcons}
               selectedIndex={addtaskbarIndex}
               onIndexChange={() => setAddtaskbarIndex(null)}
             />
@@ -343,7 +304,6 @@ const App = (props) => {
             <h1 className="foreground-change">Drop the picture...</h1>
           ) : (
             <Clock
-              weatherData={props.weatherData}
               style={{
                 position: props.clockPos !== "center" ? "absolute" : null,
                 top: props.clockPos !== "center" ? "20px" : null,
@@ -352,7 +312,7 @@ const App = (props) => {
               }}
             />
           )}
-          {props.taskbarIcons && props.taskbarIcons.length ? (
+          {props.taskbarIcons.length ? (
             <div
               className={`taskbar ${props.gradient ? "" : "no-gradient"}`}
               onMouseEnter={onTaskbarMouseMove}
@@ -371,7 +331,7 @@ const App = (props) => {
                     onClick={setAddtaskbarIndex}
                     key={i}
                     bgColor={
-                      e.icon === "empty" && isTaskbarEdit
+                      e.icon === "empty" && props.isTaskbarEdit
                         ? "rgba(87, 87, 87, 0.36)"
                         : null
                     }
@@ -379,10 +339,8 @@ const App = (props) => {
                     color={e.color}
                     isBlank={!props.altNewtab}
                     icon={e.icon}
-                    url={isTaskbarEdit ? "" : e.url}
-                    onDblClick={(e) => {
-                      //if (isTaskbarEdit) result.splice(i, 1);
-                    }}
+                    url={props.isTaskbarEdit ? "" : e.url}
+                    onDblClick={() => props.deleteTaskbarIcon(i)}
                   />
                 );
               })}
@@ -416,17 +374,8 @@ const App = (props) => {
           ) : null}
 
           <Terminal
-            ac={ac.filter((e) => e.phrase !== term).slice(0, 5)}
-            identifier={props.identifier}
-            commands={props.commands}
-            term={term}
-            setIsTaskbar={setIsTaskbarEdit}
-            altNewtab={props.altNewtab}
+            ac={ac.filter((e) => e.phrase !== props.term).slice(0, 5)}
             ref={terminal}
-            onChange={(input) => {
-              setTerm(input);
-              setIsTerminal(!!input);
-            }}
           />
 
           <div style={{ marginTop: "50px" }} className="search-results">
@@ -474,13 +423,13 @@ const App = (props) => {
               : null,
             background: props.background || "#222",
             filter: `blur(${
-              isTaskbarEdit
+              props.isTaskbarEdit
                 ? props.blur.setting
                 : isTerminal
                 ? props.blur.terminal
                 : props.blur.notTerminal
             }px) brightness(${
-              isTaskbarEdit
+              props.isTaskbarEdit
                 ? props.brightness.setting
                 : isTerminal
                 ? props.brightness.terminal
@@ -489,7 +438,7 @@ const App = (props) => {
           }}
           className={`background ${isTerminal ? "isTerminal" : ""} ${
             props.gradient ? "" : "no-gradient"
-          } ${isTaskbarEdit ? "super-blured" : ""}`}
+          } ${props.isTaskbarEdit ? "super-blured" : ""}`}
         />
       </div>
 
@@ -502,40 +451,18 @@ const App = (props) => {
     </React.Fragment>
   );
 };
-const mapStateToProp = ({ data }, { commands }) => {
-  const dataToCommand = (data) => {
-    let temp = {};
-    for (let command in data) {
-      temp[command] = (input) => {
-        if (data[command].length === 1)
-          return () => {
-            const [hasntInput, hasInput] = data[command][0]
-              .replace("%input%", input)
-              .split("%?%");
-            if (hasInput) {
-              if (input) return commands.url(hasInput)();
-              return commands.url(hasntInput)();
-            }
-            return commands.url(hasntInput)();
-          };
-        else
-          return () =>
-            ({ input }) => {
-              data[command].forEach((element) => {
-                const [hasntInput, hasInput] = element
-                  .replace("%input%", input)
-                  .split("%?%");
-
-                if (hasInput) {
-                  if (input) window.open(commands.url(hasInput)());
-                  else window.open(commands.url(hasntInput)());
-                } else window.open(commands.url(hasntInput)());
-              });
-            };
-      };
-    }
-    return temp;
+const mapStateToProp = ({ data, ui }, ownProps) => {
+ 
+ 
+  return {
+    ...data,
+    ...ui,
+    background: data.background,
   };
-  return { ...data, commands: { ...defaultCommands, ...dataToCommand() } };
 };
-export default connect(mapStateToProp, {})(App);
+export default connect(mapStateToProp, {
+  setWeatherData,
+  resetStorage,
+  addIsHistory,
+  deleteTaskbarIcon,
+})(App);

@@ -2,16 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
 import "./css/AddTaskbar.css";
-import isUrl from "../js/isUrl";
-
-export default ({
-  onSubmit,
-  style,
-  setIsTaskbar,
-  taskbarIcons,
-  selectedIndex,
-  onIndexChange,
-}) => {
+import isUrl from "../utils/isUrl";
+import { connect } from "react-redux";
+import {
+  toggleTaskbarEdit,
+  addTaskbarIcon,
+  editEmptyTaskbarIcon,
+  editTaskbarIcon,
+  deleteTaskbarIcon,
+} from "../actions";
+const AddTaskbar = (props) => {
   const [icon, setIcon] = useState("");
   const [color, setColor] = useState("#fff");
   const [url, setUrl] = useState("");
@@ -24,21 +24,29 @@ export default ({
       return parseInt(nonEmpty[index].index);
     } else return -1;
   };
+  const onSubmit = ({ icon, url, color, index }) => {
+    const realIndex = props.taskbarIcons.length;
+    if (index === -1) props.addTaskbarIcon({ icon, url, color, index: realIndex });
+    else {
+      if (icon === "empty") props.editEmptyTaskbarIcon({ icon, url, color, index });
+      else props.editTaskbarIcon({ icon, url, color, index }); 
+    }
+  };
   useEffect(() => {
     let index = 0;
-    for (let icon of taskbarIcons) {
+    for (let icon of props.taskbarIcons) {
       icon.index = index;
       index++;
     }
-  }, [taskbarIcons]);
+  }, [props.taskbarIcons]);
   useEffect(() => {
-    const i = ![null, undefined].includes(selectedIndex)
-      ? selectedIndex
-      : indexToOutput(parseInt(index), taskbarIcons);
+    const i = ![null, undefined].includes(props.selectedIndex)
+      ? props.selectedIndex
+      : indexToOutput(parseInt(index), props.taskbarIcons);
     let _index = 0;
-    if (![null, undefined].includes(selectedIndex)) {
+    if (![null, undefined].includes(props.selectedIndex)) {
       setIndex(
-        taskbarIcons
+        props.taskbarIcons
           .filter((e) => e.icon !== "empty")
           .map((e) => {
             if (e.index === i) return _index;
@@ -47,23 +55,20 @@ export default ({
           .filter((e) => e !== undefined)[0]
       );
     }
-
-    console.log(i, selectedIndex);
-
-    if (!taskbarIcons[i]) return;
-    const { icon, url, color } = taskbarIcons[i];
+    if (!props.taskbarIcons[i]) return;
+    const { icon, url, color } = props.taskbarIcons[i];
 
     setIcon(icon);
     setUrl(url);
     setColor(color);
-  }, [index, selectedIndex]);
+  }, [index, props.selectedIndex]);
 
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") setIsTaskbar(false);
+    if (e.key === "Escape") props.toggleTaskbarEdit();
   });
   return (
-    <div className="add-taskbar" style={style}>
-      <i className="fa fa-times close" onClick={() => setIsTaskbar(false)} />
+    <div className="add-taskbar" style={props.style}>
+      <i className="fa fa-times close" onClick={props.toggleTaskbarEdit} />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -72,9 +77,9 @@ export default ({
             icon,
             color,
             url,
-            index: ![null, undefined].includes(selectedIndex)
-              ? selectedIndex
-              : indexToOutput(index, taskbarIcons),
+            index: ![null, undefined].includes(props.selectedIndex)
+              ? props.selectedIndex
+              : indexToOutput(index, props.taskbarIcons),
           });
         }}
       >
@@ -111,7 +116,7 @@ export default ({
               placeholder="-1 = last, 0 = first"
               value={index}
               onChange={(e) => {
-                onIndexChange();
+                props.onIndexChange();
                 setIndex(e.target.value);
               }}
             />
@@ -153,8 +158,8 @@ export default ({
             className="ui inverted basic green button"
             type="submit"
             value={
-              indexToOutput(index, taskbarIcons) === -1 &&
-              [null, undefined].includes(selectedIndex)
+              indexToOutput(index, props.taskbarIcons) === -1 &&
+              [null, undefined].includes(props.selectedIndex)
                 ? "Add"
                 : "Edit"
             }
@@ -174,8 +179,8 @@ export default ({
             className="ui inverted basic button"
             type="button"
             value={
-              indexToOutput(index, taskbarIcons) === -1 &&
-              [null, undefined].includes(selectedIndex)
+              indexToOutput(index, props.taskbarIcons) === -1 &&
+              [null, undefined].includes(props.selectedIndex)
                 ? "Whitespace at end"
                 : "Whitespace before"
             }
@@ -184,9 +189,9 @@ export default ({
                 icon: "empty",
                 color: "",
                 url: "",
-                index: ![null, undefined].includes(selectedIndex)
-                  ? selectedIndex
-                  : indexToOutput(index, taskbarIcons),
+                index: ![null, undefined].includes(props.selectedIndex)
+                  ? props.selectedIndex
+                  : indexToOutput(index, props.taskbarIcons),
               });
             }}
           />
@@ -195,3 +200,7 @@ export default ({
     </div>
   );
 };
+const mapStateToProp = (state) => {
+  return { taskbarIcons: state.data.taskbarIcons };
+};
+export default connect(mapStateToProp, { toggleTaskbarEdit,addTaskbarIcon,editTaskbarIcon,editEmptyTaskbarIcon })(AddTaskbar);

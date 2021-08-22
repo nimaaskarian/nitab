@@ -1,7 +1,18 @@
 import localforage from "localforage";
-import isUrl from "./isUrl";
-import { addCommand } from "../actions";
+import isUrl from "../utils/isUrl";
+import {
+  addCommand,
+  addToCommand,
+  deleteCommand,
+  removeFromCommand,
+  resetStorage,
+  exportData,
+  importData,
+  toggleTaskbarEdit,
+  setIndentifier,
+} from "../actions";
 import { store } from "../store";
+import { setBackground } from "../utils/setBackground";
 
 const s = {
   iden: {
@@ -167,43 +178,13 @@ const defaultCommands = {
   },
   iden(input) {
     if (input.trim())
-      return () => () => localforage.setItem("indetifier", input);
+      return () => () => store.dispatch(setIndentifier(input.trim()));
   },
   exp() {
-    return () => {
-      return async () => {
-        const data = await getAll();
-
-        const type = "text/json";
-        const filename = "Exported-data.json";
-        var file = new Blob([JSON.stringify(data)], { type });
-
-        var a = document.createElement("a"),
-          url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        }, 0);
-      };
-    };
+    return () => () => store.dispatch(exportData());
   },
   imp() {
-    return () => {
-      return async () => {
-        const [handle] = await window.showOpenFilePicker();
-        const file = await handle.getFile();
-        const fileReader = new window.FileReader();
-
-        fileReader.readAsText(file);
-        fileReader.onload = ({ target }) => {
-          setAll(JSON.parse(target.result));
-        };
-      };
-    };
+    return () => () => store.dispatch(importData());
   },
   mag() {
     return () => {
@@ -245,7 +226,7 @@ const defaultCommands = {
     };
   },
   bg(input) {
-    if (input) return () => () => localforage.setItem("background", input);
+    if (input) return () => () => setBackground(input);
   },
   fg(input) {
     if (input) {
@@ -275,54 +256,31 @@ const defaultCommands = {
       return () => () => localforage.setItem("commands", {});
   },
   command(input) {
-    console.log("ng");
     const [commandName, ...commandFunctions] = input.split(/\s/g);
-    return () => () =>
-      store.dispatch(addCommand(commandName, commandFunctions));
-
     if (
       ["command", "commandCl"].includes(commandName) ||
       !commandFunctions.length
     )
       return;
-
-    var _commands;
-    (async () => {
-      _commands = await localforage.getItem("commands");
-    })();
-
-    if (commandFunctions[0] === "DELETE")
-      return () => () => {
-        delete _commands[commandName];
-        localforage.setItem("commands", _commands);
-      };
-    if (commandFunctions[0].toLowerCase() === "add")
-      return () => () => {
-        if (!_commands[commandName]) return;
-        _commands[commandName] = [
-          ..._commands[commandName],
-          ...commandFunctions.slice(1),
-        ];
-        localforage.setItem("commands", _commands);
-      };
-    if (commandFunctions[0].toLowerCase() === "remove")
-      return () => () => {
-        if (!_commands[commandName]) return;
-
-        let index = -1;
-        commandFunctions.slice(1).forEach((e) => {
-          if (parseInt(e) + index >= 0) {
-            _commands[commandName].splice(parseInt(e) + index, 1);
-            index--;
-          }
-        });
-        localforage.setItem("commands", _commands);
-      };
-    return () => () => {
-      _commands[commandName] = commandFunctions;
-      localforage.setItem("commands", _commands);
+    return () => {
+      switch (commandFunctions[0].toLowerCase()) {
+        case "delete":
+          return () => store.dispatch(deleteCommand(commandName));
+        case "add":
+          return () =>
+            store.dispatch(
+              addToCommand(commandName, commandFunctions.delete(0))
+            );
+        case "remove":
+          return () =>
+            store.dispatch(removeFromCommand(commandName, commandFunctions));
+        default:
+          return () =>
+            store.dispatch(addCommand(commandName, commandFunctions));
+      }
     };
   },
+  rr: () => () => () => store.dispatch(resetStorage()),
   url(input) {
     return () => {
       return (
@@ -641,7 +599,7 @@ const defaultCommands = {
     }
   },
   taskbar() {
-    return () => {};
+    return () => () => store.dispatch(toggleTaskbarEdit());
   },
 };
 const regex = (identifier) => {

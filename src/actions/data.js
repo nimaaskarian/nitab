@@ -9,7 +9,7 @@ export function addCommand(name, args) {
 export function deleteCommand(name) {
   return {
     type: "DELETE_COMMAND",
-    payload: { name },
+    payload: name,
   };
 }
 export function addToCommand(name, args) {
@@ -66,10 +66,16 @@ export function addTodo(todo) {
     payload: todo,
   };
 }
-export function importData(data) {
-  return {
-    type: "IMPORT_DATA",
-    payload: data,
+export function importData() {
+  return async (dispatch) => {
+    const [handle] = await window.showOpenFilePicker();
+    const file = await handle.getFile();
+    const fileReader = new window.FileReader();
+
+    fileReader.readAsText(file);
+    fileReader.onload = ({ target }) => {
+      dispatch({ type: "IMPORT_DATA", payload: JSON.parse(target.result) });
+    };
   };
 }
 
@@ -103,10 +109,9 @@ export function setForeground(color) {
     payload: color,
   };
 }
-export function setIsHistory(isHistory) {
+export function addIsHistory() {
   return {
-    type: "SET_ISHISTORY",
-    payload: isHistory,
+    type: "ADD_ISHISTORY",
   };
 }
 export function addTaskbarIcon(iconConfig) {
@@ -115,15 +120,15 @@ export function addTaskbarIcon(iconConfig) {
     payload: iconConfig,
   };
 }
-export function deleteTaskbarIcon(iconConfig) {
+export function deleteTaskbarIcon(index) {
   return {
-    type: "ADD_TASKBAR",
-    payload: iconConfig,
+    type: "DELETE_TASKBAR",
+    payload: index,
   };
 }
 export function editTaskbarIcon(iconConfig) {
   return {
-    type: "ADD_TASKBAR",
+    type: "EDIT_TASKBAR",
     payload: iconConfig,
   };
 }
@@ -133,10 +138,43 @@ export function editEmptyTaskbarIcon(iconConfig) {
     payload: iconConfig,
   };
 }
-export function setWeatherData(weatherData) {
-  return (dispatch,getState)=>{
-    if(getState().weatherData)
-      if(getState().weatherData.time )
-  }
-  
+export function resetStorage() {
+  return {
+    type: "RESET_STORAGE",
+  };
+}
+export function exportData() {
+  return (dispatch, getState) => {
+    const data = getState().data;
+    const type = "text/json";
+    const filename = "Exported-data.json";
+    var file = new Blob([JSON.stringify(data)], { type });
+
+    var a = document.createElement("a"),
+      url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  };
+}
+export function setWeatherData() {
+  const type = "SET_WEATHER_DATA";
+  return async (dispatch, getState) => {
+    const result = getState().data.weatherData;
+    if (result.time && result.data)
+      if (new Date().getTime() - result.time <= 3600 * 1000) {
+        dispatch({ type, payload: { ...result } });
+        return;
+      }
+    const { data } = await openWeather.get("/weather", {
+      params: { q: "Tehran" },
+    });
+   
+    dispatch({ type, payload: { data, time: new Date().getTime() } });
+  };
 }
