@@ -11,6 +11,10 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, term: payload };
     case "SET_AC":
       return { ...state, ac: payload };
+    case "SET_BACKGROUND":
+      return { ...state, background: payload };
+    case "SET_ISTERMINAL":
+      return { ...state, isTerminal: payload };
     default:
       return { ...state };
   }

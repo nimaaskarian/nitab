@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
 import { useAlert } from "react-alert";
-import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { isDark } from "../utils/isdark-min";
 import "localforage-observable/dist/localforage-observable.es6";
@@ -13,22 +12,20 @@ import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 import { termToCommand } from "../js/commands";
 import { connect } from "react-redux";
-
+import { unsplash } from "../apis";
 import { setBackground } from "../utils/setBackground";
 
 import {
-  setWeatherData,
   resetStorage,
   addIsHistory,
   deleteTaskbarIcon,
+  setTerm,
 } from "../actions";
 
 const App = (props) => {
   const [results, setResults] = useState([]);
   //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
-
-  const [ac, setAc] = useState([]);
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
   const [parallex, setParallex] = useState({ x: 0, y: 0 });
   const terminal = useRef();
@@ -82,15 +79,14 @@ const App = (props) => {
       window.removeEventListener("mousemove", mouseOver);
     };
   }, [props.isParallex]);
-  useEffect(() => {
-   
-  }, [props]);
 
   useEffect(() => {
     setBackground();
-    props.setWeatherData();
-    onForegroundChange(document.styleSheets[5], props.foreground);
+    document.addEventListener("reset", () => props.resetStorage(), false);
   }, []);
+  useEffect(() => {
+    onForegroundChange(document.styleSheets[5], props.foreground);
+  }, [props.foreground]);
   useEffect(() => {
     function getImageLightness(imageSrc, callback) {
       var img = document.createElement("img");
@@ -126,25 +122,6 @@ const App = (props) => {
         callback(brightness);
       };
       callback(null);
-    }
-    if (props.background === "unsplash") {
-      alert.show(
-        <div className="alert">Your Unsplash image is loading...</div>
-      );
-      axios
-        .get("https://api.unsplash.com/photos/random", {
-          params: {
-            collections: "9389477,908506,219941",
-            client_id: "Oi5eeseZ0KatuzRuE5P1HFP7bk7UIUC-jIFXY5nS154",
-          },
-        })
-        .then(async ({ data }) => {
-          let blob = await fetch(data.urls.full).then((r) => r.blob());
-          alert.show(
-            <div className="alert">Your Unsplash image is loaded.</div>
-          );
-        });
-    } else {
     }
   }, [props.background, props.isForegroundAuto]);
   useEffect(() => {
@@ -254,10 +231,10 @@ const App = (props) => {
     } catch (error) {}
   };
   useEffect(() => {
-    if (props.isTaskbarEdit) {
-      setIsTerminal(false);
-      props.setTerm("");
-    }
+    setIsTerminal(!!props.term);
+  }, [props.term]);
+  useEffect(() => {
+    if (props.isTaskbarEdit) props.setTerm("");
   }, [props.isTaskbarEdit]);
   const onTaskbarMouseMove = (e) => {
     if (!props.isTaskbarEdit && props.magnify)
@@ -373,10 +350,7 @@ const App = (props) => {
             </div>
           ) : null}
 
-          <Terminal
-            ac={ac.filter((e) => e.phrase !== props.term).slice(0, 5)}
-            ref={terminal}
-          />
+          <Terminal ref={terminal} />
 
           <div style={{ marginTop: "50px" }} className="search-results">
             {results
@@ -451,18 +425,28 @@ const App = (props) => {
     </React.Fragment>
   );
 };
-const mapStateToProp = ({ data, ui }, ownProps) => {
- 
- 
+const mapStateToProp = ({ data, ui }) => {
+  if (ui.background === "unsplash") {
+    unsplash
+      .get("/random", {
+        params: {
+          collections: data.unsplashCollections,
+        },
+      })
+      .then(async ({ data }) => {
+        const blob = await fetch(data.urls.full).then((r) => r.blob());
+        setBackground(blob);
+      });
+  }
   return {
     ...data,
     ...ui,
-    background: data.background,
+    background: ui.background,
   };
 };
 export default connect(mapStateToProp, {
-  setWeatherData,
   resetStorage,
   addIsHistory,
   deleteTaskbarIcon,
+  setTerm,
 })(App);

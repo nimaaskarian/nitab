@@ -26,10 +26,12 @@ const AddTaskbar = (props) => {
   };
   const onSubmit = ({ icon, url, color, index }) => {
     const realIndex = props.taskbarIcons.length;
-    if (index === -1) props.addTaskbarIcon({ icon, url, color, index: realIndex });
+    if (index === -1)
+      props.addTaskbarIcon({ icon, url, color, index: realIndex });
     else {
-      if (icon === "empty") props.editEmptyTaskbarIcon({ icon, url, color, index });
-      else props.editTaskbarIcon({ icon, url, color, index }); 
+      if (icon === "empty")
+        props.editEmptyTaskbarIcon({ icon, url, color, index });
+      else props.editTaskbarIcon({ icon, url, color, index });
     }
   };
   useEffect(() => {
@@ -63,9 +65,13 @@ const AddTaskbar = (props) => {
     setColor(color);
   }, [index, props.selectedIndex]);
 
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") props.toggleTaskbarEdit();
-  });
+  useEffect(() => {
+    const closeOnEscape = (e) => {
+      if (e.key === "Escape") props.toggleTaskbarEdit();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
   return (
     <div className="add-taskbar" style={props.style}>
       <i className="fa fa-times close" onClick={props.toggleTaskbarEdit} />
@@ -203,4 +209,9 @@ const AddTaskbar = (props) => {
 const mapStateToProp = (state) => {
   return { taskbarIcons: state.data.taskbarIcons };
 };
-export default connect(mapStateToProp, { toggleTaskbarEdit,addTaskbarIcon,editTaskbarIcon,editEmptyTaskbarIcon })(AddTaskbar);
+export default connect(mapStateToProp, {
+  toggleTaskbarEdit,
+  addTaskbarIcon,
+  editTaskbarIcon,
+  editEmptyTaskbarIcon,
+})(AddTaskbar);

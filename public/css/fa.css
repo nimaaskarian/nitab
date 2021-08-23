@@ -81,6 +81,9 @@ span.js:before {
 .fontawe.r:before {
   content: "\f1a1";
 }
+.fontawe.un:before {
+  content: "\e07c";
+}
 .fontawe.imdb:before {
   content: "\f2d8";
 }

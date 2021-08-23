@@ -1,11 +1,11 @@
 /*global chrome*/
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Autocomplete from "react-autocomplete";
 import "localforage-observable/dist/localforage-observable.es6";
 import { connect } from "react-redux";
 
 import defaultCommands, { termToCommand } from "../js/commands";
-import { setTerm,setAc } from "../actions";
+import { setTerm, setAc } from "../actions";
 
 const Terminal = React.forwardRef((props, ref) => {
   const [onSubmit, setOnSubmit] = useState(() => {});
@@ -19,13 +19,14 @@ const Terminal = React.forwardRef((props, ref) => {
     return name === "taskbar" ? "" : name;
   };
   useEffect(() => {
+    console.log(props.identifier);
     const acHandler = ({ ac }) => {
       props.setAc(ac);
     };
     document.addEventListener("autocomplete", acHandler, false);
-    return ()=>{
-      document.removeEventListener("autocomplete",acHandler)
-    }
+    return () => {
+      document.removeEventListener("autocomplete", acHandler);
+    };
   }, []);
   useEffect(() => {
     const command = termToCommand(props.term, props.identifier, props.commands);
@@ -41,7 +42,7 @@ const Terminal = React.forwardRef((props, ref) => {
     const script = document.createElement("script");
     script.src = url;
     let timeoutId, appended;
-   
+
     if (props.term) {
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
@@ -72,7 +73,6 @@ const Terminal = React.forwardRef((props, ref) => {
     return () => {
       window.removeEventListener("keydown", onkeydown);
     };
-    
   }, [props.ac]);
   useEffect(() => {
     const onSubmitHelper = (e) => {
@@ -128,7 +128,7 @@ const Terminal = React.forwardRef((props, ref) => {
           flexDirection: "column",
         }}
         getItemValue={(item) => item.phrase}
-        items={props.ac}
+        items={props.ac || []}
         renderItem={(item, isHighlighted) => {
           return (
             <div
@@ -169,8 +169,9 @@ const Terminal = React.forwardRef((props, ref) => {
 const mapStateToProp = (state) => {
   const dataToCommand = (data) => {
     let temp = {};
-    for (let command in data) {
+    Object.keys(data).forEach((command) => {
       temp[command] = (input) => {
+        if(!data[command]) return  
         if (data[command].length === 1)
           return () => {
             const [hasntInput, hasInput] = data[command][0]
@@ -197,7 +198,7 @@ const mapStateToProp = (state) => {
               });
             };
       };
-    }
+    });
     return temp;
   };
   return {
@@ -205,9 +206,9 @@ const mapStateToProp = (state) => {
     identifier: state.data.identifier,
     altNewtab: state.data.altNewtab,
     term: state.ui.term,
-    ac:state.ui.ac,
+    ac: state.ui.ac,
   };
 };
-export default connect(mapStateToProp, { setTerm,setAc }, null, { forwardRef: true })(
-  Terminal
-);
+export default connect(mapStateToProp, { setTerm, setAc }, null, {
+  forwardRef: true,
+})(Terminal);

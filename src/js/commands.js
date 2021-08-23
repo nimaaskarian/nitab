@@ -10,6 +10,15 @@ import {
   importData,
   toggleTaskbarEdit,
   setIndentifier,
+  setForeground,
+  setUnsplash,
+  setBrightness,
+  setBlur,
+  toggleMagnify,
+  toggleGradient,
+  setClockAlign,
+  setClockPosition,
+  setTerm,
 } from "../actions";
 import { store } from "../store";
 import { setBackground } from "../utils/setBackground";
@@ -90,46 +99,19 @@ const getAll = async () => {
   }
   return output;
 };
-const setAll = async (input) => {
-  if (typeof input !== "object") return;
-  Object.keys(input).forEach((key) => {
-    const value = input[key];
-    if (typeof value === "object" && value !== null) {
-      if (!Object.keys(value).length) return;
-    } else if ([null, undefined].includes(value)) return;
-    localforage.setItem(key, value);
-  });
-};
+
 /*global chrome*/
 const defaultCommands = {
   clock(input) {
     if (input) {
-      const [type, value] = input.toLowerCase().split(/\s/);
-      if (type && value)
-        return () => {
-          return () => {
-            switch (type) {
-              case "align":
-                localforage.setItem(
-                  "clockAlign",
-                  ["end", "start"].includes(value) ? "flex-" + value : value
-                );
-              case "pos":
-                localforage.setItem("clockPos", value);
-                break;
-
-              default:
-                {
-                  localforage.setItem("clockPos", type);
-                  localforage.setItem(
-                    "clockAlign",
-                    ["end", "start"].includes(value) ? "flex-" + value : value
-                  );
-                }
-                break;
-            }
-          };
+      const [position, align] = input.toLowerCase().split(/\s/);
+      if (position && align)
+        return () => () => {
+          store.dispatch(setClockPosition(position));
+          store.dispatch(setClockAlign(["end", "start"].includes(align) ? "flex-" + align : align));
+          store.dispatch(setTerm(""))
         };
+        
     }
   },
   font(input) {
@@ -187,69 +169,60 @@ const defaultCommands = {
     return () => () => store.dispatch(importData());
   },
   mag() {
-    return () => {
-      return async () => {
-        const magnify = await localforage.getItem("magnify");
-        localforage.setItem("magnify", !magnify);
-      };
-    };
+    return () => () => store.dispatch(toggleMagnify());
   },
   gr() {
-    return () => {
-      return async () => {
-        const gr = await localforage.getItem("gradient");
-
-        localforage.setItem("gradient", !gr);
-      };
-    };
+    return () => () => store.dispatch(toggleGradient());
   },
   bl(input) {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
-    return () => {
-      return () =>
-        localforage.setItem("blur", {
+    return () => () =>
+      store.dispatch(
+        setBlur({
           terminal: terminal || 0,
           notTerminal: notTerminal || 0,
           setting: setting || "10",
-        });
-    };
+        })
+      );
   },
   br(input) {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
-    return () => {
-      return () =>
-        localforage.setItem("brightness", {
+    return () => () =>
+      store.dispatch(
+        setBrightness({
           terminal: terminal || 1,
           notTerminal: notTerminal || 1,
           setting: setting || ".8",
-        });
-    };
+        })
+      );
   },
   bg(input) {
     if (input) return () => () => setBackground(input);
   },
   fg(input) {
     if (input) {
-      if (input === "auto")
-        return () => {
-          return () => {
-            localforage.setItem("isForegroundAuto", true);
-          };
-        };
-      localforage.setItem("isForegroundAuto", false);
-      if (input === "default")
-        return () => {
-          return () => {
-            localforage.setItem("foreground", "white");
-          };
-        };
-
+      // if (input === "auto")
+      //   return () => {
+      //     return () => {
+      //       localforage.setItem("isForegroundAuto", true);
+      //     };
+      //   };
+      // localforage.setItem("isForegroundAuto", false);
       const [first, second] = input.split(/\s/g);
-      if (first && second && first === "ovr")
-        return () => () =>
-          localforage.setItem("foreground", second + " !important");
-      return () => () => localforage.setItem("foreground", input);
+
+      if (input === "default") input = "white";
+      if (first && second && first === "ovr") input = second + " !important";
+
+      return () => () => store.dispatch(setForeground(input));
     }
+  },
+  un(input) {
+    if (input)
+      return () => () => {
+        store.dispatch(setUnsplash(input));
+        store.dispatch(setBackground("unsplash"));
+      };
+    return () => "https://unsplash.com/collections";
   },
   commandCl(input) {
     if (input === "CONFIRM")
@@ -613,6 +586,7 @@ const regex = (identifier) => {
   }
   const main = new RegExp(`^(?=${identifier}).*`, "g");
   const replace = new RegExp("^" + identifier, "g");
+
   return { main, replace };
 };
 const noCommand = (string) => {
@@ -649,6 +623,7 @@ export const termToCommand = (string, identifier, commands) => {
   } else if (string) {
     [name, args] = noCommand(string);
   }
+
   return { name, args };
 };
 export default defaultCommands;

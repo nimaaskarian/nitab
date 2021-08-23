@@ -93,7 +93,49 @@
   color: #fff;
   cursor: pointer;
 }
+.weather {
+  display: flex;
+  flex-direction: row;
+}
+.weather-selector > * {
+  display: inline-block;
+}
+.Dropdown-arrow-wrapper{
+  margin-left: 5px;
+  font-size: 10px;
+}
+.Dropdown-arrow-wrapper,
+.Dropdown-placeholder {
+  display: inline-block;
+}
+.weather-selector {
+  display: inline-block;
+
+  cursor: pointer;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+.weather-selector::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.weather-selector::-webkit-scrollbar-track {
+  background: #f1f1f100;
+}
+
+/* Handle */
+.weather-selector::-webkit-scrollbar-thumb {
+  background: #fff0;
+}
+
+/* Handle on hover */
+.weather-selector::-webkit-scrollbar-thumb:hover {
+  background: #5550;
+}
+
 .clock {
+  z-index: 5;
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
   user-select: none;
   display: flex;
@@ -373,7 +415,7 @@
 }
 .alert {
   text-transform: initial !important;
-  font-family: "Inconsolata","IranSans";
+  font-family: "Inconsolata", "IranSans";
   font-size: 1.5rem;
   word-break: break-all;
 }

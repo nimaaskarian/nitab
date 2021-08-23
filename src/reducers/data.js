@@ -10,6 +10,8 @@ const INITIAL_STATE = {
       index: 0,
     },
   ],
+  unsplashCollectons: "9389477,908506,219941",
+  weatherCity: "Tehran",
   weatherData: {},
   background: null,
   foreground: "white",
@@ -58,7 +60,6 @@ const deleteFromObject = (object, key) => {
 };
 
 export default (state = INITIAL_STATE, { payload, type }) => {
- 
   switch (type) {
     case "ADD_COMMAND":
       return {
@@ -106,10 +107,15 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       };
     }
     case "SET_WEATHER_DATA": {
-     
       return {
         ...state,
         weatherData: payload,
+      };
+    }
+    case "SET_WEATHER_CITY": {
+      return {
+        ...state,
+        weatherCity: payload,
       };
     }
     case "RESET_STORAGE":
@@ -122,14 +128,23 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case "SET_IDENTIFIER":
       return { ...state, identifier: payload };
     case "IMPORT_DATA":
-     
-      break;
-    case "SET_BACKGROUND":{
-     
-      return { ...state, background: payload };
-
-    }
-
+      return payload;
+    case "SET_FOREGROUND":
+      return { ...state, foreground: payload };
+    case "SET_UNSPLASH":
+      return { ...state, unsplashCollections: payload };
+    case "SET_BRIGHTNESS":
+      return { ...state, brightness: payload };
+    case "SET_BLUR":
+      return { ...state, blur: payload };
+    case "TOGGLE_MAGNIFY":
+      return { ...state, magnify: payload };
+    case "TOGGLE_GRADIENT":
+      return { ...state, gradient: payload };
+    case "SET_CLOCKPOS":
+      return { ...state, clockPos: payload };
+    case "SET_CLOCKALIGN":
+      return { ...state, clockAlign: payload };
     default:
       return { ...state };
   }

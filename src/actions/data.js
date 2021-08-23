@@ -24,21 +24,16 @@ export function removeFromCommand(name, indexs) {
     payload: { name, indexs },
   };
 }
-export function setBackground(bg) {
-  return {
-    type: "SET_BACKGROUND",
-    payload: bg,
-  };
-}
+
 export function setClockPosition(position) {
   return {
-    type: "SET_CLOCK_POSITION",
+    type: "SET_CLOCKPOS",
     payload: position,
   };
 }
 export function setClockAlign(align) {
   return {
-    type: "SET_CLOCK_ALIGN",
+    type: "SET_CLOCKALIGN",
     payload: align,
   };
 }
@@ -79,10 +74,23 @@ export function importData() {
   };
 }
 
-export function toggleMagnify(isMagnify) {
-  return {
-    type: "TOGGLE_MAGNIFY",
-    payload: isMagnify,
+export function toggleMagnify() {
+  return (dispatch, getStore) => {
+    const prevMagnify = getStore().data.magnify
+    dispatch({
+      type: "TOGGLE_MAGNIFY",
+      payload: !prevMagnify,
+    });
+  };
+}
+
+export function toggleGradient() {
+  return (dispatch, getStore) => {
+    const prevGradient = getStore().data.gradient
+    dispatch({
+      type: "TOGGLE_GRADIENT",
+      payload: !prevGradient,
+    });
   };
 }
 export function setGradient(gradient) {
@@ -162,19 +170,27 @@ export function exportData() {
     }, 0);
   };
 }
-export function setWeatherData() {
+export function setWeatherData(q) {
   const type = "SET_WEATHER_DATA";
   return async (dispatch, getState) => {
     const result = getState().data.weatherData;
     if (result.time && result.data)
-      if (new Date().getTime() - result.time <= 3600 * 1000) {
-        dispatch({ type, payload: { ...result } });
-        return;
-      }
+      if (result.data.name === q)
+        if (new Date().getTime() - result.time <= 3600 * 1000) {
+          dispatch({ type, payload: { ...result } });
+          return;
+        }
+    dispatch({ type, payload: {} });
     const { data } = await openWeather.get("/weather", {
-      params: { q: "Tehran" },
+      params: { q },
     });
-   
+
     dispatch({ type, payload: { data, time: new Date().getTime() } });
   };
+}
+export function setWeatherCity(q) {
+  return { type: "SET_WEATHER_CITY", payload: q };
+}
+export function setUnsplash(un) {
+  return { type: "SET_UNSPLASH", payload: un };
 }

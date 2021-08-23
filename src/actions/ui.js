@@ -10,3 +10,15 @@ export function setTerm(term) {
 export function setAc(term) {
   return { type: "SET_AC", payload: term };
 }
+export function setBackground(bg) {
+  return {
+    type: "SET_BACKGROUND",
+    payload: bg,
+  };
+}
+export function setIsTerminal(isTerminal) {
+  return {
+    type: "SET_ISTERMINAL",
+    payload: isTerminal,
+  };
+}
