@@ -14,7 +14,7 @@ import { termToCommand } from "../js/commands";
 import { connect } from "react-redux";
 import { unsplash } from "../apis";
 import { setBackground } from "../utils/setBackground";
-
+import Helmet from "react-helmet"
 import {
   resetStorage,
   addIsHistory,
@@ -383,6 +383,9 @@ const App = (props) => {
   };
   return (
     <React.Fragment>
+      <Helmet>
+        <title>{props.identifier==="NONE"?"":props.identifier}Niotab</title>
+      </Helmet>
       <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
         <div
           style={{
