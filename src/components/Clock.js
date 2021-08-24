@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Weather from "./Weather";
-const Clock = ({ style, isDate, weatherData }) => {
+import { connect } from "react-redux";
+const Clock = (props) => {
   const [time, setTime] = useState(new Date());
   useEffect(() => {
     const intervalid = setInterval(() => {
@@ -11,7 +12,15 @@ const Clock = ({ style, isDate, weatherData }) => {
     };
   }, []);
   return (
-    <div style={style} className="clock foreground-change">
+    <div
+      style={{
+        position: props.clockPos !== "center" ? "absolute" : null,
+        top: props.clockPos !== "center" ? "20px" : null,
+        [props.clockPos]: "5vw",
+        alignItems: props.clockAlign,
+      }}
+      className="clock foreground-change"
+    >
       <div className="clock-time">{`${time.getHours()}:${
         time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
       }`}</div>
@@ -20,4 +29,7 @@ const Clock = ({ style, isDate, weatherData }) => {
     </div>
   );
 };
-export default Clock;
+const mapStateToProp = (state) => {
+  return { clockPos: state.data.clockPos, clockAlign: state.data.clockAlign };
+};
+export default connect(mapStateToProp)(Clock);

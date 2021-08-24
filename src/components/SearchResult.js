@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/SearchResult.css";
+import "../css/SearchResult.css";
 const SearchResult = ({ children, key, header, onClick }) => {
   return (
     <div

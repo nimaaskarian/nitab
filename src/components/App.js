@@ -5,21 +5,26 @@ import { useAlert } from "react-alert";
 import { useDropzone } from "react-dropzone";
 import { isDark } from "../utils/isdark-min";
 import "localforage-observable/dist/localforage-observable.es6";
+import { connect } from "react-redux";
+import Helmet from "react-helmet";
+
 import AddTaskbar from "./AddTaskbar";
 import Terminal from "./Terminal";
 import Clock from "./Clock";
 import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 import { termToCommand } from "../js/commands";
-import { connect } from "react-redux";
 import { unsplash } from "../apis";
+import "../css/App.css";
+import "../css/fa.css";
+
 import { setBackground } from "../utils/setBackground";
-import Helmet from "react-helmet"
 import {
   resetStorage,
   addIsHistory,
   deleteTaskbarIcon,
   setTerm,
+  removeTodo,
 } from "../actions";
 
 const App = (props) => {
@@ -67,7 +72,20 @@ const App = (props) => {
       accept: "image/*",
       multiple: false,
     });
-
+  useEffect(() => {
+    if (props.background === "unsplash") {
+      unsplash
+        .get("/random", {
+          params: {
+            collections: props.unsplashCollections,
+          },
+        })
+        .then(async ({ data }) => {
+          const blob = await fetch(data.urls.full).then((r) => r.blob());
+          setBackground(blob);
+        });
+    }
+  }, [props.background]);
   useEffect(() => {
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
@@ -79,13 +97,45 @@ const App = (props) => {
       window.removeEventListener("mousemove", mouseOver);
     };
   }, [props.isParallex]);
-
+  useEffect(() => {
+    alert.removeAll();
+    props.todo.forEach((e, i) => {
+      alert.show(
+        <div
+          style={{
+            direction: `${/^[\u0600-\u06FF\s]+/.test(e) ? "rtl" : "ltr"}`,
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          className="alert"
+        >
+          <div>{e}</div>
+          <a
+            style={{ marginLeft: "5px", cursor: "pointer" }}
+            className="fal fa-circle"
+            onClick={async (e) => {
+              e.target.className = "fal fa-check-circle";
+              setTimeout(() => {
+                props.removeTodo();
+              }, 200);
+            }}
+          />
+        </div>,
+        { timeout: 0 }
+      );
+    });
+  }, [props.todo]);
   useEffect(() => {
     setBackground();
     document.addEventListener("reset", () => props.resetStorage(), false);
   }, []);
   useEffect(() => {
-    onForegroundChange(document.styleSheets[5], props.foreground);
+    onForegroundChange(
+      document.styleSheets[2],
+      props.foreground
+    );
   }, [props.foreground]);
   useEffect(() => {
     function getImageLightness(imageSrc, callback) {
@@ -280,14 +330,7 @@ const App = (props) => {
           ) : isDragActive && isDragAccept ? (
             <h1 className="foreground-change">Drop the picture...</h1>
           ) : (
-            <Clock
-              style={{
-                position: props.clockPos !== "center" ? "absolute" : null,
-                top: props.clockPos !== "center" ? "20px" : null,
-                [props.clockPos]: "5vw",
-                alignItems: props.clockAlign,
-              }}
-            />
+            <Clock />
           )}
           {props.taskbarIcons.length ? (
             <div
@@ -384,7 +427,9 @@ const App = (props) => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>{props.identifier==="NONE"?"":props.identifier}Niotab</title>
+        <title>
+          {props.identifier === "NONE" ? "" : props.identifier}Niotab
+        </title>
       </Helmet>
       <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
         <div
@@ -429,18 +474,6 @@ const App = (props) => {
   );
 };
 const mapStateToProp = ({ data, ui }) => {
-  if (ui.background === "unsplash") {
-    unsplash
-      .get("/random", {
-        params: {
-          collections: data.unsplashCollections,
-        },
-      })
-      .then(async ({ data }) => {
-        const blob = await fetch(data.urls.full).then((r) => r.blob());
-        setBackground(blob);
-      });
-  }
   return {
     ...data,
     ...ui,
@@ -452,4 +485,5 @@ export default connect(mapStateToProp, {
   addIsHistory,
   deleteTaskbarIcon,
   setTerm,
+  removeTodo,
 })(App);

@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/TaskbarIcon.css";
+import "../css/TaskbarIcon.css";
 
 import defaultCommands from "../js/commands";
 export default ({

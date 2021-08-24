@@ -61,6 +61,12 @@ export function addTodo(todo) {
     payload: todo,
   };
 }
+export function removeTodo(index) {
+  return {
+    type: "REMOVE_TODO",
+    payload: index,
+  };
+}
 export function importData() {
   return async (dispatch) => {
     const [handle] = await window.showOpenFilePicker();

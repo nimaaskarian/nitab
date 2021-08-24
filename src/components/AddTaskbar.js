@@ -1,7 +1,7 @@
 /*global chrome*/
 import React, { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
-import "./css/AddTaskbar.css";
+import "../css/AddTaskbar.css";
 import isUrl from "../utils/isUrl";
 import { connect } from "react-redux";
 import {

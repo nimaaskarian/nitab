@@ -166,7 +166,7 @@
 .terminal {
   align-items: center;
   display: flex;
-  margin-top: 50px;
+  margin-top: -10px;
   width: 90vw;
   flex-direction: row;
   justify-content: space-between;
@@ -258,11 +258,11 @@
 .r *::selection {
   background-color: #fda025 !important;
 }
-.terminal .fa * {
+.terminal.fa * {
   color: #1c7ed6;
 }
-.fa *::selection {
-  background-color: #1c7ed6 !important;
+.terminal.fa *::selection {
+  background-color: #1c7ed6;
 }
 .url * {
   color: #005eb1 !important;
@@ -441,10 +441,6 @@ body {
 @font-face {
   font-family: Inconsolata;
   src: url(../fonts/Inconsolata.TTF);
-}
-@font-face {
-  font-family: consolas;
-  src: url(../fonts/CONSOLA.TTF);
 }
 @font-face {
   font-family: IranSans;

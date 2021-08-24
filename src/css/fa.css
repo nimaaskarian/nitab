@@ -4,34 +4,8 @@
 }
 
 .fontawe {
-  font-family: "Font Awesome 5 Brands", "Font Awesome 5 Pro" !important;
+  font-family: "Font Awesome 6 Brands", "Font Awesome 6 Pro" !important;
 }
-@font-face {
-  font-family: "Font Awesome 5 Brands";
-  font-display: block;
-  src: url(../font-awesome/webfonts/fa-brands-400.eot);
-  src: url(../font-awesome/webfonts/fa-brands-400.eot?#iefix)
-      format("embedded-opentype"),
-    url(../font-awesome/webfonts/fa-brands-400.woff2) format("woff2"),
-    url(../font-awesome/webfonts/fa-brands-400.woff) format("woff"),
-    url(../font-awesome/webfonts/fa-brands-400.ttf) format("truetype"),
-    url(../font-awesome/webfonts/fa-brands-400.svg#fontawesome) format("svg");
-}
-@font-face {
-  font-family: "Font Awesome 5 Pro";
-  src: url("../font-awesome/webfonts/fa-solid-900.eot");
-  src: url("../font-awesome/webfonts/fa-solid-900.eot?#iefix")
-      format("embedded-opentype"),
-    url("../font-awesome/webfonts/fa-solid-900.woff2") format("woff2"),
-    url("../font-awesome/webfonts/fa-solid-900.woff") format("woff"),
-    url("../font-awesome/webfonts/fa-solid-900.ttf") format("truetype"),
-    url("../font-awesome/webfonts/fa-solid-900.svg#fontawesome") format("svg");
-}
-.fab {
-  font-family: "Font Awesome 5 Brands";
-  font-weight: 400;
-}
-
 @font-face {
   font-family: fa-w3;
   src: url(../fonts/fa-w3.woff);
@@ -48,6 +22,9 @@
 }
 .fontawe.wa:before {
   content: "\f232";
+}
+.fontawe.bg:before {
+  content: "\f03e";
 }
 .fontawe.fa:before {
   content: "\f425";

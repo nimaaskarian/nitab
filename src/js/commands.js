@@ -19,6 +19,8 @@ import {
   setClockAlign,
   setClockPosition,
   setTerm,
+  addTodo,
+  setFont,
 } from "../actions";
 import { store } from "../store";
 import { setBackground } from "../utils/setBackground";
@@ -108,22 +110,20 @@ const defaultCommands = {
       if (position && align)
         return () => () => {
           store.dispatch(setClockPosition(position));
-          store.dispatch(setClockAlign(["end", "start"].includes(align) ? "flex-" + align : align));
-          store.dispatch(setTerm(""))
+          store.dispatch(
+            setClockAlign(
+              ["end", "start"].includes(align) ? "flex-" + align : align
+            )
+          );
+          store.dispatch(setTerm(""));
         };
-        
     }
   },
   font(input) {
-    return () => async () => {
-      localforage.setItem("font", input || "Inconsolata");
-    };
+    return () => () => store.dispatch(setFont(input));
   },
   todo(input) {
-    return () => async () => {
-      const r = await localforage.getItem("todo");
-      localforage.setItem("todo", [...(r || []), input]);
-    };
+    return () => () => store.dispatch(addTodo(input));
   },
   par(input) {
     if (!input)

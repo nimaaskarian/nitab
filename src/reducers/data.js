@@ -35,6 +35,7 @@ const INITIAL_STATE = {
     setting: ".8",
   },
   isForegroundAuto: false,
+  todo: [],
 };
 Array.prototype.before = function (index, item) {
   return this.flatMap((e, i) => {
@@ -145,6 +146,14 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, clockPos: payload };
     case "SET_CLOCKALIGN":
       return { ...state, clockAlign: payload };
+
+    case "ADD_TODO":
+      return { ...state, todo: [...state.todo, payload] };
+
+    case "REMOVE_TODO":
+      return { ...state, todo: state.todo.delete(payload) };
+    case "SET_FONT":
+      return { ...state, font: payload };
     default:
       return { ...state };
   }
