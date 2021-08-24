@@ -13,7 +13,7 @@ import Terminal from "./Terminal";
 import Clock from "./Clock";
 import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
-import { termToCommand } from "../js/commands";
+import defaultCommands, { termToCommand } from "../js/commands";
 import { unsplash } from "../apis";
 import "../css/App.css";
 import "../css/fa.css";
@@ -32,7 +32,7 @@ const App = (props) => {
   //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
-  const [parallex, setParallex] = useState({ x: 0, y: 0 });
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const terminal = useRef();
   const alert = useAlert();
   const onForegroundChange = (stylesheet, color) => {
@@ -87,16 +87,17 @@ const App = (props) => {
     }
   }, [props.background]);
   useEffect(() => {
+    console.log(props.isParallax)
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
       const y = 0.5 - Math.round((e.clientY / window.innerHeight) * 10) / 10;
-      setParallex({ x, y });
+      setParallax({ x, y });
     };
-    if (props.isParallex) window.addEventListener("mousemove", mouseOver);
+    if (props.isParallax) window.addEventListener("mousemove", mouseOver);
     return () => {
       window.removeEventListener("mousemove", mouseOver);
     };
-  }, [props.isParallex]);
+  }, [props.isParallax]);
   useEffect(() => {
     alert.removeAll();
     props.todo.forEach((e, i) => {
@@ -132,10 +133,16 @@ const App = (props) => {
     document.addEventListener("reset", () => props.resetStorage(), false);
   }, []);
   useEffect(() => {
-    onForegroundChange(
-      document.styleSheets[2],
-      props.foreground
-    );
+    const _styleIndex = document.styleSheets.length - 1 
+    onForegroundChange(document.styleSheets[_styleIndex], props.foreground);
+    return () => {
+      document.styleSheets[_styleIndex].deleteRule(
+        document.styleSheets[_styleIndex].cssRules.length - 2
+      );
+      document.styleSheets[_styleIndex].deleteRule(
+        document.styleSheets[_styleIndex].cssRules.length - 1
+      );
+    };
   }, [props.foreground]);
   useEffect(() => {
     function getImageLightness(imageSrc, callback) {
@@ -240,11 +247,11 @@ const App = (props) => {
 
   const chromeHistory = (term) => {
     const isNameSearch =
-      termToCommand(term, props.identifier, props.commands).name === "search";
+      termToCommand(term, props.identifier, defaultCommands).name === "search";
     const searchSuggest = (term) => {
       if (!isNameSearch)
         return {
-          url: props.commands["search"](term)(),
+          url: defaultCommands["search"](term)(),
           header: {
             className: "fontawe search",
           },
@@ -291,9 +298,9 @@ const App = (props) => {
       document.querySelectorAll(".taskbar-icon:not(.empty)").forEach((i) => {
         const { left } = i.getBoundingClientRect();
         let distance = Math.abs(e.clientX - left - i.offsetWidth / 2) / 30;
-        if (distance < 1) distance = 1;
+        if (distance <= 1) distance = .6;
 
-        i.style.fontSize = parseInt((35 + 17.5 / distance) * 10) / 10 + "px";
+        i.style.fontSize = parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
       });
   };
   const renderedNoTerminal = () => {
@@ -311,14 +318,6 @@ const App = (props) => {
           }}
         >
           <input {...getInputProps()} />
-          {/* <div
-            className={`input-label-wrapper ${gradient ? "" : "no-gradient"}`}
-          >
-            <label
-              htmlFor="image-input"
-              className="fa fa-image foreground-change input-label"
-            />
-          </div> */}
         </div>
 
         <div style={{ display: `${isTerminal ? "none" : "contents"}` }}>
@@ -434,14 +433,14 @@ const App = (props) => {
       <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
         <div
           style={{
-            marginLeft: props.isParallex
-              ? `${parallex.x * props.parallexFactor}vw`
+            marginLeft: props.isParallax
+              ? `${parallax.x * props.parallaxFactor}vw`
               : "0",
-            marginTop: props.isParallex
-              ? `${parallex.y * props.parallexFactor}vh`
+            marginTop: props.isParallax
+              ? `${parallax.y * props.parallaxFactor}vh`
               : "0",
-            transform: props.isParallex
-              ? `scale(${1 + props.parallexFactor / 100})`
+            transform: props.isParallax
+              ? `scale(${1 + props.parallaxFactor / 100})`
               : null,
             background: props.background || "#222",
             filter: `blur(${

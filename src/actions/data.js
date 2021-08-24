@@ -6,6 +6,20 @@ export function addCommand(name, args) {
     payload: { name, args },
   };
 }
+export function clearCommands() {
+  return {
+    type: "CLEAR_COMMANDS",
+  };
+}
+export function setParallaxFactor(factor) {
+  return { type: "SET_PARALLAX_FACTOR", payload: factor };
+}
+export function toggleIsParallax() {
+  return (dispatch, getStore) => {
+    const prevIsParallax = getStore().data.isParallax;
+    dispatch({ type: "TOGGLE_PARALLAX", payload: !prevIsParallax });
+  };
+}
 export function deleteCommand(name) {
   return {
     type: "DELETE_COMMAND",
@@ -82,7 +96,7 @@ export function importData() {
 
 export function toggleMagnify() {
   return (dispatch, getStore) => {
-    const prevMagnify = getStore().data.magnify
+    const prevMagnify = getStore().data.magnify;
     dispatch({
       type: "TOGGLE_MAGNIFY",
       payload: !prevMagnify,
@@ -92,7 +106,7 @@ export function toggleMagnify() {
 
 export function toggleGradient() {
   return (dispatch, getStore) => {
-    const prevGradient = getStore().data.gradient
+    const prevGradient = getStore().data.gradient;
     dispatch({
       type: "TOGGLE_GRADIENT",
       payload: !prevGradient,

@@ -21,6 +21,9 @@ import {
   setTerm,
   addTodo,
   setFont,
+  toggleIsParallax,
+  setParallaxFactor,
+  clearCommands,
 } from "../actions";
 import { store } from "../store";
 import { setBackground } from "../utils/setBackground";
@@ -126,17 +129,8 @@ const defaultCommands = {
     return () => () => store.dispatch(addTodo(input));
   },
   par(input) {
-    if (!input)
-      return () => {
-        return async () => {
-          const res = await localforage.getItem("parallex");
-
-          localforage.setItem("parallex", !res);
-        };
-      };
-    return () => {
-      return () => localforage.setItem("parallex-factor", parseInt(input));
-    };
+    if (!parseFloat(input)) return () => () => store.dispatch(toggleIsParallax());
+    return () => () => store.dispatch(setParallaxFactor(parseFloat(input)));
   },
   c(input) {
     const sums = {
@@ -201,15 +195,7 @@ const defaultCommands = {
   },
   fg(input) {
     if (input) {
-      // if (input === "auto")
-      //   return () => {
-      //     return () => {
-      //       localforage.setItem("isForegroundAuto", true);
-      //     };
-      //   };
-      // localforage.setItem("isForegroundAuto", false);
       const [first, second] = input.split(/\s/g);
-
       if (input === "default") input = "white";
       if (first && second && first === "ovr") input = second + " !important";
 
@@ -225,8 +211,9 @@ const defaultCommands = {
     return () => "https://unsplash.com/collections";
   },
   commandCl(input) {
+    
     if (input === "CONFIRM")
-      return () => () => localforage.setItem("commands", {});
+      return () => () => store.dispatch(clearCommands())
   },
   command(input) {
     const [commandName, ...commandFunctions] = input.split(/\s/g);

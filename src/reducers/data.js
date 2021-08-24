@@ -17,9 +17,9 @@ const INITIAL_STATE = {
   foreground: "white",
   gradient: true,
   magnify: true,
-  isParallex: false,
+  isParallax: false,
   identifier: "/",
-  parallexFactor: 5,
+  parallaxFactor: 5,
   commands: defaultCommands,
   font: "Inconsolata",
   clockPos: "center",
@@ -154,6 +154,12 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, todo: state.todo.delete(payload) };
     case "SET_FONT":
       return { ...state, font: payload };
+    case "SET_PARALLAX_FACTOR":
+      return { ...state, parallaxFactor: payload };
+    case "TOGGLE_PARALLAX":
+      return { ...state, isParallax: payload };
+    case "CLEAR_COMMANDS":
+      return {...state, commands:INITIAL_STATE.commands}
     default:
       return { ...state };
   }

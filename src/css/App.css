@@ -440,7 +440,7 @@ body {
 
 @font-face {
   font-family: Inconsolata;
-  src: url(../fonts/Inconsolata.TTF);
+  src: url(../fonts/Inconsolata.ttf);
 }
 @font-face {
   font-family: IranSans;

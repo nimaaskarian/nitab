@@ -8,7 +8,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import "./font-awesome/css/brands.min.css"
 import "./font-awesome/css/light.min.css"
 import "./font-awesome/css/solid.min.css"
-import "./font-awesome/css/fontawesome.css"
+import "./font-awesome/css/fontawesome.min.css"
 
 import { store, persistor } from "./store";
 import App from "./components/App";
