@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import { setWeatherData, setWeatherCity } from "../actions";
 import Dropdown from "react-dropdown";
 
-import cities from "../utils/cities";
+import { cities } from "../utils";
+
 const icons = {
   "01d": "fa-sun",
   "01n": "fa-moon",

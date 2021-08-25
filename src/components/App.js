@@ -3,7 +3,6 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 
 import { useAlert } from "react-alert";
 import { useDropzone } from "react-dropzone";
-import { isDark } from "../utils/isdark-min";
 import "localforage-observable/dist/localforage-observable.es6";
 import { connect } from "react-redux";
 import Helmet from "react-helmet";
@@ -14,17 +13,19 @@ import Clock from "./Clock";
 import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 import defaultCommands, { termToCommand } from "../js/commands";
+import { isDark, getImageLightness, setBackground } from "../utils";
+
 import { unsplash } from "../apis";
 import "../css/App.css";
 import "../css/fa.css";
 
-import { setBackground } from "../utils/setBackground";
 import {
   resetStorage,
   addIsHistory,
   deleteTaskbarIcon,
   setTerm,
   removeTodo,
+  setForeground,
 } from "../actions";
 
 const App = (props) => {
@@ -32,6 +33,7 @@ const App = (props) => {
   //bookmark === 0, history === 1, nothing === 0
   const [isTerminal, setIsTerminal] = useState(false);
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
+  const [prevCommands, setPrevCommands] = useState(null);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const terminal = useRef();
   const alert = useAlert();
@@ -73,6 +75,27 @@ const App = (props) => {
       multiple: false,
     });
   useEffect(() => {
+    if (prevCommands) {
+      let deleted = [],
+        added = [];
+      Object.keys(prevCommands).forEach((key) => {
+        if (!props.commands.hasOwnProperty(key)) deleted.push(key);
+      });
+      Object.keys(props.commands).forEach((key) => {
+        if (!prevCommands.hasOwnProperty(key)) added.push(key);
+      });
+      added.forEach(e=>{
+        
+      })
+    } else {
+      setPrevCommands({ ...props.commands });
+    }
+    return () => {
+      if (typeof props.commands === "object")
+        setPrevCommands({ ...props.commands });
+    };
+  }, [props.commands]);
+  useEffect(() => {
     if (props.background === "unsplash") {
       unsplash
         .get("/random", {
@@ -87,7 +110,7 @@ const App = (props) => {
     }
   }, [props.background]);
   useEffect(() => {
-    console.log(props.isParallax)
+    console.log(props.isParallax);
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
       const y = 0.5 - Math.round((e.clientY / window.innerHeight) * 10) / 10;
@@ -133,7 +156,7 @@ const App = (props) => {
     document.addEventListener("reset", () => props.resetStorage(), false);
   }, []);
   useEffect(() => {
-    const _styleIndex = document.styleSheets.length - 1 
+    const _styleIndex = document.styleSheets.length - 1;
     onForegroundChange(document.styleSheets[_styleIndex], props.foreground);
     return () => {
       document.styleSheets[_styleIndex].deleteRule(
@@ -145,40 +168,26 @@ const App = (props) => {
     };
   }, [props.foreground]);
   useEffect(() => {
-    function getImageLightness(imageSrc, callback) {
-      var img = document.createElement("img");
-      img.src = imageSrc;
-      img.style.display = "none";
-      document.body.appendChild(img);
-
-      var colorSum = 0;
-
-      img.onload = function () {
-        // create canvas
-        var canvas = document.createElement("canvas");
-        canvas.width = this.width;
-        canvas.height = this.height;
-
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(this, 0, 0);
-
-        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        var data = imageData.data;
-        var r, g, b, avg;
-
-        for (var x = 0, len = data.length; x < len; x += 4) {
-          r = data[x];
-          g = data[x + 1];
-          b = data[x + 2];
-
-          avg = Math.floor((r + g + b) / 3);
-          colorSum += avg;
+    if (props.background && props.isForegroundAuto) {
+      getImageLightness(
+        props.background
+          .replace(/^url\('|^url\("/g, "")
+          .replace(/"\)|'\)/g, ""),
+        (br) => {
+          if (br !== null)
+            props.setForeground(
+              `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
+                br < 127.5 ? 255 : 0
+              })`
+            );
+          else
+            props.setForeground(
+              `rgb(${isDark(props.background) ? 255 : 0},${
+                isDark(props.background) ? 255 : 0
+              },${isDark(props.background) ? 255 : 0})`
+            );
         }
-
-        var brightness = Math.floor(colorSum / (this.width * this.height));
-        callback(brightness);
-      };
-      callback(null);
+      );
     }
   }, [props.background, props.isForegroundAuto]);
   useEffect(() => {
@@ -298,7 +307,7 @@ const App = (props) => {
       document.querySelectorAll(".taskbar-icon:not(.empty)").forEach((i) => {
         const { left } = i.getBoundingClientRect();
         let distance = Math.abs(e.clientX - left - i.offsetWidth / 2) / 30;
-        if (distance <= 1) distance = .6;
+        if (distance <= 1) distance = 0.6;
 
         i.style.fontSize = parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
       });
@@ -375,7 +384,7 @@ const App = (props) => {
         <div style={{ display: `${isTerminal ? "block" : "none"}` }}>
           {props.isHistory ? (
             <div
-              className={`ctrl-item foreground-change ${
+              className={`search-mode foreground-change ${
                 props.gradient ? "" : "no-gradient"
               }`}
             >
@@ -485,4 +494,5 @@ export default connect(mapStateToProp, {
   deleteTaskbarIcon,
   setTerm,
   removeTodo,
+  setForeground,
 })(App);

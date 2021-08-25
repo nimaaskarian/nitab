@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Weather from "./Weather";
 import { connect } from "react-redux";
+
+import Weather from "./Weather";
+import "../css/Clock.css"
+
 const Clock = (props) => {
   const [time, setTime] = useState(new Date());
   useEffect(() => {

@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import isUrl from "../utils/isUrl";
+import { isUrl } from "../utils";
 import {
   addCommand,
   addToCommand,
@@ -24,9 +24,10 @@ import {
   toggleIsParallax,
   setParallaxFactor,
   clearCommands,
+  setIsForegoundAuto,
 } from "../actions";
 import { store } from "../store";
-import { setBackground } from "../utils/setBackground";
+import { setBackground } from "../utils";
 
 const s = {
   iden: {
@@ -129,7 +130,8 @@ const defaultCommands = {
     return () => () => store.dispatch(addTodo(input));
   },
   par(input) {
-    if (!parseFloat(input)) return () => () => store.dispatch(toggleIsParallax());
+    if (!parseFloat(input))
+      return () => () => store.dispatch(toggleIsParallax());
     return () => () => store.dispatch(setParallaxFactor(parseFloat(input)));
   },
   c(input) {
@@ -198,8 +200,12 @@ const defaultCommands = {
       const [first, second] = input.split(/\s/g);
       if (input === "default") input = "white";
       if (first && second && first === "ovr") input = second + " !important";
-
-      return () => () => store.dispatch(setForeground(input));
+      if (first === "auto")
+        return () => () => store.dispatch(setIsForegoundAuto(true));
+      return () => () => {
+        store.dispatch(setForeground(input));
+        store.dispatch(setIsForegoundAuto(false));
+      };
     }
   },
   un(input) {
@@ -211,9 +217,7 @@ const defaultCommands = {
     return () => "https://unsplash.com/collections";
   },
   commandCl(input) {
-    
-    if (input === "CONFIRM")
-      return () => () => store.dispatch(clearCommands())
+    if (input === "CONFIRM") return () => () => store.dispatch(clearCommands());
   },
   command(input) {
     const [commandName, ...commandFunctions] = input.split(/\s/g);

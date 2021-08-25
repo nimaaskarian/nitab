@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
 import "../css/AddTaskbar.css";
-import isUrl from "../utils/isUrl";
+import { isUrl } from "../utils";
 import { connect } from "react-redux";
 import {
   toggleTaskbarEdit,

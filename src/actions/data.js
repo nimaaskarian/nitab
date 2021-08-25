@@ -6,6 +6,9 @@ export function addCommand(name, args) {
     payload: { name, args },
   };
 }
+export function setIsForegoundAuto(isFgAuto) {
+  return { type: "SET_ISFOREGROUND_AUTO", payload: isFgAuto };
+}
 export function clearCommands() {
   return {
     type: "CLEAR_COMMANDS",

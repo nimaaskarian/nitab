@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 
 import defaultCommands, { termToCommand } from "../js/commands";
 import { setTerm, setAc } from "../actions";
+import "../css/Terminal.css";
+import "../css/commandsColors.css";
 
 const Terminal = React.forwardRef((props, ref) => {
   const [onSubmit, setOnSubmit] = useState(() => {});
@@ -19,7 +21,6 @@ const Terminal = React.forwardRef((props, ref) => {
     return name === "taskbar" ? "" : name;
   };
   useEffect(() => {
-    console.log(props.identifier);
     const acHandler = ({ ac }) => {
       props.setAc(ac);
     };
@@ -111,15 +112,17 @@ const Terminal = React.forwardRef((props, ref) => {
       });
     } else setOnSubmit(() => {});
   }, [props.term, props.commands, props.altNewtab]);
-
   return (
     <div
       style={{
         direction: `${/^[\u0600-\u06FF\s]+/.test(props.term) ? "rtl" : "ltr"}`,
       }}
-      className={"terminal foreground-change " + termClass()}
+      className={"terminal foreground-change"}
     >
-      <Autocomplete
+      {/* <Autocomplete
+      wrapperStyle={{
+        color:`var(--${termClass})`
+      }}
         menuStyle={{
           fontSize: "16px",
           backgroundColor: "rgba(0,0,0,0)",
@@ -155,8 +158,22 @@ const Terminal = React.forwardRef((props, ref) => {
         }}
         ref={ref}
         selectOnBlur={true}
+      /> */}
+      <input
+        style={{
+          color: `var(--${termClass()})`,
+        }}
+        className={termClass()}
+        ref={ref}
+        autoFocus
+        onChange={(e) => {
+          props.setTerm(e.target.value.trimStart());
+        }}
       />
       <span
+        style={{
+          color: `var(--${termClass()})`,
+        }}
         className={`terminal-output ${
           termToCommand(props.term, props.identifier, props.commands).name
             ? "fontawe"
@@ -171,7 +188,7 @@ const mapStateToProp = (state) => {
     let temp = {};
     Object.keys(data).forEach((command) => {
       temp[command] = (input) => {
-        if(!data[command]) return  
+        if (!data[command]) return;
         if (data[command].length === 1)
           return () => {
             const [hasntInput, hasInput] = data[command][0]

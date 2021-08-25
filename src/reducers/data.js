@@ -159,7 +159,9 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case "TOGGLE_PARALLAX":
       return { ...state, isParallax: payload };
     case "CLEAR_COMMANDS":
-      return {...state, commands:INITIAL_STATE.commands}
+      return { ...state, commands: INITIAL_STATE.commands };
+    case "SET_ISFOREGROUND_AUTO":
+      return { ...state, isForegroundAuto: payload };
     default:
       return { ...state };
   }
