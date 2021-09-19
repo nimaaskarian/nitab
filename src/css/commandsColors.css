@@ -10,7 +10,9 @@
   --y: #a357ff;
   --fa: #1c7ed6;
   --url: #037fec;
+  --r: #ff8100;
   --fg: #ffb900;
+  --mo: rgb(255, 238, 197);
 }
 .rgx::selection {
   background-color: var(--rgx) !important;
@@ -44,8 +46,11 @@
 .r::selection {
   background-color: var(--r) !important;
 }
-.terminal.fa::selection {
+.terminal .fa::selection {
   background-color: var(--fa);
+}
+.mo::selection {
+  background-color: var(--mo) !important;
 }
 .url::selection {
   background-color: var(--url) !important;

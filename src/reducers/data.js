@@ -1,5 +1,6 @@
 import defaultCommands from "../js/commands";
 const INITIAL_STATE = {
+  persianDate: true,
   isHistory: 1,
   altNewtab: false,
   taskbarIcons: [
@@ -50,6 +51,7 @@ Array.prototype.replace = function (index, item) {
   return this.map((e, i) => (i === index ? item : e));
 };
 Array.prototype.delete = function (index) {
+  console.log(index);
   const output = [...this];
   output.splice(index, 1);
   return output;
@@ -149,9 +151,10 @@ export default (state = INITIAL_STATE, { payload, type }) => {
 
     case "ADD_TODO":
       return { ...state, todo: [...state.todo, payload] };
-
-    case "REMOVE_TODO":
+    case "REMOVE_TODO": {
+      console.log(type, payload);
       return { ...state, todo: state.todo.delete(payload) };
+    }
     case "SET_FONT":
       return { ...state, font: payload };
     case "SET_PARALLAX_FACTOR":
@@ -162,6 +165,10 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, commands: INITIAL_STATE.commands };
     case "SET_ISFOREGROUND_AUTO":
       return { ...state, isForegroundAuto: payload };
+    case "TOGGLE_ALT_NEWTAB":
+      return { ...state, altNewtab: payload };
+    case "TOGGLE_PERSIAN_DATE":
+      return { ...state, persianDate: payload };
     default:
       return { ...state };
   }

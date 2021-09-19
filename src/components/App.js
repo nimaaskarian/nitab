@@ -26,6 +26,7 @@ import {
   setTerm,
   removeTodo,
   setForeground,
+  toggleAltNewtab,
 } from "../actions";
 
 const App = (props) => {
@@ -75,26 +76,35 @@ const App = (props) => {
       multiple: false,
     });
   useEffect(() => {
-    if (prevCommands) {
-      let deleted = [],
-        added = [];
-      Object.keys(prevCommands).forEach((key) => {
-        if (!props.commands.hasOwnProperty(key)) deleted.push(key);
-      });
-      Object.keys(props.commands).forEach((key) => {
-        if (!prevCommands.hasOwnProperty(key)) added.push(key);
-      });
-      added.forEach(e=>{
-        
-      })
-    } else {
-      setPrevCommands({ ...props.commands });
-    }
+    if (!prevCommands) setPrevCommands({ ...props.commands });
     return () => {
+      console.log(props.commands);
       if (typeof props.commands === "object")
         setPrevCommands({ ...props.commands });
     };
   }, [props.commands]);
+  useEffect(() => {
+    if (prevCommands) {
+      let updates = [];
+      Object.keys(prevCommands).forEach((key) => {
+        if (!props.commands.hasOwnProperty(key))
+          updates.push({ key, type: "delete" });
+      });
+      Object.keys(props.commands).forEach((key) => {
+        if (!prevCommands.hasOwnProperty(key))
+          updates.push({ key, type: "add" });
+      });
+      updates.forEach((e) => {
+        alert.show(
+          <div className="alert">
+            {e.type === "add"
+              ? `You've added "${e.key}" to your commands`
+              : `You've deleted "${e.key}" from your commands`}
+          </div>
+        );
+      });
+    }
+  }, [prevCommands]);
   useEffect(() => {
     if (props.background === "unsplash") {
       unsplash
@@ -142,8 +152,8 @@ const App = (props) => {
             onClick={async (e) => {
               e.target.className = "fal fa-check-circle";
               setTimeout(() => {
-                props.removeTodo();
-              }, 200);
+                props.removeTodo(i);
+              }, 350);
             }}
           />
         </div>,
@@ -195,14 +205,7 @@ const App = (props) => {
       if (e.code === "Space" && !props.term) return;
       e.stopPropagation();
       if (e.ctrlKey && e.code === "KeyB") {
-        alert.show(
-          <div className="alert">
-            {props.altNewtab
-              ? "Default enter behaviour is now new tab"
-              : "Default enter behaviour is now current tab"}
-          </div>
-        );
-        //setAltNewtab
+        props.toggleAltNewtab();
       }
       if (e.ctrlKey && e.code === "KeyQ") props.addIsHistory();
 
@@ -253,10 +256,21 @@ const App = (props) => {
     if (props.term) chromeHistory(props.term);
     else setResults([]);
   }, [props.isHistory, props.term]);
-
+  useEffect(() => {
+    alert.show(
+      <div className="alert">
+        {props.altNewtab
+          ? "Default enter behaviour is now current tab"
+          : "Default enter behaviour is now new tab"}
+      </div>
+    );
+  }, [props.altNewtab]);
   const chromeHistory = (term) => {
     const isNameSearch =
-      termToCommand(term, props.identifier, defaultCommands).name === "search";
+      termToCommand(term, props.identifier, {
+        ...defaultCommands,
+        ...props.commands,
+      }).name === "search";
     const searchSuggest = (term) => {
       if (!isNameSearch)
         return {
@@ -495,4 +509,5 @@ export default connect(mapStateToProp, {
   setTerm,
   removeTodo,
   setForeground,
+  toggleAltNewtab,
 })(App);

@@ -25,9 +25,9 @@ import {
   setParallaxFactor,
   clearCommands,
   setIsForegoundAuto,
+  setBackground,
 } from "../actions";
 import { store } from "../store";
-import { setBackground } from "../utils";
 
 const s = {
   iden: {
@@ -247,13 +247,10 @@ const defaultCommands = {
   rr: () => () => () => store.dispatch(resetStorage()),
   url(input) {
     return () => {
-      return (
-        "https://" +
-        input
-          .replace(/www./g, "")
-          .replace("https://", "")
-          .replace("http://", "")
-      );
+      if (!input.match(/^http[s]?:\/\//i)) {
+        input = "http://" + input;
+      }
+      return input;
     };
   },
   imdb(input) {

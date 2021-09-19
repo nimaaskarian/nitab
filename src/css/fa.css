@@ -26,8 +26,11 @@
 .fontawe.bg:before {
   content: "\f03e";
 }
-.fontawe.fg::before{
+.fontawe.fg::before {
   content: "\1f3a8";
+}
+.fontawe.mo::before {
+  content: "\1f37f";
 }
 .fontawe.fa:before {
   content: "\f2b4";

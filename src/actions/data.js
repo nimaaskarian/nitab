@@ -54,10 +54,10 @@ export function setClockAlign(align) {
     payload: align,
   };
 }
-export function setAltNewtab(isAltNewtab) {
-  return {
-    type: "SET_ALT_NEWTAB",
-    payload: isAltNewtab,
+export function toggleAltNewtab() {
+  return (dispatch, getStore) => {
+    const prevAltNewtab = getStore().data.altNewtab;
+    dispatch({ type: "TOGGLE_ALT_NEWTAB", payload: !prevAltNewtab });
   };
 }
 export function setFont(font) {
@@ -106,7 +106,15 @@ export function toggleMagnify() {
     });
   };
 }
-
+export function togglePersianDate() {
+  return (dispatch, getStore) => {
+    const prevPD = getStore().data.persianDate;
+    dispatch({
+      type: "TOGGLE_PERSIAN_DATE",
+      payload: !prevPD,
+    });
+  };
+}
 export function toggleGradient() {
   return (dispatch, getStore) => {
     const prevGradient = getStore().data.gradient;
@@ -197,6 +205,10 @@ export function setWeatherData(q) {
   const type = "SET_WEATHER_DATA";
   return async (dispatch, getState) => {
     const result = getState().data.weatherData;
+    if (!result) {
+      dispatch({ type, payload: { ...result } });
+      return;
+    }
     if (result.time && result.data)
       if (result.data.name === q)
         if (new Date().getTime() - result.time <= 3600 * 1000) {

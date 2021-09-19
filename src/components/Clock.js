@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import persianDate from "persian-date";
 
 import Weather from "./Weather";
-import "../css/Clock.css"
+import "../css/Clock.css";
+
+import { togglePersianDate } from "../actions";
 
 const Clock = (props) => {
   const [time, setTime] = useState(new Date());
@@ -14,6 +17,10 @@ const Clock = (props) => {
       clearInterval(intervalid);
     };
   }, []);
+
+  const onClick = () => {
+    props.togglePersianDate();
+  };
   return (
     <div
       style={{
@@ -27,12 +34,21 @@ const Clock = (props) => {
       <div className="clock-time">{`${time.getHours()}:${
         time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
       }`}</div>
-      <div className="clock-date">{new Date().toDateString(time)}</div>
+      <div className="clock-date" onClick={onClick}>
+        {new persianDate()
+          .toLocale(props.persianDate ? "fa" : "en")
+          .toCalendar(props.persianDate ? "persian" : "gregorian")
+          .format(props.persianDate ? "dddd DD MMMM" : "dddd, MMMM DD")}
+      </div>
       <Weather />
     </div>
   );
 };
 const mapStateToProp = (state) => {
-  return { clockPos: state.data.clockPos, clockAlign: state.data.clockAlign };
+  return {
+    clockPos: state.data.clockPos,
+    clockAlign: state.data.clockAlign,
+    persianDate: state.data.persianDate,
+  };
 };
-export default connect(mapStateToProp)(Clock);
+export default connect(mapStateToProp, { togglePersianDate })(Clock);

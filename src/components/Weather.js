@@ -3,15 +3,14 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { setWeatherData, setWeatherCity } from "../actions";
 import Dropdown from "react-dropdown";
-
 import { cities } from "../utils";
 
 const icons = {
   "01d": "fa-sun",
   "01n": "fa-moon",
 
-  "02d": "fa-cloud-moon",
-  "02n": "fa-cloud-sun",
+  "02d": "fa-cloud-sun",
+  "02n": "fa-cloud-moon",
 
   "03d": "fa-cloud",
   "03n": "fa-cloud",
@@ -22,8 +21,8 @@ const icons = {
   "09d": "fa-cloud-showers-heavy",
   "09n": "fa-cloud-showers-heavy",
 
-  "10d": "fa-cloud-moon-rain",
-  "10n": "fa-cloud-sun-rain",
+  "10d": "fa-cloud-sun-rain",
+  "10n": "fa-cloud-moon-rain",
 
   "11d": "fa-thunderstorm",
   "11n": "fa-thunderstorm",
@@ -39,7 +38,6 @@ const Weather = (props) => {
   const isDay = (t) => {
     return new Date(t).getHours() > 6 && new Date(t).getHours() < 20;
   };
-
   useEffect(() => {
     props.setWeatherData(props.city);
   }, [props.city]);
@@ -67,7 +65,8 @@ const Weather = (props) => {
   return <div>Gathering Data</div>;
 };
 const mapStateToProp = ({ data }) => {
-  return { data: data.weatherData.data, city: data.weatherCity };
+  if (data.weatherData && data.weatherCity)
+    return { data: data.weatherData.data, city: data.weatherCity };
 };
 export default connect(mapStateToProp, { setWeatherData, setWeatherCity })(
   Weather

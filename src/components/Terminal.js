@@ -1,9 +1,9 @@
 /*global chrome*/
 import React, { useState, useEffect } from "react";
-import Autocomplete from "react-autocomplete";
 import "localforage-observable/dist/localforage-observable.es6";
 import { connect } from "react-redux";
 
+import Autocomplete from "./Autocomplete";
 import defaultCommands, { termToCommand } from "../js/commands";
 import { setTerm, setAc } from "../actions";
 import "../css/Terminal.css";
@@ -45,6 +45,7 @@ const Terminal = React.forwardRef((props, ref) => {
     let timeoutId, appended;
 
     if (props.term) {
+      props.setAc([]);
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
         appended = true;
@@ -59,22 +60,7 @@ const Terminal = React.forwardRef((props, ref) => {
       }
     };
   }, [props.term]);
-  useEffect(() => {
-    const onkeydown = (e) => {
-      const selected = document.querySelector(".item.selected");
-      if (e.code === "Tab") {
-        if (selected) {
-          props.setTerm(selected.innerText);
-        } else {
-          props.setTerm(props.ac[0].phrase);
-        }
-      }
-    };
-    window.addEventListener("keydown", onkeydown);
-    return () => {
-      window.removeEventListener("keydown", onkeydown);
-    };
-  }, [props.ac]);
+
   useEffect(() => {
     const onSubmitHelper = (e) => {
       const { args } = termToCommand(
@@ -117,59 +103,23 @@ const Terminal = React.forwardRef((props, ref) => {
       style={{
         direction: `${/^[\u0600-\u06FF\s]+/.test(props.term) ? "rtl" : "ltr"}`,
       }}
-      className={"terminal foreground-change"}
+      className="terminal foreground-change"
     >
-      {/* <Autocomplete
-      wrapperStyle={{
-        color:`var(--${termClass})`
-      }}
-        menuStyle={{
-          fontSize: "16px",
-          backgroundColor: "rgba(0,0,0,0)",
-          position: "absolute",
-          display: "flex",
-          flexDirection: "column",
-        }}
-        getItemValue={(item) => item.phrase}
-        items={props.ac || []}
-        renderItem={(item, isHighlighted) => {
-          return (
-            <div
-              key={item.phrase}
-              className={`item ${isHighlighted ? "selected" : "not-selected"}`}
-              style={{
-                background: isHighlighted
-                  ? `linear-gradient(
-                  ${/^[\u0600-\u06FF\s]+/.test(props.term) ? "90" : "270"}deg,
-                  rgba(0, 0, 0, 0) 50%,
-                  rgba(0, 0, 0, 0.1) 100%
-                )`
-                  : null,
-              }}
-            >
-              {item.phrase}
-            </div>
-          );
-        }}
-        autoFocus
-        value={props.term}
-        onChange={(e) => {
-          props.setTerm(e.target.value.trimStart());
-        }}
-        ref={ref}
-        selectOnBlur={true}
-      /> */}
-      <input
-        style={{
-          color: `var(--${termClass()})`,
-        }}
-        className={termClass()}
-        ref={ref}
-        autoFocus
-        onChange={(e) => {
-          props.setTerm(e.target.value.trimStart());
-        }}
-      />
+      <div>
+        <input
+          style={{
+            color: `var(--${termClass()})`,
+          }}
+          value={props.term}
+          className={termClass()}
+          ref={ref}
+          autoFocus
+          onChange={(e) => {
+            props.setTerm(e.target.value.trimStart());
+          }}
+        />
+        <Autocomplete style={{ color: `var(--${termClass()})` }} />
+      </div>
       <span
         style={{
           color: `var(--${termClass()})`,
