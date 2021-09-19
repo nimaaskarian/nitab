@@ -46,7 +46,7 @@
 .r::selection {
   background-color: var(--r) !important;
 }
-.terminal .fa::selection {
+.terminal .fa.fontawe::selection {
   background-color: var(--fa);
 }
 .mo::selection {

@@ -8,12 +8,11 @@ export const setBackground = async (background) => {
   } else {
     localforage.setItem("background", background);
   }
-  if (background && background !== null)
-    store.dispatch(
-      setBgAction(
-        typeof background === "object"
-          ? `url('${URL.createObjectURL(background)}')`
-          : background
-      )
-    );
+  store.dispatch(
+    setBgAction(
+      typeof background === "object"
+        ? `url('${URL.createObjectURL(background)}')`
+        : background
+    )
+  );
 };

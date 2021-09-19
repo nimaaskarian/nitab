@@ -25,8 +25,9 @@ import {
   setParallaxFactor,
   clearCommands,
   setIsForegoundAuto,
-  setBackground,
 } from "../actions";
+
+import { setBackground } from "../utils";
 import { store } from "../store";
 
 const s = {
@@ -220,7 +221,20 @@ const defaultCommands = {
     if (input === "CONFIRM") return () => () => store.dispatch(clearCommands());
   },
   command(input) {
-    const [commandName, ...commandFunctions] = input.split(/\s/g);
+    let [commandName, ...commandFunctions] = input.split(/\s/g);
+    commandFunctions = commandFunctions.filter(
+      (e) => !/(?<=icon:").*(?=")/g.test(e)
+    );
+    const icon = (/(?<=icon:").*(?=")/g.exec(input) || [])[0];
+    if (icon) {
+      document.querySelector(
+        ".terminal-output"
+      ).className = `terminal-output ${icon}`;
+    } else {
+      document.querySelector(".terminal-output").className =
+        "terminal-output fontawe";
+    }
+
     if (
       ["command", "commandCl"].includes(commandName) ||
       !commandFunctions.length
@@ -240,7 +254,7 @@ const defaultCommands = {
             store.dispatch(removeFromCommand(commandName, commandFunctions));
         default:
           return () =>
-            store.dispatch(addCommand(commandName, commandFunctions));
+            store.dispatch(addCommand(commandName, commandFunctions, icon));
       }
     };
   },

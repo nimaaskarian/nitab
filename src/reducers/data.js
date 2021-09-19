@@ -67,7 +67,10 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case "ADD_COMMAND":
       return {
         ...state,
-        commands: { ...state.commands, [payload.name]: payload.args },
+        commands: {
+          ...state.commands,
+          [payload.name]: { args: payload.args, icon: payload.icon },
+        },
       };
     case "DELETE_COMMAND": {
       return {

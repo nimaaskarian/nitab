@@ -18,7 +18,10 @@ const Terminal = React.forwardRef((props, ref) => {
       props.identifier,
       props.commands
     );
-    return name === "taskbar" ? "" : name;
+
+    return ["taskbar", "command"].includes(name)
+      ? ""
+      : props.commandIcons[name] || "fontawe " + name;
   };
   useEffect(() => {
     const acHandler = ({ ac }) => {
@@ -124,24 +127,22 @@ const Terminal = React.forwardRef((props, ref) => {
         style={{
           color: `var(--${termClass()})`,
         }}
-        className={`terminal-output ${
-          termToCommand(props.term, props.identifier, props.commands).name
-            ? "fontawe"
-            : ""
-        } ${termClass()}`}
+        className={`terminal-output ${termClass()}`}
       ></span>
     </div>
   );
 });
 const mapStateToProp = (state) => {
   const dataToCommand = (data) => {
-    let temp = {};
+    let commands = {},
+      icons = {};
     Object.keys(data).forEach((command) => {
-      temp[command] = (input) => {
-        if (!data[command]) return;
-        if (data[command].length === 1)
+      if (data[command].icon) icons[command] = data[command].icon;
+      commands[command] = (input) => {
+        if (!data[command].args) return;
+        if (data[command].args.length === 1)
           return () => {
-            const [hasntInput, hasInput] = data[command][0]
+            const [hasntInput, hasInput] = data[command].args[0]
               .replace("%input%", input)
               .split("%?%");
             if (hasInput) {
@@ -153,7 +154,7 @@ const mapStateToProp = (state) => {
         else
           return () =>
             ({ input }) => {
-              data[command].forEach((element) => {
+              data[command].args.forEach((element) => {
                 const [hasntInput, hasInput] = element
                   .replace("%input%", input)
                   .split("%?%");
@@ -166,10 +167,12 @@ const mapStateToProp = (state) => {
             };
       };
     });
-    return temp;
+    return { commands, icons };
   };
+  const { commands, icons } = dataToCommand(state.data.commands);
   return {
-    commands: { ...defaultCommands, ...dataToCommand(state.data.commands) },
+    commands: { ...defaultCommands, ...commands },
+    commandIcons: icons,
     identifier: state.data.identifier,
     altNewtab: state.data.altNewtab,
     term: state.ui.term,

@@ -12,22 +12,14 @@ import Terminal from "./Terminal";
 import Clock from "./Clock";
 import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
+
 import defaultCommands, { termToCommand } from "../js/commands";
 import { isDark, getImageLightness, setBackground } from "../utils";
-
 import { unsplash } from "../apis";
+import * as actions from "../actions";
+
 import "../css/App.css";
 import "../css/fa.css";
-
-import {
-  resetStorage,
-  addIsHistory,
-  deleteTaskbarIcon,
-  setTerm,
-  removeTodo,
-  setForeground,
-  toggleAltNewtab,
-} from "../actions";
 
 const App = (props) => {
   const [results, setResults] = useState([]);
@@ -106,6 +98,7 @@ const App = (props) => {
     }
   }, [prevCommands]);
   useEffect(() => {
+    console.log(props.background);
     if (props.background === "unsplash") {
       unsplash
         .get("/random", {
@@ -502,12 +495,4 @@ const mapStateToProp = ({ data, ui }) => {
     background: ui.background,
   };
 };
-export default connect(mapStateToProp, {
-  resetStorage,
-  addIsHistory,
-  deleteTaskbarIcon,
-  setTerm,
-  removeTodo,
-  setForeground,
-  toggleAltNewtab,
-})(App);
+export default connect(mapStateToProp, actions)(App);
