@@ -94,7 +94,7 @@ const AddTaskbar = (props) => {
             <label className="label" htmlFor="#add-taskbar-input">
               Icon(find some from{" "}
               <a
-                href="https://fontawesome.com/v5.15/icons?d=gallery&p=2&s=brands,solid,light"
+                href="https://fontawesome.com/v6.0/icons"
                 target="_blank"
               >
                 here

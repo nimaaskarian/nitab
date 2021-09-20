@@ -221,10 +221,10 @@ const defaultCommands = {
     if (input === "CONFIRM") return () => () => store.dispatch(clearCommands());
   },
   command(input) {
-    let [commandName, ...commandFunctions] = input.split(/\s/g);
-    commandFunctions = commandFunctions.filter(
-      (e) => !/(?<=icon:").*(?=")/g.test(e)
-    );
+    let [commandName, ...commandFunctions] = input
+      .replace(/icon:".*"/g, "")
+      .split(/\s/g)
+      .filter((e) => !!e);
     const icon = (/(?<=icon:").*(?=")/g.exec(input) || [])[0];
     if (icon) {
       document.querySelector(
@@ -240,6 +240,7 @@ const defaultCommands = {
       !commandFunctions.length
     )
       return;
+    console.log(icon, commandFunctions);
     return () => {
       switch (commandFunctions[0].toLowerCase()) {
         case "delete":
@@ -423,11 +424,11 @@ const defaultCommands = {
   fa(input) {
     if (input) {
       return () => {
-        return "https://fontawesome.com/icons?d=gallery&p=2&q=" + input;
+        return "https://fontawesome.com/v6.0/icons?q=" + input;
       };
     } else {
       return () => {
-        return "https://fontawesome.com/cheatsheet";
+        return "https://fontawesome.com/v6.0/icons";
       };
     }
   },
