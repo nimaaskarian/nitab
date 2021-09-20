@@ -111,7 +111,7 @@ const Terminal = React.forwardRef((props, ref) => {
       <div>
         <input
           style={{
-            color: `var(--${termClass()})`,
+            color: `var(--${termClass().replace(/^fontawe /g, "")})`,
           }}
           value={props.term}
           className={termClass()}
@@ -125,7 +125,7 @@ const Terminal = React.forwardRef((props, ref) => {
       </div>
       <span
         style={{
-          color: `var(--${termClass()})`,
+          color: `var(--${termClass().replace(/^fontawe /g, "")})`,
         }}
         className={`terminal-output ${termClass()}`}
       ></span>
