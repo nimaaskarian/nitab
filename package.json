@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "@tippyjs/react": "^4.2.5",
     "axios": "^0.21.1",
     "html-react-parser": "^1.2.7",
     "localforage": "^1.9.0",
@@ -26,6 +27,7 @@
     "redux-persist": "^6.0.0",
     "redux-persist-webextension-storage": "^1.0.2",
     "redux-thunk": "^2.3.0",
+    "tippy.js": "^6.3.1",
     "web-vitals": "^1.1.2",
     "zen-observable": "^0.8.15"
   },

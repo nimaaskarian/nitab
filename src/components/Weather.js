@@ -5,6 +5,9 @@ import { setWeatherData, setWeatherCity } from "../actions";
 import Dropdown from "react-dropdown";
 import { cities } from "../utils";
 
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+
 const icons = {
   "01d": "fa-sun",
   "01n": "fa-moon",
@@ -35,12 +38,19 @@ const icons = {
 };
 const Weather = (props) => {
   //api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-  const isDay = (t) => {
-    return new Date(t).getHours() > 6 && new Date(t).getHours() < 20;
-  };
+  const [visible, setVisible] = useState(false);
+  const show = () => setVisible(true);
+  const hide = () => setVisible(false);
   useEffect(() => {
     props.setWeatherData(props.city);
   }, [props.city]);
+  useEffect(() => {
+    const stylesheet = document.styleSheets[document.styleSheets.length - 2]
+    stylesheet.insertRule(
+      `.tippy-box{font-family:${props.font};}`,
+      stylesheet.rules.length
+    );
+  }, [props.font]);
   if (props.data && props.data.main)
     return (
       <div className="weather" style={{ marginTop: ".5rem", fontSize: "1rem" }}>
@@ -56,17 +66,29 @@ const Weather = (props) => {
           />
         </div>
         {Math.round(props.data.main.temp)}&#176;C
-        <i
-          style={{ marginLeft: "5px" }}
-          className={`fa ${icons[props.data.weather[0].icon]}`}
-        ></i>
+        <Tippy
+          onClickOutside={hide}
+          content={props.data.weather[0].main}
+          visible={visible}
+          placement="bottom"
+        >
+          <i
+            onClick={visible ? hide : show}
+            style={{ marginLeft: "5px" }}
+            className={`fa ${icons[props.data.weather[0].icon]}`}
+          />
+        </Tippy>
       </div>
     );
   return <div>Gathering Data</div>;
 };
 const mapStateToProp = ({ data }) => {
   if (data.weatherData && data.weatherCity)
-    return { data: data.weatherData.data, city: data.weatherCity };
+    return {
+      data: data.weatherData.data,
+      city: data.weatherCity,
+      font: data.font,
+    };
 };
 export default connect(mapStateToProp, { setWeatherData, setWeatherCity })(
   Weather

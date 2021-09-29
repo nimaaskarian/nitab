@@ -44,7 +44,9 @@ const Terminal = React.forwardRef((props, ref) => {
     const url =
       "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
     const script = document.createElement("script");
-    script.src = url;
+    try {
+      script.src = url;
+    } catch (error) {}
     let timeoutId, appended;
 
     if (props.term) {

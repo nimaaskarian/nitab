@@ -30,6 +30,7 @@ const App = (props) => {
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const terminal = useRef();
   const alert = useAlert();
+
   const onForegroundChange = (stylesheet, color) => {
     stylesheet.insertRule(
       `.foreground-change *,.foreground-change{color:${color};}`,

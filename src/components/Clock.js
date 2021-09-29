@@ -38,7 +38,7 @@ const Clock = (props) => {
         {new persianDate()
           .toLocale(props.persianDate ? "fa" : "en")
           .toCalendar(props.persianDate ? "persian" : "gregorian")
-          .format(props.persianDate ? "dddd DD MMMM" : "dddd, MMMM DD")}
+          .format(props.persianDate ? "dddd D MMMM" : "dddd, MMMM D")}
       </div>
       <Weather />
     </div>
