@@ -35,7 +35,7 @@ const Autocomplete = ({ ac, setTerm, term, style }) => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selected, ac]);
-
+  console.log(style);
   return (
     <div className="autocomplete">
       {ac

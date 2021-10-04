@@ -23,6 +23,7 @@ const Terminal = React.forwardRef((props, ref) => {
       ? ""
       : props.commandIcons[name] || "fontawe " + name;
   };
+
   useEffect(() => {
     const acHandler = ({ ac }) => {
       props.setAc(ac);
@@ -54,7 +55,7 @@ const Terminal = React.forwardRef((props, ref) => {
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
         appended = true;
-      }, 250);
+      }, 100);
     } else {
       props.setAc([]);
     }
@@ -123,7 +124,7 @@ const Terminal = React.forwardRef((props, ref) => {
             props.setTerm(e.target.value.trimStart());
           }}
         />
-        <Autocomplete style={{ color: `var(--${termClass()})` }} />
+        <Autocomplete style={{ color: `var(--${termClass().replace(/^fontawe /g, "")})` }} />
       </div>
       <span
         style={{

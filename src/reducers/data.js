@@ -11,6 +11,7 @@ const INITIAL_STATE = {
       index: 0,
     },
   ],
+  clockFormat: "24",
   unsplashCollectons: "9389477,908506,219941",
   weatherCity: "Tehran",
   weatherData: {},
@@ -172,6 +173,8 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, altNewtab: payload };
     case "TOGGLE_PERSIAN_DATE":
       return { ...state, persianDate: payload };
+    case "TOGGLE_CLOCK_FORMAT":
+      return { ...state, clockFormat: payload };
     default:
       return { ...state };
   }

@@ -115,6 +115,17 @@ export function togglePersianDate() {
     });
   };
 }
+
+export function toggleClockFormat() {
+  return (dispatch, getStore) => {
+    const output = getStore().data.clockFormat === "12" ? "24" : "12";
+    dispatch({
+      type: "TOGGLE_CLOCK_FORMAT",
+      payload: output,
+    });
+  };
+}
+
 export function toggleGradient() {
   return (dispatch, getStore) => {
     const prevGradient = getStore().data.gradient;

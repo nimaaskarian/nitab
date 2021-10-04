@@ -14,7 +14,7 @@ import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 
 import defaultCommands, { termToCommand } from "../js/commands";
-import { isDark, getImageLightness, setBackground } from "../utils";
+import { isDark, getImageLightness, setBackground, mutedKeys } from "../utils";
 import { unsplash } from "../apis";
 import * as actions from "../actions";
 
@@ -196,7 +196,13 @@ const App = (props) => {
   }, [props.background, props.isForegroundAuto]);
   useEffect(() => {
     const onKeydown = (e) => {
-      if (e.code === "Space" && !props.term) return;
+      if (
+        mutedKeys.includes(e.key) ||
+        (e.code === "Space" && !props.term) ||
+        (e.code === "KeyI" && e.ctrlKey && e.shiftKey) ||
+        (e.code === "KeyC" && e.ctrlKey && e.shiftKey)
+      )
+        return;
       e.stopPropagation();
       if (e.ctrlKey && e.code === "KeyB") {
         props.toggleAltNewtab();
@@ -337,52 +343,50 @@ const App = (props) => {
           <input {...getInputProps()} />
         </div>
 
-        <div style={{ display: `${isTerminal ? "none" : "contents"}` }}>
-          {props.isTaskbarEdit ? (
-            <AddTaskbar
-              selectedIndex={addtaskbarIndex}
-              onIndexChange={() => setAddtaskbarIndex(null)}
-            />
-          ) : isDragActive && isDragAccept ? (
-            <h1 className="foreground-change">Drop the picture...</h1>
-          ) : (
-            <Clock />
-          )}
-          {props.taskbarIcons.length ? (
-            <div
-              className={`taskbar ${props.gradient ? "" : "no-gradient"}`}
-              onMouseEnter={onTaskbarMouseMove}
-              onMouseMove={onTaskbarMouseMove}
-              onMouseOut={() => {
-                document
-                  .querySelectorAll(".taskbar-icon:not(.empty)")
-                  .forEach((i) => {
-                    i.style.fontSize = "35px";
-                  });
-              }}
-            >
-              {props.taskbarIcons.map((e, i) => {
-                return (
-                  <TaskbarIcon
-                    onClick={setAddtaskbarIndex}
-                    key={i}
-                    bgColor={
-                      e.icon === "empty" && props.isTaskbarEdit
-                        ? "rgba(87, 87, 87, 0.36)"
-                        : null
-                    }
-                    index={e.index}
-                    color={e.color}
-                    isBlank={!props.altNewtab}
-                    icon={e.icon}
-                    url={props.isTaskbarEdit ? "" : e.url}
-                    onDblClick={() => props.deleteTaskbarIcon(i)}
-                  />
-                );
-              })}
-            </div>
-          ) : null}
-        </div>
+        {props.isTaskbarEdit ? (
+          <AddTaskbar
+            selectedIndex={addtaskbarIndex}
+            onIndexChange={() => setAddtaskbarIndex(null)}
+          />
+        ) : isDragActive && isDragAccept ? (
+          <h1 className="foreground-change">Drop the picture...</h1>
+        ) : (
+          <Clock />
+        )}
+        {props.taskbarIcons.length ? (
+          <div
+            className={`taskbar ${props.gradient ? "" : "no-gradient"}`}
+            onMouseEnter={onTaskbarMouseMove}
+            onMouseMove={onTaskbarMouseMove}
+            onMouseOut={() => {
+              document
+                .querySelectorAll(".taskbar-icon:not(.empty)")
+                .forEach((i) => {
+                  i.style.fontSize = "35px";
+                });
+            }}
+          >
+            {props.taskbarIcons.map((e, i) => {
+              return (
+                <TaskbarIcon
+                  onClick={setAddtaskbarIndex}
+                  key={i}
+                  bgColor={
+                    e.icon === "empty" && props.isTaskbarEdit
+                      ? "rgba(87, 87, 87, 0.36)"
+                      : null
+                  }
+                  index={e.index}
+                  color={e.color}
+                  isBlank={!props.altNewtab}
+                  icon={e.icon}
+                  url={props.isTaskbarEdit ? "" : e.url}
+                  onDblClick={() => props.deleteTaskbarIcon(i)}
+                />
+              );
+            })}
+          </div>
+        ) : null}
       </React.Fragment>
     );
   };

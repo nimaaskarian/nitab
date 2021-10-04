@@ -5,9 +5,21 @@ import persianDate from "persian-date";
 import Weather from "./Weather";
 import "../css/Clock.css";
 
-import { togglePersianDate } from "../actions";
+import { togglePersianDate, toggleClockFormat } from "../actions";
 
 const Clock = (props) => {
+  function format12h(date) {
+    const hours = date.getHours() % 12 ? date.getHours() % 12 : 12;
+    const minutes =
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    const ampm = date.getHours() >= 12 ? "PM" : "AM";
+    return `${hours}:${minutes} ${ampm}`;
+  }
+  const format24h = (date) => {
+    return `${date.getHours()}:${
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+    }`;
+  };
   const [time, setTime] = useState(new Date());
   useEffect(() => {
     const intervalid = setInterval(() => {
@@ -17,10 +29,6 @@ const Clock = (props) => {
       clearInterval(intervalid);
     };
   }, []);
-
-  const onClick = () => {
-    props.togglePersianDate();
-  };
   return (
     <div
       style={{
@@ -31,10 +39,10 @@ const Clock = (props) => {
       }}
       className="clock foreground-change"
     >
-      <div className="clock-time">{`${time.getHours()}:${
-        time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
-      }`}</div>
-      <div className="clock-date" onClick={onClick}>
+      <div className="clock-time" onClick={props.toggleClockFormat}>
+        {props.clockFormat === "12" ? format12h(time) : format24h(time)}
+      </div>
+      <div className="clock-date" onClick={props.togglePersianDate}>
         {new persianDate()
           .toLocale(props.persianDate ? "fa" : "en")
           .toCalendar(props.persianDate ? "persian" : "gregorian")
@@ -49,6 +57,10 @@ const mapStateToProp = (state) => {
     clockPos: state.data.clockPos,
     clockAlign: state.data.clockAlign,
     persianDate: state.data.persianDate,
+    clockFormat: state.data.clockFormat,
   };
 };
-export default connect(mapStateToProp, { togglePersianDate })(Clock);
+export default connect(mapStateToProp, {
+  togglePersianDate,
+  toggleClockFormat,
+})(Clock);

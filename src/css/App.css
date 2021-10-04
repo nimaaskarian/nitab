@@ -13,16 +13,10 @@
   z-index: 2;
   line-height: 1;
 }
-
-.search-results {
-  bottom: 20px;
-  flex-wrap: wrap;
-  margin-top: 50px;
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
-  position: absolute;
+.tippy-box {
+  font-size: 16px;
 }
+
 .background {
   background-color: #333;
   overflow: hidden;
@@ -57,12 +51,6 @@
 .background.no-gradient:after {
   transition: opacity 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
   opacity: 0 !important;
-}
-.terminal *,
-.search-mode,
-.search-results > * {
-  transition: color 450ms cubic-bezier(0.65, 0.05, 0.36, 1),
-    background-color 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
 .background.super-blured {
@@ -104,7 +92,9 @@
   font-family: "Inconsolata", "IranSans";
   font-size: 1.5rem;
 }
+
 .search-mode {
+  animation: moveFromLeft 0.75s ease-out;
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
   position: absolute;
   left: 0px;
