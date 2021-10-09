@@ -485,7 +485,7 @@ const App = (props) => {
       </div>
 
       <div
-        className="keepcentered"
+        className={`keepcentered ${isTerminal ? "" : "no-terminal"}`}
         style={{ fontFamily: `${props.font}, IranSans` }}
       >
         {isTerminal ? renderedTerminal() : renderedNoTerminal()}

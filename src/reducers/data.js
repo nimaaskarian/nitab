@@ -52,7 +52,6 @@ Array.prototype.replace = function (index, item) {
   return this.map((e, i) => (i === index ? item : e));
 };
 Array.prototype.delete = function (index) {
-  console.log(index);
   const output = [...this];
   output.splice(index, 1);
   return output;
