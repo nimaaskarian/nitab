@@ -36,7 +36,6 @@ const icons = {
   "50n": "fa-fog",
 };
 const Weather = (props) => {
-  //api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
   const [conditionVisible, setConditionVisible] = useState(false);
   const conditionShow = () => setConditionVisible(true);
   const conditionHide = () => setConditionVisible(false);
@@ -56,66 +55,74 @@ const Weather = (props) => {
       stylesheet.rules.length
     );
   }, [props.font]);
-  console.log(props.data);
-  if (props.data && props.data.main)
-    return (
-      <div className="weather">
-        <div style={{ marginRight: "5px" }} className="weather-selector">
-          <Dropdown
-            options={cities}
-            onChange={(q) => {
-              props.setWeatherCity(q.value);
-            }}
-            value={props.city}
-            arrowClosed={<span className="fa fa-chevron-down" />}
-            arrowOpen={<span className="fa fa-chevron-up" />}
-          />
-        </div>
 
-        <Tippy
-          allowHTML
-          onClickOutside={tempHide}
-          content={
-            <div>
-              <span style={spanStyle}>
-                <i className="fa fa-temperature-half" />
-                {props.data.main.temp}°
-              </span>
-              <span style={spanStyle}>
-                <i className="fa fa-droplet-percent" />
-                {props.data.main.humidity}%
-              </span>
-              <span style={spanStyle}>
-                {props.data.main.feels_like !== props.data.main.temp
-                  ? `Feels Like: ${props.data.main.feels_like}°`
-                  : ""}
-              </span>
-            </div>
-          }
-          visible={tempVisible}
-          placement="bottom"
-        >
-          <span onClick={tempVisible ? tempHide : tempShow}>
-            {Math.round(props.data.main.temp)}&#176;C
-          </span>
-        </Tippy>
-        <Tippy
-          onClickOutside={conditionHide}
-          content={props.data.weather[0].description}
-          visible={conditionVisible}
-          placement="bottom"
-        >
-          <i
-            onClick={conditionVisible ? conditionHide : conditionShow}
-            style={{ marginLeft: "5px" }}
-            className={`fa ${icons[props.data.weather[0].icon]}`}
-          />
-        </Tippy>
-      </div>
-    );
+  const renderedWeather = (props) => {
+    if (props.data && props.data.main) {
+      return (
+        <>
+          <Tippy
+            allowHTML
+            onClickOutside={tempHide}
+            content={
+              <div>
+                <span style={spanStyle}>
+                  <i className="fa fa-temperature-half" />
+                  {props.data.main.temp}°
+                </span>
+                <span style={spanStyle}>
+                  <i className="fa fa-droplet-percent" />
+                  {props.data.main.humidity}%
+                </span>
+                <span style={spanStyle}>
+                  {props.data.main.feels_like !== props.data.main.temp
+                    ? `Feels Like: ${props.data.main.feels_like}°`
+                    : ""}
+                </span>
+              </div>
+            }
+            visible={tempVisible}
+            placement="bottom"
+          >
+            <span onClick={tempVisible ? tempHide : tempShow}>
+              {Math.round(props.data.main.temp)}&#176;C
+            </span>
+          </Tippy>
+          <Tippy
+            onClickOutside={conditionHide}
+            content={props.data.weather[0].description}
+            visible={conditionVisible}
+            placement="bottom"
+          >
+            <i
+              onClick={conditionVisible ? conditionHide : conditionShow}
+              style={{ marginLeft: "5px" }}
+              className={`fa ${icons[props.data.weather[0].icon]}`}
+            />
+          </Tippy>
+        </>
+      );
+    } else {
+      return <div className="weather-unloaded">
+        <i className="fas fa-spinner"></i>
+      </div>;
+    }
+  };
+  console.log(props.data);
   return (
-    <div className="weather-unloaded">
-      <i className="fas fa-spinner"></i>
+    <div className="weather">
+      <div style={{ marginRight: "5px" }} className="weather-selector">
+        <Dropdown
+          options={["Automatic", ...cities]}
+          onChange={(q) => {
+            props.setWeatherCity(q.value);
+          }}
+          value={props.city}
+          arrowClosed={<span className="fa fa-chevron-down" />}
+          arrowOpen={<span className="fa fa-chevron-up" />}
+        />
+      </div>
+
+      {renderedWeather(props)}
     </div>
   );
 };

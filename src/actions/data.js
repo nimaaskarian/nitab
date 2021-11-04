@@ -227,11 +227,24 @@ export function setWeatherData(q) {
           return;
         }
     dispatch({ type, payload: {} });
-    const { data } = await openWeather.get("/weather", {
-      params: { q },
-    });
+    //api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+    if (q === "Automatic") {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude: lat, longitude: lon } }) => {
+          dispatchData({ lat, lon });
+        }
+      );
+    } else {
+      dispatchData({ q });
+    }
 
-    dispatch({ type, payload: { data, time: new Date().getTime() } });
+    async function dispatchData(params) {
+      const { data } = await openWeather.get("/weather", {
+        params,
+      });
+
+      dispatch({ type, payload: { data, time: new Date().getTime() } });
+    }
   };
 }
 export function setWeatherCity(q) {

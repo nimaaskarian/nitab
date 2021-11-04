@@ -146,12 +146,13 @@ const defaultCommands = {
       async ({ altKey }) => {
         const url = "chrome://" + (sums[input] || input);
         if (altKey) {
-          const { id, index } = await chrome.tabs.getCurrent();
-          chrome.tabs.create({
-            url,
-            index,
+          chrome.tabs.getCurrent(({ id, index }) => {
+            chrome.tabs.create({
+              url,
+              index,
+            });
+            chrome.tabs.remove(id);
           });
-          chrome.tabs.remove(id);
         } else chrome.tabs.create({ url });
       };
   },
@@ -262,7 +263,7 @@ const defaultCommands = {
   rr: () => () => () => store.dispatch(resetStorage()),
   url(input) {
     return () => {
-      if (!input.match(/^http[s]?:\/\//i)) {
+      if (!input.match(/^http[s]?:\/\//i) && !input.match(/^((..?)?\/)+.*/i)) {
         input = "http://" + input;
       }
       return input;

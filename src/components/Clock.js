@@ -36,6 +36,7 @@ const Clock = (props) => {
         top: props.clockPos !== "center" ? "20px" : null,
         [props.clockPos]: "5vw",
         alignItems: props.clockAlign,
+        transform: props.clockPos !== "center" ? "translateY(0)" : null,
       }}
       className="clock foreground-change"
     >
