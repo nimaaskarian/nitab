@@ -345,7 +345,7 @@ const defaultCommands = {
     };
   },
   search(input) {
-    if (chrome.search)
+    if (chrome.search.query)
       return () =>
         ({ altKey }) => {
           chrome.search.query({

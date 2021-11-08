@@ -3,14 +3,7 @@ const INITIAL_STATE = {
   persianDate: true,
   isHistory: 1,
   altNewtab: false,
-  taskbarIcons: [
-    {
-      icon: "fab fa-telegram",
-      color: "white",
-      url: "webk.telegram.org",
-      index: 0,
-    },
-  ],
+  taskbarIcons: [],
   clockFormat: "24",
   unsplashCollectons: "9389477,908506,219941",
   weatherCity: "Tehran",

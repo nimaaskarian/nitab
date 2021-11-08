@@ -13,5 +13,5 @@
     "newtab": "focus.html"
   },
   "permissions": ["history", "storage", "bookmarks", "search"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://duckduckgo.com 'sha256-sUnRGwEFv/uRubj+MLa+X2Au/bhzdbFTCA9VXASfyJM='"
+  "content_security_policy": "script-src 'self' https://duckduckgo.com; object-src 'self'"
 }

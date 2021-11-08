@@ -1,1 +1,2 @@
-window.location = "/index.html";
+window.open("/index.html");
+window.close();
