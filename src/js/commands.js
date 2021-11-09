@@ -560,21 +560,21 @@ const defaultCommands = {
       return "http://alaatv.com/";
     };
   },
-  mu(input) {
-    if (input === "c") {
-      return () => {
-        return "http://musicator.ir:2082/";
-      };
-    } else if (parseInt(input)) {
-      return () => {
-        return "https://musicator.ir/player/index.php?page=" + input;
-      };
-    } else {
-      return () => {
-        return "https://musicator.ir/";
-      };
-    }
-  },
+  // mu(input) {
+  //   if (input === "c") {
+  //     return () => {
+  //       return "http://musicator.ir:2082/";
+  //     };
+  //   } else if (parseInt(input)) {
+  //     return () => {
+  //       return "https://musicator.ir/player/index.php?page=" + input;
+  //     };
+  //   } else {
+  //     return () => {
+  //       return "https://musicator.ir/";
+  //     };
+  //   }
+  // },
   taskbar() {
     return () => () => store.dispatch(toggleTaskbarEdit());
   },

@@ -1,5 +1,5 @@
 # Nitab
-A Neat, advanced and customizable start page for your chrome. written in JavaScript and React.
+A Neat, advanced and customizable start page for your browser. written in JavaScript and React.
 
 # Features
 - **Adding [commands](#commands)** will make your life easier !
