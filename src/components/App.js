@@ -213,19 +213,19 @@ const App = (props) => {
         setIsTerminal(false);
         return;
       }
-      if (e.altKey && parseInt(e.key)) {
+      if (e.altKey && +(e.code.replace(/(Digit)|(Numpad)/,""))) {
         if (isTerminal)
           try {
             document
               .querySelectorAll(".search-result")
-              [parseInt(e.key) - 1].click();
+              [+e.code.replace(/(Digit)|(Numpad)/,"") - 1].click();
             return;
           } catch (error) {}
         else
           try {
             document
               .querySelectorAll(".taskbar-icon:not(.empty)")
-              [parseInt(e.key) - 1].click();
+              [+e.code.replace(/(Digit)|(Numpad)/,"") - 1].click();
             return;
           } catch (error) {}
       }

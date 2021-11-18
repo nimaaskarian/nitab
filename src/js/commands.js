@@ -199,11 +199,14 @@ const defaultCommands = {
   },
   fg(input) {
     if (input) {
-      const [first, second] = input.split(/\s/g);
       if (input === "default") input = "white";
-      if (first && second && first === "ovr") input = second + " !important";
-      if (first === "auto")
+      if (input === "auto")
         return () => () => store.dispatch(setIsForegoundAuto(true));
+      const [first, second] = input.includes("ovr")
+        ? ["ovr", input.replace(/ovr\s/, "")]
+        : [];
+      if (first && second && first === "ovr") input = second + " !important";
+
       return () => () => {
         store.dispatch(setForeground(input));
         store.dispatch(setIsForegoundAuto(false));
