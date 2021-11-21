@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Nitab",
-  "version": "3.16.5",
+  "version": "3.20.0",
   "description": "A Neat, advanced and customizable start page for your browser.",
   "icons": {
     "16": "icons/16.png",
@@ -18,5 +18,8 @@
     "gecko": {
       "id": "test@gmail.com"
     }
+  },
+  "background": {
+    "scripts": ["js/background.js"]
   }
 }

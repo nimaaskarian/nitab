@@ -1,4 +1,6 @@
 /*global chrome*/
+/*global browser*/
+
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
 import { useAlert } from "react-alert";
@@ -289,10 +291,7 @@ const App = (props) => {
     try {
       switch (props.isHistory) {
         case 3: {
-          (async () => {
-            // eslint-disable-next-line no-undef
-            const allTabs = await browser.tabs.query({});
-            console.log(allTabs);
+          chrome.tabs.query({}, (allTabs) => {
             onSearchComplete(
               allTabs
                 .flatMap(({ url, title, windowId, index: tabs }) => {
@@ -305,7 +304,7 @@ const App = (props) => {
                 .filter((e) => e)
                 .slice(0, 3 + isNameSearch)
             );
-          })();
+          });
           break;
         }
         case 2:
@@ -455,7 +454,8 @@ const App = (props) => {
                         }
                       } else {
                         const { tabs, windowId } = e;
-                        chrome.tabs.highlight({ windowId, tabs });
+                        browser.windows.update(windowId, { focused: true });
+                        browser.tabs.highlight({ tabs, windowId });
                         if (props.altNewtab) window.close();
                       }
                     }}
