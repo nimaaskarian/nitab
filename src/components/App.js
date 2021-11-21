@@ -213,19 +213,19 @@ const App = (props) => {
         setIsTerminal(false);
         return;
       }
-      if (e.altKey && +(e.code.replace(/(Digit)|(Numpad)/,""))) {
+      if (e.altKey && +e.code.replace(/(Digit)|(Numpad)/, "")) {
         if (isTerminal)
           try {
             document
               .querySelectorAll(".search-result")
-              [+e.code.replace(/(Digit)|(Numpad)/,"") - 1].click();
+              [+e.code.replace(/(Digit)|(Numpad)/, "") - 1].click();
             return;
           } catch (error) {}
         else
           try {
             document
               .querySelectorAll(".taskbar-icon:not(.empty)")
-              [+e.code.replace(/(Digit)|(Numpad)/,"") - 1].click();
+              [+e.code.replace(/(Digit)|(Numpad)/, "") - 1].click();
             return;
           } catch (error) {}
       }
@@ -282,11 +282,32 @@ const App = (props) => {
         };
     };
     const onSearchComplete = (e) => {
+      console.log([searchSuggest(term), ...e]);
       setResults([searchSuggest(term), ...e]);
     };
 
     try {
       switch (props.isHistory) {
+        case 3: {
+          (async () => {
+            // eslint-disable-next-line no-undef
+            const allTabs = await browser.tabs.query({});
+            console.log(allTabs);
+            onSearchComplete(
+              allTabs
+                .flatMap(({ url, title, windowId, index: tabs }) => {
+                  if (
+                    url.toLowerCase().includes(term.toLowerCase()) ||
+                    title.toLowerCase().includes(term.toLowerCase())
+                  )
+                    return { windowId, tabs, title, url };
+                })
+                .filter((e) => e)
+                .slice(0, 3 + isNameSearch)
+            );
+          })();
+          break;
+        }
         case 2:
           chrome.bookmarks.search({ query: term }, (res) => {
             onSearchComplete(res.slice(0, 3 + isNameSearch));
@@ -406,6 +427,8 @@ const App = (props) => {
                     return "History";
                   case 2:
                     return "Bookmark";
+                  case 3:
+                    return "Tabs";
                   default:
                     break;
                 }
@@ -422,11 +445,18 @@ const App = (props) => {
                 return (
                   <SearchResult
                     onClick={() => {
-                      if (typeof e.url === "string") {
-                        if (!props.altNewtab) window.open(e.url);
-                        else document.location = e.url;
+                      console.log("E: ", e);
+                      if (e.windowId === undefined) {
+                        if (typeof e.url === "string") {
+                          if (props.altNewtab) document.location = e.url;
+                          else window.open(e.url);
+                        } else {
+                          e.url(props.altNewtab);
+                        }
                       } else {
-                        e.url(props.altNewtab);
+                        const { tabs, windowId } = e;
+                        chrome.tabs.highlight({ windowId, tabs });
+                        if (props.altNewtab) window.close();
                       }
                     }}
                     key={i}

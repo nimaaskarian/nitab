@@ -122,7 +122,7 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case "ADD_ISHISTORY":
       return {
         ...state,
-        isHistory: state.isHistory + 1 > 2 ? 0 : state.isHistory + 1,
+        isHistory: state.isHistory + 1 > 3 ? 0 : state.isHistory + 1,
       };
     case "SET_IDENTIFIER":
       return { ...state, identifier: payload };
