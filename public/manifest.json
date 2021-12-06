@@ -18,8 +18,5 @@
     "gecko": {
       "id": "test@gmail.com"
     }
-  },
-  "background": {
-    "scripts": ["js/background.js"]
   }
 }

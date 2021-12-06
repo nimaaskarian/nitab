@@ -10,7 +10,7 @@ export const setBackground = async (background) => {
   }
   store.dispatch(
     setBgAction(
-      typeof background === "object"
+      typeof background === "object" && background
         ? `url('${URL.createObjectURL(background)}')`
         : background
     )

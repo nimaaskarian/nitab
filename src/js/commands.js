@@ -348,14 +348,15 @@ const defaultCommands = {
     };
   },
   search(input) {
-    if (chrome.search.query)
-      return () =>
-        ({ altKey }) => {
-          chrome.search.query({
-            disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-            text: input,
-          });
-        };
+    if (chrome.search)
+      if (chrome.search.query)
+        return () =>
+          ({ altKey }) => {
+            chrome.search.query({
+              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+              text: input,
+            });
+          };
     return this.g(input);
   },
   g(input) {
