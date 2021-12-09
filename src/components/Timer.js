@@ -5,7 +5,10 @@ import {
   setTimerFlags,
   toggleTimerIsPaused,
   toggleTimerLoop,
-  toggleIsClock
+  toggleIsClock,
+  addTimerFlags,
+  setCurrentTimer,
+  setTimerIsPaused,
 } from "../actions";
 
 import Countdown from "./Countdown";
@@ -44,10 +47,25 @@ const Timer = (props) => {
         <a
           className={`fal fa-${props.timerIsPaused ? "play" : "pause"}`}
           onClick={() => {
-            props.setTimerFlags(0);
             props.toggleTimerIsPaused();
           }}
         />
+        {props.timerLoop ? (
+          <a
+            className="fal fa-forward-step"
+            onClick={() => {
+              
+              props.addTimerFlags(1);
+              props.setCurrentTimer(0);
+              
+              props.toggleTimerIsPaused();
+              setTimeout(() => {
+                props.toggleTimerIsPaused();
+              }, 1);
+              
+            }}
+          />
+        ) : null}
       </div>
       {props.timerLoop ? (
         <div
@@ -78,5 +96,8 @@ export default connect(mapStateToProps, {
   toggleTimerLoop,
   toggleTimerIsPaused,
   setTimerFlags,
-  toggleIsClock
+  toggleIsClock,
+  addTimerFlags,
+  setCurrentTimer,
+  setTimerIsPaused,
 })(Timer);

@@ -31,7 +31,6 @@ const TimerEdit = (props) => {
       }}
       onKeyPress={({ code }) => {
         if (code === "Enter") {
-          props.setTimerFlags(0);
           props.setCurrentTimer(0);
           props.setCountingTo(+seconds + +minutes * 60 + +hours * 3600);
           props.setTimerData({ hours, minutes, seconds });
