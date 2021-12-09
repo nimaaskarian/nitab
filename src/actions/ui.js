@@ -7,6 +7,9 @@ export function toggleTaskbarEdit() {
 export function setTerm(term) {
   return { type: "SET_TERM", payload: term };
 }
+export function setTimerEditFocus(focus) {
+  return { type: "SET_TIMER_EDIT_FOCUS", payload: focus };
+}
 export function setAc(term) {
   return { type: "SET_AC", payload: term };
 }

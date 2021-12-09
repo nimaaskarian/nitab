@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   isTaskbarEdit: false,
+  timerEditFocus:false,
   term: "",
 };
 
@@ -15,6 +16,8 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, background: payload };
     case "SET_ISTERMINAL":
       return { ...state, isTerminal: payload };
+    case "SET_TIMER_EDIT_FOCUS":
+      return {...state, timerEditFocus:payload}
     default:
       return { ...state };
   }

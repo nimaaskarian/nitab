@@ -1,0 +1,18 @@
+.timer-edit input {
+  font-family: inherit !important;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  font-size: 76px;
+  width: 76px;
+  direction: rtl;
+  border-color: initial;
+  font-weight: 600;
+}
+.timer-edit input:focus {
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}

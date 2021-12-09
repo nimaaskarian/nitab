@@ -1,5 +1,9 @@
+/* eslint-disable no-extend-native */
+/* eslint-disable import/no-anonymous-default-export */
 import defaultCommands from "../js/commands";
 const INITIAL_STATE = {
+  currentTimer: 0,
+  countingTo: 1639027222598,
   persianDate: true,
   isHistory: 1,
   altNewtab: false,
@@ -167,6 +171,11 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, persianDate: payload };
     case "TOGGLE_CLOCK_FORMAT":
       return { ...state, clockFormat: payload };
+    case "SET_CURRENT_TIMER":
+      return { ...state, currentTimer: payload };
+      case "SET_COUNTING_TO":
+        return { ...state, countingTo: payload };
+      
     default:
       return { ...state };
   }

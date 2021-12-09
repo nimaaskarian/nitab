@@ -1,3 +1,5 @@
+/*global chrome*/
+
 import localforage from "localforage";
 import { isUrl } from "../utils";
 import {
@@ -106,8 +108,6 @@ const getAll = async () => {
   }
   return output;
 };
-
-/*global chrome*/
 const defaultCommands = {
   clock(input) {
     if (input) {
@@ -348,15 +348,16 @@ const defaultCommands = {
     };
   },
   search(input) {
-    if (chrome.search)
-      if (chrome.search.query)
-        return () =>
-          ({ altKey }) => {
-            chrome.search.query({
-              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-              text: input,
-            });
-          };
+    // if (chrome)
+    //   if (chrome.search)
+    //     if (chrome.search.query)
+    //       return () =>
+    //         ({ altKey }) => {
+    //           chrome.search.query({
+    //             disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+    //             text: input,
+    //           });
+    //         };
     return this.g(input);
   },
   g(input) {

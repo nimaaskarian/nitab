@@ -12,6 +12,7 @@ import Helmet from "react-helmet";
 import AddTaskbar from "./AddTaskbar";
 import Terminal from "./Terminal";
 import Clock from "./Clock";
+import Timer from "./Timer";
 import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 
@@ -242,8 +243,11 @@ const App = (props) => {
       }
       if (e.key === "Backspace" && !props.term) return;
       if (!e.altKey) {
-        setIsTerminal(true);
-        terminal.current.focus();
+        console.log(props.timerEditFocus)
+        if (!props.timerEditFocus) {
+          setIsTerminal(true);
+          terminal.current.focus();
+        }
       } else {
         e.preventDefault();
       }
@@ -252,7 +256,7 @@ const App = (props) => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, props.isHistory, props.isTaskbarEdit]);
+  }, [isTerminal, props.isHistory, props.isTaskbarEdit, props.timerEditFocus]);
 
   useEffect(() => {
     if (props.term) chromeHistory(props.term);
@@ -316,7 +320,7 @@ const App = (props) => {
           chrome.history.search(
             {
               text: term,
-              startTime: new Date().getTime() - 14 * 24 * 3600 * 1000,
+              startTime: Date.now() - 14 * 24 * 3600 * 1000,
               maxResults: 3 + isNameSearch,
             },
             (res) => {
@@ -371,7 +375,7 @@ const App = (props) => {
         ) : isDragActive && isDragAccept ? (
           <h1 className="foreground-change">Drop the picture...</h1>
         ) : (
-          <Clock />
+          <Timer />
         )}
         {props.taskbarIcons.length ? (
           <div

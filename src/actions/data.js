@@ -41,7 +41,12 @@ export function removeFromCommand(name, indexs) {
     payload: { name, indexs },
   };
 }
-
+export function setCurrentTimer(currentTimer) {
+  return { type: "SET_CURRENT_TIMER", payload: currentTimer };
+}
+export function setCountingTo(countingTo) {
+  return { type: "SET_COUNTING_TO", payload: countingTo };
+}
 export function setClockPosition(position) {
   return {
     type: "SET_CLOCKPOS",
@@ -222,7 +227,7 @@ export function setWeatherData(q) {
     }
     if (result.time && result.data)
       if (result.data.name === q)
-        if (new Date().getTime() - result.time <= 3600 * 1000) {
+        if (Date().now() - result.time <= 3600 * 1000) {
           dispatch({ type, payload: { ...result } });
           return;
         }
