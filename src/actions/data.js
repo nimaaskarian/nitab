@@ -14,8 +14,27 @@ export function clearCommands() {
     type: "CLEAR_COMMANDS",
   };
 }
+
+export function setTimerFlags(timerFlags) {
+  return { type: "SET_TIMER_FLAGS", payload: timerFlags };
+}
+export function addTimerFlags() {
+  return { type: "ADD_TIMER_FLAGS" };
+}
+export function toggleTimerIsPaused() {
+  return { type: "TOGGLE_TIMER_ISPAUSED" };
+}
+export function setTimerIsPaused(isPaused) {
+  return { type: "SET_TIMER_ISPAUSED", payload: isPaused };
+}
+export function toggleTimerLoop(loop) {
+  return { type: "TOGGLE_TIMER_LOOP", payload: loop };
+}
 export function setParallaxFactor(factor) {
   return { type: "SET_PARALLAX_FACTOR", payload: factor };
+}
+export function toggleIsClock(isClock) {
+  return { type: "TOGGLE_IS_CLOCK", payload: isClock };
 }
 export function toggleIsParallax() {
   return (dispatch, getStore) => {
@@ -46,6 +65,9 @@ export function setCurrentTimer(currentTimer) {
 }
 export function setCountingTo(countingTo) {
   return { type: "SET_COUNTING_TO", payload: countingTo };
+}
+export function setTimerData(data) {
+  return { type: "SET_TIMER_DATA", payload: data };
 }
 export function setClockPosition(position) {
   return {
@@ -227,7 +249,7 @@ export function setWeatherData(q) {
     }
     if (result.time && result.data)
       if (result.data.name === q)
-        if (Date().now() - result.time <= 3600 * 1000) {
+        if (Date.now() - result.time <= 3600 * 1000) {
           dispatch({ type, payload: { ...result } });
           return;
         }

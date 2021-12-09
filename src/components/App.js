@@ -243,7 +243,7 @@ const App = (props) => {
       }
       if (e.key === "Backspace" && !props.term) return;
       if (!e.altKey) {
-        console.log(props.timerEditFocus)
+        console.log(props.timerEditFocus);
         if (!props.timerEditFocus) {
           setIsTerminal(true);
           terminal.current.focus();
@@ -375,7 +375,7 @@ const App = (props) => {
         ) : isDragActive && isDragAccept ? (
           <h1 className="foreground-change">Drop the picture...</h1>
         ) : (
-          <Timer />
+          props.isClock ? <Clock /> : <Timer />
         )}
         {props.taskbarIcons.length ? (
           <div

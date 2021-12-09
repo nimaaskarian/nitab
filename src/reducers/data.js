@@ -2,8 +2,16 @@
 /* eslint-disable import/no-anonymous-default-export */
 import defaultCommands from "../js/commands";
 const INITIAL_STATE = {
+  timerData: {
+    hours: null,
+    minutes: null,
+    seconds: null,
+  },
+  timerPausedData: null,
+  timerIsPaused: false,
   currentTimer: 0,
-  countingTo: 1639027222598,
+  timerFlags: null,
+  countingTo: 0,
   persianDate: true,
   isHistory: 1,
   altNewtab: false,
@@ -23,6 +31,7 @@ const INITIAL_STATE = {
   font: "Inconsolata",
   clockPos: "center",
   clockAlign: "center",
+  isClock: true,
   blur: {
     terminal: "0",
     notTerminal: "0",
@@ -173,9 +182,22 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, clockFormat: payload };
     case "SET_CURRENT_TIMER":
       return { ...state, currentTimer: payload };
-      case "SET_COUNTING_TO":
-        return { ...state, countingTo: payload };
-      
+    case "SET_COUNTING_TO":
+      return { ...state, countingTo: payload };
+    case "SET_TIMER_DATA":
+      return { ...state, timerData: payload };
+    case "TOGGLE_TIMER_LOOP":
+      return { ...state, timerLoop: !state.timerLoop };
+    case "TOGGLE_TIMER_ISPAUSED":
+      return { ...state, timerIsPaused: !state.timerIsPaused };
+    case "SET_TIMER_ISPAUSED":
+      return { ...state, timerIsPaused: payload };
+    case "ADD_TIMER_FLAGS":
+      return { ...state, timerFlags: state.timerFlags + 1 };
+    case "SET_TIMER_FLAGS":
+      return { ...state, timerFlags: payload };
+    case "TOGGLE_IS_CLOCK":
+      return { ...state, isClock: !state.isClock };
     default:
       return { ...state };
   }

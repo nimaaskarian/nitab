@@ -1,12 +1,18 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { setCountingTo, setTimerEditFocus } from "../actions";
+import {
+  setCountingTo,
+  setTimerEditFocus,
+  setTimerData,
+  setCurrentTimer,
+  setTimerFlags,
+} from "../actions";
 import "../css/TimerEdit.css";
 const TimerEdit = (props) => {
-  const [seconds, setSeconds] = useState(null);
-  const [minutes, setMinutes] = useState(null);
-  const [hours, setHours] = useState(null);
+  const [seconds, setSeconds] = useState(props.timerData.seconds);
+  const [minutes, setMinutes] = useState(props.timerData.minutes);
+  const [hours, setHours] = useState(props.timerData.hours);
 
   const hoursElement = useRef();
   const minutesElement = useRef();
@@ -17,51 +23,67 @@ const TimerEdit = (props) => {
     <form
       ref={formElement}
       className="timer-edit"
+      onKeyDown={({ code }) => {
+        if (code === "Escape") {
+          props.setTimerEditFocus(false);
+          formElement.current.blur();
+        }
+      }}
       onKeyPress={({ code }) => {
         if (code === "Enter") {
-          props.setCountingTo(
-            Date.now() + seconds * 1000 + minutes * 60000 + hours * 3600000
-          );
+          props.setTimerFlags(0);
+          props.setCurrentTimer(0);
+          props.setCountingTo(+seconds + +minutes * 60 + +hours * 3600);
+          props.setTimerData({ hours, minutes, seconds });
           props.setTimerEditFocus(false);
           formElement.current.blur();
         }
       }}
     >
       <input
-        type="number"
+        pattern="[0-9]*"
         ref={hoursElement}
         onChange={({ target }) => {
-          setHours(parseInt(target.value.slice(0, 2) || 0) || null);
+          if (!Object.is(Number(target.value), NaN))
+            setHours(target.value.slice(0, 2) || "");
         }}
         onKeyDown={({ target, code }) => {
           if (code === "Backspace")
             if (target.value.length <= 0) minutesElement.current.focus();
+          if (code === "Tab") hoursElement.current.focus();
         }}
         value={hours}
         placeholder="00"
       />
       :
       <input
-        type="number"
+        pattern="[0-9]*"
         ref={minutesElement}
         onChange={({ target }) => {
-          setMinutes(parseInt(target.value.slice(0, 2) || 0) || null);
+          if (!Object.is(Number(target.value), NaN))
+            setMinutes(target.value.slice(0, 2) || "");
           if (target.value.length >= 2) hoursElement.current.focus();
         }}
         onKeyDown={({ target, code }) => {
           if (code === "Backspace")
             if (target.value.length <= 0) secondsElement.current.focus();
+          if (code === "Tab") hoursElement.current.focus();
         }}
         value={minutes}
         placeholder="00"
       />
       :
       <input
-        type="number"
+        autoFocus
+        pattern="[0-9]*"
         ref={secondsElement}
         onChange={({ target }) => {
-          setSeconds(parseInt(target.value.slice(0, 2) || 0) || null);
+          if (!Object.is(Number(target.value), NaN))
+            setSeconds(target.value.slice(0, 2) || "");
           if (target.value.length >= 2) minutesElement.current.focus();
+        }}
+        onKeyDown={({ code }) => {
+          if (code === "Tab") minutesElement.current.focus();
         }}
         value={seconds}
         placeholder="00"
@@ -69,5 +91,15 @@ const TimerEdit = (props) => {
     </form>
   );
 };
-
-export default connect(null, { setCountingTo, setTimerEditFocus })(TimerEdit);
+const mapStateToProps = (state) => {
+  return {
+    timerData: state.data.timerData,
+  };
+};
+export default connect(mapStateToProps, {
+  setCountingTo,
+  setTimerEditFocus,
+  setTimerData,
+  setCurrentTimer,
+  setTimerFlags,
+})(TimerEdit);

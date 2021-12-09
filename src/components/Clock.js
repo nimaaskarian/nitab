@@ -5,7 +5,11 @@ import persianDate from "persian-date";
 import Weather from "./Weather";
 import "../css/Clock.css";
 
-import { togglePersianDate, toggleClockFormat } from "../actions";
+import {
+  togglePersianDate,
+  toggleClockFormat,
+  toggleIsClock,
+} from "../actions";
 
 const Clock = (props) => {
   function format12h(date) {
@@ -31,6 +35,10 @@ const Clock = (props) => {
   }, []);
   return (
     <div
+      onContextMenu={(e) => {
+        e.preventDefault();
+        props.toggleIsClock();
+      }}
       style={{
         position: props.clockPos !== "center" ? "absolute" : null,
         top: props.clockPos !== "center" ? "20px" : null,
@@ -64,4 +72,5 @@ const mapStateToProp = (state) => {
 export default connect(mapStateToProp, {
   togglePersianDate,
   toggleClockFormat,
+  toggleIsClock,
 })(Clock);
