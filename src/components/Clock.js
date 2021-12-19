@@ -39,16 +39,20 @@ const Clock = (props) => {
         e.preventDefault();
         props.toggleIsClock();
       }}
+      className="clock foreground-change"
       style={{
         position: props.clockPos !== "center" ? "absolute" : null,
         top: props.clockPos !== "center" ? "20px" : null,
         [props.clockPos]: "5vw",
-        alignItems: props.clockAlign,
-        transform: props.clockPos !== "center" ? "translateY(0)" : null,
+        transform: props.clockPos !== "center" ? "translateY(50%)" : null,
       }}
-      className="clock foreground-change"
     >
-      <div className="clock-wrapper">
+      <div
+        className="clock-wrapper"
+        style={{
+          alignItems: props.clockAlign,
+        }}
+      >
         <div className="clock-time" onClick={props.toggleClockFormat}>
           {props.clockFormat === "12" ? format12h(time) : format24h(time)}
         </div>

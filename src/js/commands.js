@@ -101,11 +101,20 @@ const s = {
     des: "For Adding, Deleting or changing a command. command [commandName:string] [URL(s)]",
   },
 };
+const getAll = async () => {
+  let output = {};
+  const keys = await localforage.keys();
+  for (let key of keys) {
+    const value = await localforage.getItem(key);
+    output[key] = value;
+  }
+  return output;
+};
 const defaultCommands = {
   date() {
     return () => () => {
       store.dispatch(toggleDateActive());
-      store.dispatch(setTerm(""));
+      
     };
   },
   w() {

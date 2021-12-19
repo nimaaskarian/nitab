@@ -23,15 +23,17 @@ const Timer = (props) => {
         props.toggleIsClock();
       }}
       className="clock foreground-change timer"
+      style={{
+        position: props.clockPos !== "center" ? "absolute" : null,
+        top: props.clockPos !== "center" ? "20px" : null,
+        [props.clockPos]: "5vw",
+        transform: props.clockPos !== "center" ? "translateY(50%)" : null,
+      }}
     >
       <div
         className="clock-wrapper"
         style={{
-          position: props.clockPos !== "center" ? "absolute" : null,
-          top: props.clockPos !== "center" ? "20px" : null,
-          [props.clockPos]: "5vw",
           alignItems: props.clockAlign,
-          transform: props.clockPos !== "center" ? "translateY(0)" : null,
         }}
       >
         <div
