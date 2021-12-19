@@ -48,18 +48,20 @@ const Clock = (props) => {
       }}
       className="clock foreground-change"
     >
-      <div className="clock-time" onClick={props.toggleClockFormat}>
-        {props.clockFormat === "12" ? format12h(time) : format24h(time)}
-      </div>
-      {props.isDateActive ? (
-        <div className="clock-date" onClick={props.togglePersianDate}>
-          {new persianDate()
-            .toLocale(props.persianDate ? "fa" : "en")
-            .toCalendar(props.persianDate ? "persian" : "gregorian")
-            .format(props.persianDate ? "dddd D MMMM" : "dddd, MMMM D")}
+      <div className="clock-wrapper">
+        <div className="clock-time" onClick={props.toggleClockFormat}>
+          {props.clockFormat === "12" ? format12h(time) : format24h(time)}
         </div>
-      ) : null}
-      {props.isWeatherActive ? <Weather /> : null}
+        {props.isDateActive ? (
+          <div className="clock-date" onClick={props.togglePersianDate}>
+            {new persianDate()
+              .toLocale(props.persianDate ? "fa" : "en")
+              .toCalendar(props.persianDate ? "persian" : "gregorian")
+              .format(props.persianDate ? "dddd D MMMM" : "dddd, MMMM D")}
+          </div>
+        ) : null}
+        {props.isWeatherActive ? <Weather /> : null}
+      </div>
     </div>
   );
 };

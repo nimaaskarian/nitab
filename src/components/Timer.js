@@ -22,61 +22,63 @@ const Timer = (props) => {
         e.preventDefault();
         props.toggleIsClock();
       }}
-      style={{
-        position: props.clockPos !== "center" ? "absolute" : null,
-        top: props.clockPos !== "center" ? "20px" : null,
-        [props.clockPos]: "5vw",
-        alignItems: props.clockAlign,
-        transform: props.clockPos !== "center" ? "translateY(0)" : null,
-      }}
       className="clock foreground-change timer"
     >
       <div
-        className="clock-time"
-        onClick={() => {
-          props.setTimerEditFocus(true);
+        className="clock-wrapper"
+        style={{
+          position: props.clockPos !== "center" ? "absolute" : null,
+          top: props.clockPos !== "center" ? "20px" : null,
+          [props.clockPos]: "5vw",
+          alignItems: props.clockAlign,
+          transform: props.clockPos !== "center" ? "translateY(0)" : null,
         }}
       >
-        {props.timerEditFocus ? <TimerEdit /> : <Countdown />}
-      </div>
-      <div className="clock-date">
-        <a
-          className={`fal fa-repeat ${props.timerLoop ? null : "disabled"}`}
-          onClick={props.toggleTimerLoop}
-        />
-        <a
-          className={`fal fa-${props.timerIsPaused ? "play" : "pause"}`}
+        <div
+          className="clock-time"
           onClick={() => {
-            props.toggleTimerIsPaused();
+            props.setTimerEditFocus(true);
           }}
-        />
-        {props.timerLoop ? (
+        >
+          {props.timerEditFocus ? <TimerEdit /> : <Countdown />}
+        </div>
+        <div className="clock-date">
           <a
-            className="fal fa-forward-step"
+            className={`fal fa-repeat ${props.timerLoop ? null : "disabled"}`}
+            onClick={props.toggleTimerLoop}
+          />
+          <a
+            className={`fal fa-${props.timerIsPaused ? "play" : "pause"}`}
             onClick={() => {
-              
-              props.addTimerFlags(1);
-              props.setCurrentTimer(0);
-              
               props.toggleTimerIsPaused();
-              setTimeout(() => {
-                props.toggleTimerIsPaused();
-              }, 1);
-              
             }}
           />
+          {props.timerLoop ? (
+            <a
+              className="fal fa-forward-step"
+              onClick={() => {
+                props.addTimerFlags(1);
+                props.setCurrentTimer(0);
+
+                props.toggleTimerIsPaused();
+                setTimeout(() => {
+                  props.toggleTimerIsPaused();
+                }, 1);
+              }}
+            />
+          ) : null}
+        </div>
+        {props.timerLoop ? (
+          <div
+            className="weather"
+            style={{ cursor: "pointer" }}
+            onDoubleClick={() => props.setTimerFlags(0)}
+          >
+            <a className="fa fa-flag-pennant" style={{ marginRight: "5px" }} />
+            <span>{props.timerFlags}</span>
+          </div>
         ) : null}
       </div>
-      {props.timerLoop ? (
-        <div
-          className="weather"
-          style={{ cursor: "pointer" }}
-          onDoubleClick={() => props.setTimerFlags(0)}
-        >
-          <a className="fa fa-flag-pennant" style={{ marginRight: "5px" }} />
-          <span>{props.timerFlags}</span>
-        </div>
-      ) : null}
     </div>
   );
 };
