@@ -7,6 +7,7 @@
   box-shadow: none;
   font-size: 36px;
   font-weight: 500 !important;
+  line-height: 2;
 }
 .terminal {
   align-items: center;

@@ -4,3 +4,6 @@ export * from "./setBackground";
 export * from "./isUrl";
 export * from "./getImageLightness";
 export * from "./mutedKeys";
+export * from "./mutedKeys";
+export * from "./useDidMountEffect";
+

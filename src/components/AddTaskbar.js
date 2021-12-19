@@ -20,7 +20,6 @@ const AddTaskbar = (props) => {
     index = parseInt(index);
     const nonEmpty = taskbarIcons.filter((e) => e.icon !== "empty");
     if (nonEmpty[index]) {
-      parseInt(nonEmpty[index].index);
       return parseInt(nonEmpty[index].index);
     } else return -1;
   };

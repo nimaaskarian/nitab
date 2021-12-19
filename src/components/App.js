@@ -20,7 +20,7 @@ import defaultCommands, { termToCommand } from "../js/commands";
 import { isDark, getImageLightness, setBackground, mutedKeys } from "../utils";
 import { unsplash } from "../apis";
 import * as actions from "../actions";
-
+import { useDidMountEffect } from "../utils";
 import "../css/App.css";
 import "../css/fa.css";
 
@@ -160,8 +160,9 @@ const App = (props) => {
   }, [props.todo]);
   useEffect(() => {
     setBackground();
-    document.addEventListener("reset", () => props.resetStorage(), false);
-    
+
+    document.addEventListener("reset", props.resetStorage, false);
+    return () => document.removeEventListener("reset", props.resetStorage);
   }, []);
   useEffect(() => {
     const _styleIndex = document.styleSheets.length - 1;
@@ -263,7 +264,9 @@ const App = (props) => {
     if (props.term) chromeHistory(props.term);
     else setResults([]);
   }, [props.isHistory, props.term]);
-  useEffect(() => {
+
+  useDidMountEffect(() => {
+    console.log("cdu");
     alert.show(
       <div className="alert">
         {props.altNewtab
@@ -375,8 +378,10 @@ const App = (props) => {
           />
         ) : isDragActive && isDragAccept ? (
           <h1 className="foreground-change">Drop the picture...</h1>
+        ) : props.isClock ? (
+          <Clock />
         ) : (
-          props.isClock ? <Clock /> : <Timer />
+          <Timer />
         )}
         {props.taskbarIcons.length ? (
           <div
