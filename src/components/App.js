@@ -159,10 +159,6 @@ const App = (props) => {
     });
   }, [props.todo]);
   useEffect(() => {
-    setBackground();
-    document.addEventListener("reset", () => props.resetStorage(), false);
-  }, []);
-  useEffect(() => {
     const _styleIndex = document.styleSheets.length - 1;
     onForegroundChange(document.styleSheets[_styleIndex], props.foreground);
     return () => {

@@ -7,6 +7,8 @@ const INITIAL_STATE = {
     minutes: null,
     seconds: null,
   },
+  isDateActive: true,
+  isWeatherActive: true,
   timerPausedData: null,
   timerIsPaused: false,
   currentTimer: 0,
@@ -198,6 +200,10 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, timerFlags: payload };
     case "TOGGLE_IS_CLOCK":
       return { ...state, isClock: !state.isClock };
+    case "TOGGLE_WEATHER_ACTIVE":
+      return { ...state, isWeatherActive: !state.isWeatherActive };
+    case "TOGGLE_DATE_ACTIVE":
+      return { ...state, isDateActive: !state.isDateActive };
     default:
       return { ...state };
   }

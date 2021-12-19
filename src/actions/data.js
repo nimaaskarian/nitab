@@ -239,6 +239,12 @@ export function exportData() {
     }, 0);
   };
 }
+export function toggleDateActive() {
+  return { type: "TOGGLE_DATE_ACTIVE" };
+}
+export function toggleWeatherActive() {
+  return { type: "TOGGLE_WEATHER_ACTIVE" };
+}
 export function setWeatherData(q) {
   const type = "SET_WEATHER_DATA";
   return async (dispatch, getState) => {

@@ -51,18 +51,22 @@ const Clock = (props) => {
       <div className="clock-time" onClick={props.toggleClockFormat}>
         {props.clockFormat === "12" ? format12h(time) : format24h(time)}
       </div>
-      <div className="clock-date" onClick={props.togglePersianDate}>
-        {new persianDate()
-          .toLocale(props.persianDate ? "fa" : "en")
-          .toCalendar(props.persianDate ? "persian" : "gregorian")
-          .format(props.persianDate ? "dddd D MMMM" : "dddd, MMMM D")}
-      </div>
-      <Weather />
+      {props.isDateActive ? (
+        <div className="clock-date" onClick={props.togglePersianDate}>
+          {new persianDate()
+            .toLocale(props.persianDate ? "fa" : "en")
+            .toCalendar(props.persianDate ? "persian" : "gregorian")
+            .format(props.persianDate ? "dddd D MMMM" : "dddd, MMMM D")}
+        </div>
+      ) : null}
+      {props.isWeatherActive ? <Weather /> : null}
     </div>
   );
 };
 const mapStateToProp = (state) => {
   return {
+    isDateActive: state.data.isDateActive,
+    isWeatherActive: state.data.isWeatherActive,
     clockPos: state.data.clockPos,
     clockAlign: state.data.clockAlign,
     persianDate: state.data.persianDate,
