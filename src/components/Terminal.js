@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "localforage-observable/dist/localforage-observable.es6";
 import { connect } from "react-redux";
+import history from "../history";
 
 import Autocomplete from "./Autocomplete";
 import defaultCommands, { termToCommand } from "../js/commands";
@@ -76,10 +77,14 @@ const Terminal = React.forwardRef((props, ref) => {
       );
       if (e.code === "Enter" && onSubmit.f) {
         let _output = onSubmit.f(args);
-
         if (typeof _output === "string") {
+          const prevTitle = document.title;
+          window.document.title = props.term + " - " + prevTitle;
+          history.push({ search: "?t=" + props.term });
           if (e.altKey !== props.altNewtab) document.location = _output;
-          else window.open(_output);
+          else {
+            window.open(_output);
+          }
         } else {
           _output({
             altKey: e.altKey !== props.altNewtab,
@@ -124,7 +129,9 @@ const Terminal = React.forwardRef((props, ref) => {
             props.setTerm(e.target.value.trimStart());
           }}
         />
-        <Autocomplete style={{ color: `var(--${termClass().replace(/^fontawe /g, "")})` }} />
+        <Autocomplete
+          style={{ color: `var(--${termClass().replace(/^fontawe /g, "")})` }}
+        />
       </div>
       <span
         style={{

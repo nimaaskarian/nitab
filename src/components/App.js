@@ -72,6 +72,7 @@ const App = (props) => {
       multiple: false,
     });
   useEffect(() => {
+    console.log(document);
     if (!prevCommands) setPrevCommands({ ...props.commands });
     return () => {
       console.log(props.commands);
@@ -160,7 +161,7 @@ const App = (props) => {
   }, [props.todo]);
   useEffect(() => {
     setBackground();
-
+    props.setTerm(new URLSearchParams(window.location.search).get("t"));
     document.addEventListener("reset", props.resetStorage, false);
     return () => document.removeEventListener("reset", props.resetStorage);
   }, []);

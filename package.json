@@ -1,6 +1,6 @@
 {
   "name": "nitab",
-  "version": "3.21.5",
+  "version": "3.21.8",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@tippyjs/react": "^4.2.5",
     "axios": "^0.21.1",
+    "history": "^5.2.0",
     "html-react-parser": "^1.2.7",
     "localforage": "^1.9.0",
     "localforage-observable": "^2.1.1",
