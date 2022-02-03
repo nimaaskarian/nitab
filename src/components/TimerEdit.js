@@ -13,7 +13,6 @@ const TimerEdit = (props) => {
   const [seconds, setSeconds] = useState(props.timerData.seconds);
   const [minutes, setMinutes] = useState(props.timerData.minutes);
   const [hours, setHours] = useState(props.timerData.hours);
-
   const hoursElement = useRef();
   const minutesElement = useRef();
   const secondsElement = useRef();

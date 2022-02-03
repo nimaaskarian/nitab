@@ -114,7 +114,6 @@ const defaultCommands = {
   date() {
     return () => () => {
       store.dispatch(toggleDateActive());
-      
     };
   },
   w() {
@@ -241,9 +240,11 @@ const defaultCommands = {
   command(input) {
     let [commandName, ...commandFunctions] = input
       .replace(/icon:".*"/g, "")
+      .replace(/color:".*"/g, "")
       .split(/\s/g)
       .filter((e) => !!e);
-    const icon = (/(?<=icon:").*(?=")/g.exec(input) || [])[0];
+    const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
+    const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
     if (icon) {
       document.querySelector(
         ".terminal-output"
@@ -258,7 +259,7 @@ const defaultCommands = {
       !commandFunctions.length
     )
       return;
-    console.log(icon, commandFunctions);
+    
     return () => {
       switch (commandFunctions[0].toLowerCase()) {
         case "delete":
@@ -273,7 +274,9 @@ const defaultCommands = {
             store.dispatch(removeFromCommand(commandName, commandFunctions));
         default:
           return () =>
-            store.dispatch(addCommand(commandName, commandFunctions, icon));
+            store.dispatch(
+              addCommand(commandName, commandFunctions, icon, color)
+            );
       }
     };
   },
@@ -631,7 +634,9 @@ const noCommand = (string) => {
 export const termToCommand = (string, identifier, commands) => {
   let name, args;
   const { main, replace } = regex(identifier);
+  
   if (main.test(string)) {
+    
     let values = string.replace(replace, "").split(" ");
     name = values[0];
     args = "";

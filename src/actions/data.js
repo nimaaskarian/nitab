@@ -1,9 +1,9 @@
 import { openWeather } from "../apis";
 
-export function addCommand(name, args, icon) {
+export function addCommand(name, args, icon,color) {
   return {
     type: "ADD_COMMAND",
-    payload: { name, args, icon },
+    payload: { name, args, icon,color },
   };
 }
 export function setIsForegoundAuto(isFgAuto) {

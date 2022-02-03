@@ -72,14 +72,16 @@ const deleteFromObject = (object, key) => {
 
 export default (state = INITIAL_STATE, { payload, type }) => {
   switch (type) {
-    case "ADD_COMMAND":
+    case "ADD_COMMAND": {
+      const { icon, color } = payload;
       return {
         ...state,
         commands: {
           ...state.commands,
-          [payload.name]: { args: payload.args, icon: payload.icon },
+          [payload.name]: { args: payload.args, icon, color },
         },
       };
+    }
     case "DELETE_COMMAND": {
       return {
         ...state,
@@ -163,7 +165,7 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case "ADD_TODO":
       return { ...state, todo: [...state.todo, payload] };
     case "REMOVE_TODO": {
-      console.log(type, payload);
+      
       return { ...state, todo: state.todo.delete(payload) };
     }
     case "SET_FONT":

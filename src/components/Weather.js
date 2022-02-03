@@ -107,7 +107,7 @@ const Weather = (props) => {
       </div>;
     }
   };
-  console.log(props.data);
+  
   return (
     <div className="weather">
       <div style={{ marginRight: "5px" }} className="weather-selector">

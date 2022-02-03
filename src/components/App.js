@@ -72,10 +72,10 @@ const App = (props) => {
       multiple: false,
     });
   useEffect(() => {
-    console.log(document);
+    
     if (!prevCommands) setPrevCommands({ ...props.commands });
     return () => {
-      console.log(props.commands);
+      
       if (typeof props.commands === "object")
         setPrevCommands({ ...props.commands });
     };
@@ -103,7 +103,7 @@ const App = (props) => {
     }
   }, [prevCommands]);
   useEffect(() => {
-    console.log(props.background);
+    
     if (props.background === "unsplash") {
       unsplash
         .get("/random", {
@@ -118,7 +118,7 @@ const App = (props) => {
     }
   }, [props.background]);
   useEffect(() => {
-    console.log(props.isParallax);
+    
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
       const y = 0.5 - Math.round((e.clientY / window.innerHeight) * 10) / 10;
@@ -161,7 +161,7 @@ const App = (props) => {
   }, [props.todo]);
   useEffect(() => {
     setBackground();
-    props.setTerm(new URLSearchParams(window.location.search).get("t"));
+    props.setTerm(new URLSearchParams(window.location.search).get("t")||"");
     document.addEventListener("reset", props.resetStorage, false);
     return () => document.removeEventListener("reset", props.resetStorage);
   }, []);
@@ -246,7 +246,7 @@ const App = (props) => {
       }
       if (e.key === "Backspace" && !props.term) return;
       if (!e.altKey) {
-        console.log(props.timerEditFocus);
+        
         if (!props.timerEditFocus) {
           setIsTerminal(true);
           terminal.current.focus();
@@ -267,7 +267,7 @@ const App = (props) => {
   }, [props.isHistory, props.term]);
 
   useDidMountEffect(() => {
-    console.log("cdu");
+    
     alert.show(
       <div className="alert">
         {props.altNewtab
@@ -293,7 +293,7 @@ const App = (props) => {
         };
     };
     const onSearchComplete = (e) => {
-      console.log([searchSuggest(term), ...e]);
+      
       setResults([searchSuggest(term), ...e]);
     };
 
@@ -455,7 +455,7 @@ const App = (props) => {
                 return (
                   <SearchResult
                     onClick={() => {
-                      console.log("E: ", e);
+                      
                       if (e.windowId === undefined) {
                         if (typeof e.url === "string") {
                           if (props.altNewtab) document.location = e.url;

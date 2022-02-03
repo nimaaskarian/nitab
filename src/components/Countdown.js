@@ -14,7 +14,7 @@ const Countdown = (props) => {
     return new Date(Math.round(s) * 1000).toISOString().substr(11, 8);
   };
   const onFinish = () => {
-    console.log("finished");
+    
     props.setTimerIsPaused(true);
     props.setCurrentTimer(0);
     if (props.loop) {
@@ -29,7 +29,7 @@ const Countdown = (props) => {
         setTimeoutID(
           setTimeout(() => {
             props.setCurrentTimer(props.currentTimer + 1);
-            console.log(props.countingTo, props.currentTimer, timeoutID);
+            
           }, 1000)
         );
       else {

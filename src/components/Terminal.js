@@ -9,6 +9,7 @@ import defaultCommands, { termToCommand } from "../js/commands";
 import { setTerm, setAc } from "../actions";
 import "../css/Terminal.css";
 import "../css/commandsColors.css";
+import { isDark } from "../utils";
 
 const Terminal = React.forwardRef((props, ref) => {
   const [onSubmit, setOnSubmit] = useState(() => {});
@@ -19,10 +20,9 @@ const Terminal = React.forwardRef((props, ref) => {
       props.identifier,
       props.commands
     );
-
     return ["taskbar", "command"].includes(name)
-      ? ""
-      : props.commandIcons[name] || "fontawe " + name;
+      ? {}
+      : { icons: props.commandIcons[name], className: name };
   };
 
   useEffect(() => {
@@ -109,6 +109,7 @@ const Terminal = React.forwardRef((props, ref) => {
       });
     } else setOnSubmit(() => {});
   }, [props.term, props.commands, props.altNewtab]);
+  const {className, icons} = termClass()
   return (
     <div
       style={{
@@ -119,10 +120,10 @@ const Terminal = React.forwardRef((props, ref) => {
       <div>
         <input
           style={{
-            color: `var(--${termClass().replace(/^fontawe /g, "")})`,
+            color: `var(--${className})`,
           }}
           value={props.term}
-          className={termClass()}
+          className={className}
           ref={ref}
           autoFocus
           onChange={(e) => {
@@ -130,14 +131,14 @@ const Terminal = React.forwardRef((props, ref) => {
           }}
         />
         <Autocomplete
-          style={{ color: `var(--${termClass().replace(/^fontawe /g, "")})` }}
+          style={{ color: `var(--${className})` }}
         />
       </div>
       <span
         style={{
-          color: `var(--${termClass().replace(/^fontawe /g, "")})`,
+          color: `var(--${className})`,
         }}
-        className={`terminal-output ${termClass()}`}
+        className={`terminal-output ${className} ${icons||"fontawe"}`}
       ></span>
     </div>
   );
@@ -148,6 +149,21 @@ const mapStateToProp = (state) => {
       icons = {};
     Object.keys(data).forEach((command) => {
       if (data[command].icon) icons[command] = data[command].icon;
+      if (data[command].color) {
+        const _styleIndex = document.styleSheets.length - 1;
+        const stylesheet = document.styleSheets[_styleIndex];
+        stylesheet.insertRule(
+          `.${command}::selection{background-color:${
+            data[command].color
+          };color:${isDark(data[command].color) ? "#CCC" : "#333"};}`,
+          stylesheet.rules.length
+        );
+        document.documentElement.style.setProperty(
+          `--${command}`,
+          data[command].color
+        );
+      }
+
       commands[command] = (input) => {
         if (!data[command].args) return;
         if (data[command].args.length === 1)
