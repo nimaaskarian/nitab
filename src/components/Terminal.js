@@ -1,25 +1,18 @@
 /*global chrome*/
 import React, { useState, useEffect } from "react";
-import "localforage-observable/dist/localforage-observable.es6";
 import { connect } from "react-redux";
-import history from "../history";
-
+import history from "../js/history";
 import Autocomplete from "./Autocomplete";
-import defaultCommands, { termToCommand } from "../js/commands";
+import { termToCommand } from "../js/commands.js";
 import { setTerm, setAc } from "../actions";
+
 import "../css/Terminal.css";
 import "../css/commandsColors.css";
-import { isDark } from "../utils";
 
 const Terminal = React.forwardRef((props, ref) => {
   const [onSubmit, setOnSubmit] = useState(() => {});
-
   const termClass = () => {
-    const { name } = termToCommand(
-      props.term,
-      props.identifier,
-      props.commands
-    );
+    const { name } = termToCommand(props.term, props.identifier, props.commands);
     return ["taskbar", "command"].includes(name)
       ? {}
       : { icons: props.commandIcons[name], className: name };
@@ -70,11 +63,7 @@ const Terminal = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     const onSubmitHelper = (e) => {
-      const { args } = termToCommand(
-        props.term,
-        props.identifier,
-        props.commands
-      );
+      const { args } = termToCommand(props.term, props.identifier, props.commands);
       if (e.code === "Enter" && onSubmit.f) {
         let _output = onSubmit.f(args);
         if (typeof _output === "string") {
@@ -109,7 +98,7 @@ const Terminal = React.forwardRef((props, ref) => {
       });
     } else setOnSubmit(() => {});
   }, [props.term, props.commands, props.altNewtab]);
-  const {className, icons} = termClass()
+  const { className, icons } = termClass();
   return (
     <div
       style={{
@@ -130,75 +119,19 @@ const Terminal = React.forwardRef((props, ref) => {
             props.setTerm(e.target.value.trimStart());
           }}
         />
-        <Autocomplete
-          style={{ color: `var(--${className})` }}
-        />
+        <Autocomplete style={{ color: `var(--${className})` }} />
       </div>
       <span
         style={{
           color: `var(--${className})`,
         }}
-        className={`terminal-output ${className} ${icons||"fontawe"}`}
+        className={`terminal-output ${className} ${icons || "fontawe"}`}
       ></span>
     </div>
   );
 });
 const mapStateToProp = (state) => {
-  const dataToCommand = (data) => {
-    let commands = {},
-      icons = {};
-    Object.keys(data).forEach((command) => {
-      if (data[command].icon) icons[command] = data[command].icon;
-      if (data[command].color) {
-        const _styleIndex = document.styleSheets.length - 1;
-        const stylesheet = document.styleSheets[_styleIndex];
-        stylesheet.insertRule(
-          `.${command}::selection{background-color:${
-            data[command].color
-          };color:${isDark(data[command].color) ? "#CCC" : "#333"};}`,
-          stylesheet.rules.length
-        );
-        document.documentElement.style.setProperty(
-          `--${command}`,
-          data[command].color
-        );
-      }
-
-      commands[command] = (input) => {
-        if (!data[command].args) return;
-        if (data[command].args.length === 1)
-          return () => {
-            const [hasntInput, hasInput] = data[command].args[0]
-              .replace("%input%", input)
-              .split("%?%");
-            if (hasInput) {
-              if (input) return defaultCommands.url(hasInput)();
-              return defaultCommands.url(hasntInput)();
-            }
-            return defaultCommands.url(hasntInput)();
-          };
-        else
-          return () =>
-            ({ input }) => {
-              data[command].args.forEach((element) => {
-                const [hasntInput, hasInput] = element
-                  .replace("%input%", input)
-                  .split("%?%");
-
-                if (hasInput) {
-                  if (input) window.open(defaultCommands.url(hasInput)());
-                  else window.open(defaultCommands.url(hasntInput)());
-                } else window.open(defaultCommands.url(hasntInput)());
-              });
-            };
-      };
-    });
-    return { commands, icons };
-  };
-  const { commands, icons } = dataToCommand(state.data.commands);
   return {
-    commands: { ...defaultCommands, ...commands },
-    commandIcons: icons,
     identifier: state.data.identifier,
     altNewtab: state.data.altNewtab,
     term: state.ui.term,

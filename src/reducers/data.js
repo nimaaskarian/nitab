@@ -19,7 +19,7 @@ const INITIAL_STATE = {
   altNewtab: false,
   taskbarIcons: [],
   clockFormat: "24",
-  unsplashCollectons: "9389477,908506,219941",
+  unsplashCollections: "9389477,908506,219941",
   weatherCity: "Tehran",
   weatherData: {},
   background: null,

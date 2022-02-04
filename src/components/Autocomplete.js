@@ -5,6 +5,7 @@ import "../css/Autocomplete.css";
 
 const Autocomplete = ({ ac, setTerm, term, style }) => {
   const [selected, setSelected] = useState(0);
+
   useEffect(() => {
     setSelected(0);
   }, [term]);

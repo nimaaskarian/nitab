@@ -1,125 +1,18 @@
 /*global chrome*/
 
-import localforage from "localforage";
-import { isUrl } from "../utils";
-import {
-  toggleDateActive,
-  toggleWeatherActive,
-  addCommand,
-  addToCommand,
-  deleteCommand,
-  removeFromCommand,
-  resetStorage,
-  exportData,
-  importData,
-  toggleTaskbarEdit,
-  setIndentifier,
-  setForeground,
-  setUnsplash,
-  setBrightness,
-  setBlur,
-  toggleMagnify,
-  toggleGradient,
-  setClockAlign,
-  setClockPosition,
-  setTerm,
-  addTodo,
-  setFont,
-  toggleIsParallax,
-  setParallaxFactor,
-  clearCommands,
-  setIsForegoundAuto,
-} from "../actions";
-
-import { setBackground } from "../utils";
+import { isUrl,setBackground } from "../utils";
+import * as actions from "../actions";
 import { store } from "../store";
-
-const s = {
-  iden: {
-    des: "Changes command identifier",
-    def: "/",
-    current: () => {},
-  },
-  clock: {
-    des: "Changes clock position and align",
-    def: "center center",
-    current: () => {},
-  },
-  font: {
-    des: "Changes font of newtab's texts",
-    def: "Inconsolata",
-    current: () => {},
-  },
-  par: {
-    des: "Toggles Background's Mouse Parallex effect (use par [number] to set zoom percentage",
-    def: "off",
-    current: () => {},
-  },
-  c: {
-    des: "Short term for 'chrome://'. ext: extension, set: settings, his: history",
-  },
-  exp: {
-    des: "Exports your newtab settings as a .JSON file. (backgrounds except for urls and colors(solid and gradient) cannot be saved",
-  },
-  imp: {
-    des: "Opens a file selection menu to select your exported .JSON file and import its settings",
-  },
-  mag: {
-    des: "Toggles magnification of your Taskbar",
-    def: "on",
-    current: () => {},
-  },
-  gr: {
-    des: "Toggles Taskbar and Result-Mode background, and Terminals background gradient",
-    def: "on",
-    current: () => {},
-  },
-  bl: {
-    des: "Changes blur of background. bl [Main:number] [Terminal:number] [SettingGUI:number]",
-    def: "0 0 10",
-    current: () => {},
-  },
-  br: {
-    des: "Changes brightness of background. (1 or 100% = normal) br [Main:number] [Terminal:number] [SettingGUI:number]",
-    def: "1 1 0.8",
-    current: () => {},
-  },
-  bg: {
-    des: "Changes background. bg [background:cssColor,rgb,hsl,hex,gradient,url('example.com/path/to/background.jpg')",
-    def: "#333",
-    current: () => {},
-  },
-  fg: {
-    des: "Changes foreground color. ovr will make color to never change. fg ovr(optional) [color:cssColor,rgb,hsl,hex]",
-    def: "white",
-    current: () => {},
-  },
-  commandCl: {
-    des: "Clears all commands that you've added. commandCL CONFIRM (CONFIRM needs to be in Capital letters)",
-  },
-  command: {
-    des: "For Adding, Deleting or changing a command. command [commandName:string] [URL(s)]",
-  },
-};
-const getAll = async () => {
-  let output = {};
-  const keys = await localforage.keys();
-  for (let key of keys) {
-    const value = await localforage.getItem(key);
-    output[key] = value;
-  }
-  return output;
-};
 const defaultCommands = {
   date() {
     return () => () => {
-      store.dispatch(toggleDateActive());
+      store.dispatch(actions.toggleDateActive());
     };
   },
   w() {
     return () => () => {
-      store.dispatch(toggleWeatherActive());
-      store.dispatch(setTerm(""));
+      store.dispatch(actions.toggleWeatherActive());
+      store.dispatch(actions.setTerm(""));
     };
   },
   clock(input) {
@@ -127,26 +20,26 @@ const defaultCommands = {
       const [position, align] = input.toLowerCase().split(/\s/);
       if (position && align)
         return () => () => {
-          store.dispatch(setClockPosition(position));
+          store.dispatch(actions.setClockPosition(position));
           store.dispatch(
-            setClockAlign(
+            actions.setClockAlign(
               ["end", "start"].includes(align) ? "flex-" + align : align
             )
           );
-          store.dispatch(setTerm(""));
+          store.dispatch(actions.setTerm(""));
         };
     }
   },
   font(input) {
-    return () => () => store.dispatch(setFont(input));
+    return () => () => store.dispatch(actions.setFont(input));
   },
   todo(input) {
-    return () => () => store.dispatch(addTodo(input));
+    return () => () => store.dispatch(actions.addTodo(input));
   },
   par(input) {
     if (!parseFloat(input))
-      return () => () => store.dispatch(toggleIsParallax());
-    return () => () => store.dispatch(setParallaxFactor(parseFloat(input)));
+      return () => () => store.dispatch(actions.toggleIsParallax());
+    return () => () => store.dispatch(actions.setParallaxFactor(parseFloat(input)));
   },
   c(input) {
     const sums = {
@@ -171,25 +64,25 @@ const defaultCommands = {
   },
   iden(input) {
     if (input.trim())
-      return () => () => store.dispatch(setIndentifier(input.trim()));
+      return () => () => store.dispatch(actions.setIndentifier(input.trim()));
   },
   exp() {
-    return () => () => store.dispatch(exportData());
+    return () => () => store.dispatch(actions.exportData());
   },
   imp() {
-    return () => () => store.dispatch(importData());
+    return () => () => store.dispatch(actions.importData());
   },
   mag() {
-    return () => () => store.dispatch(toggleMagnify());
+    return () => () => store.dispatch(actions.toggleMagnify());
   },
   gr() {
-    return () => () => store.dispatch(toggleGradient());
+    return () => () => store.dispatch(actions.toggleGradient());
   },
   bl(input) {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
     return () => () =>
       store.dispatch(
-        setBlur({
+        actions.setBlur({
           terminal: terminal || 0,
           notTerminal: notTerminal || 0,
           setting: setting || "10",
@@ -200,7 +93,7 @@ const defaultCommands = {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
     return () => () =>
       store.dispatch(
-        setBrightness({
+        actions.setBrightness({
           terminal: terminal || 1,
           notTerminal: notTerminal || 1,
           setting: setting || ".8",
@@ -214,28 +107,28 @@ const defaultCommands = {
     if (input) {
       if (input === "default") input = "white";
       if (input === "auto")
-        return () => () => store.dispatch(setIsForegoundAuto(true));
+        return () => () => store.dispatch(actions.setIsForegoundAuto(true));
       const [first, second] = input.includes("ovr")
         ? ["ovr", input.replace(/ovr\s/, "")]
         : [];
       if (first && second && first === "ovr") input = second + " !important";
 
       return () => () => {
-        store.dispatch(setForeground(input));
-        store.dispatch(setIsForegoundAuto(false));
+        store.dispatch(actions.setForeground(input));
+        store.dispatch(actions.setIsForegoundAuto(false));
       };
     }
   },
   un(input) {
     if (input)
       return () => () => {
-        store.dispatch(setUnsplash(input));
-        store.dispatch(setBackground("unsplash"));
+        store.dispatch(actions.setUnsplash(input));
+        store.dispatch(actions.setBackground("unsplash"));
       };
     return () => "https://unsplash.com/collections";
   },
   commandCl(input) {
-    if (input === "CONFIRM") return () => () => store.dispatch(clearCommands());
+    if (input === "CONFIRM") return () => () => store.dispatch(actions.clearCommands());
   },
   command(input) {
     let [commandName, ...commandFunctions] = input
@@ -259,28 +152,28 @@ const defaultCommands = {
       !commandFunctions.length
     )
       return;
-    
+
     return () => {
       switch (commandFunctions[0].toLowerCase()) {
         case "delete":
-          return () => store.dispatch(deleteCommand(commandName));
+          return () => store.dispatch(actions.deleteCommand(commandName));
         case "add":
           return () =>
             store.dispatch(
-              addToCommand(commandName, commandFunctions.delete(0))
+              actions.addToCommand(commandName, commandFunctions.delete(0))
             );
         case "remove":
           return () =>
-            store.dispatch(removeFromCommand(commandName, commandFunctions));
+            store.dispatch(actions.removeFromCommand(commandName, commandFunctions));
         default:
           return () =>
             store.dispatch(
-              addCommand(commandName, commandFunctions, icon, color)
+              actions.addCommand(commandName, commandFunctions, icon, color)
             );
       }
     };
   },
-  rr: () => () => () => store.dispatch(resetStorage()),
+  rr: () => () => () => store.dispatch(actions.resetStorage()),
   url(input) {
     return () => {
       if (!input.match(/^http[s]?:\/\//i) && !input.match(/^((..?)?\/)+.*/i)) {
@@ -322,11 +215,11 @@ const defaultCommands = {
   mo(input) {
     if (input)
       return () => {
-        return "https://www.film2media.mobi/?s=" + input;
+        return "https://www.f2m.site/?s=" + input;
       };
     else
       return () => {
-        return "https://www.film2media.mobi/";
+        return "https://www.f2m.site/";
       };
   },
   t() {
@@ -455,11 +348,6 @@ const defaultCommands = {
       };
     }
   },
-  ico() {
-    return () => {
-      return "https://icomoon.io/app/#/select";
-    };
-  },
   st(input) {
     if (!input)
       return () => {
@@ -469,11 +357,6 @@ const defaultCommands = {
       return () => {
         return "https://store.steampowered.com/search/?term=" + input;
       };
-  },
-  sch() {
-    return () => {
-      return "http://student.mat.ir";
-    };
   },
   b(input) {
     let [title, url, parentId] = input.split(/\s/g);
@@ -488,35 +371,6 @@ const defaultCommands = {
     return () => () => {
       chrome.bookmarks.create(tempObj);
     };
-  },
-  // js(input) {
-  //   $("#terminal-output").html(
-  //     `<span class="js fontawe" style="margin:0 10;"></span>`
-  //   );
-  //   try {
-  //     return () => {
-  //       $("#terminal-output").html(
-  //         JSON.stringify(eval(input)) +
-  //           `<span class="js fontawe" style="margin:0 10;"></span>`
-  //       );
-  //     };
-  //   } catch (error) {
-  //     throw new error();
-  //   }
-  // },
-  s(input) {
-    if (input)
-      if (input.split(" ").length >= 2) {
-        let temp = "";
-        for (let index in input.split(" "))
-          if (parseInt(index)) temp += " " + input.split(" ")[index];
-
-        return () => {
-          return `https://www.google.com/search?q=${temp} site:${
-            input.split(" ")[0]
-          }`;
-        };
-      } else return () => {};
   },
   tr(input) {
     if (input) {
@@ -548,11 +402,6 @@ const defaultCommands = {
       };
     }
   },
-  y(input) {
-    return () => {
-      return "https://search.yahoo.com/search;_ylc=--?p=" + encodeURI(input);
-    };
-  },
   sft(input) {
     if (input) {
       return () => {
@@ -577,28 +426,8 @@ const defaultCommands = {
         return "https://www.dictionary.com/browse/" + input;
       };
   },
-  al(input) {
-    return () => {
-      return "http://alaatv.com/";
-    };
-  },
-  // mu(input) {
-  //   if (input === "c") {
-  //     return () => {
-  //       return "http://musicator.ir:2082/";
-  //     };
-  //   } else if (parseInt(input)) {
-  //     return () => {
-  //       return "https://musicator.ir/player/index.php?page=" + input;
-  //     };
-  //   } else {
-  //     return () => {
-  //       return "https://musicator.ir/";
-  //     };
-  //   }
-  // },
   taskbar() {
-    return () => () => store.dispatch(toggleTaskbarEdit());
+    return () => () => store.dispatch(actions.toggleTaskbarEdit());
   },
 };
 const regex = (identifier) => {
@@ -634,9 +463,8 @@ const noCommand = (string) => {
 export const termToCommand = (string, identifier, commands) => {
   let name, args;
   const { main, replace } = regex(identifier);
-  
+
   if (main.test(string)) {
-    
     let values = string.replace(replace, "").split(" ");
     name = values[0];
     args = "";

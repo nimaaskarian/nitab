@@ -1,32 +1,45 @@
 /*global chrome*/
 /*global browser*/
 
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 import { useAlert } from "react-alert";
 import { useDropzone } from "react-dropzone";
-import "localforage-observable/dist/localforage-observable.es6";
 import { connect } from "react-redux";
 import Helmet from "react-helmet";
+import dataToCommands from "../utils/dataToCommands";
 
 import AddTaskbar from "./AddTaskbar";
 import Terminal from "./Terminal";
 import Clock from "./Clock";
 import Timer from "./Timer";
-import SearchResult from "./SearchResult";
 import TaskbarIcon from "./TaskbarIcon";
 
-import defaultCommands, { termToCommand } from "../js/commands";
-import { isDark, getImageLightness, setBackground, mutedKeys } from "../utils";
+import {
+  isDark,
+  getImageLightness,
+  setBackground,
+  mutedKeys,
+  useDidMountEffect,
+} from "../utils";
 import { unsplash } from "../apis";
 import * as actions from "../actions";
-import { useDidMountEffect } from "../utils";
 import "../css/App.css";
 import "../css/fa.css";
+import SearchResultList from "./SearchResultList";
 
 const App = (props) => {
-  const [results, setResults] = useState([]);
+  console.log("first");
   //bookmark === 0, history === 1, nothing === 0
+  const { commands, icons: commandIcons } = useMemo(() => {
+    return dataToCommands(props.commands);
+  }, [props.commands]);
   const [isTerminal, setIsTerminal] = useState(false);
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
   const [prevCommands, setPrevCommands] = useState(null);
@@ -49,7 +62,7 @@ const App = (props) => {
   const onDropAccepted = useCallback((files) => {
     alert.show(
       <div className="alert">
-        {files[0].name} has equiped as your background picture
+        {files[0].name} has been set as your background picture
       </div>
     );
     const bgBlob = new Blob([files[0]], { type: "image/*" });
@@ -72,10 +85,8 @@ const App = (props) => {
       multiple: false,
     });
   useEffect(() => {
-    
     if (!prevCommands) setPrevCommands({ ...props.commands });
     return () => {
-      
       if (typeof props.commands === "object")
         setPrevCommands({ ...props.commands });
     };
@@ -103,7 +114,6 @@ const App = (props) => {
     }
   }, [prevCommands]);
   useEffect(() => {
-    
     if (props.background === "unsplash") {
       unsplash
         .get("/random", {
@@ -118,7 +128,6 @@ const App = (props) => {
     }
   }, [props.background]);
   useEffect(() => {
-    
     const mouseOver = (e) => {
       const x = 0.5 - Math.round((e.clientX / window.innerWidth) * 10) / 10;
       const y = 0.5 - Math.round((e.clientY / window.innerHeight) * 10) / 10;
@@ -161,7 +170,7 @@ const App = (props) => {
   }, [props.todo]);
   useEffect(() => {
     setBackground();
-    props.setTerm(new URLSearchParams(window.location.search).get("t")||"");
+    props.setTerm(new URLSearchParams(window.location.search).get("t") || "");
     document.addEventListener("reset", props.resetStorage, false);
     return () => document.removeEventListener("reset", props.resetStorage);
   }, []);
@@ -246,7 +255,6 @@ const App = (props) => {
       }
       if (e.key === "Backspace" && !props.term) return;
       if (!e.altKey) {
-        
         if (!props.timerEditFocus) {
           setIsTerminal(true);
           terminal.current.focus();
@@ -261,13 +269,7 @@ const App = (props) => {
     };
   }, [isTerminal, props.isHistory, props.isTaskbarEdit, props.timerEditFocus]);
 
-  useEffect(() => {
-    if (props.term) chromeHistory(props.term);
-    else setResults([]);
-  }, [props.isHistory, props.term]);
-
   useDidMountEffect(() => {
-    
     alert.show(
       <div className="alert">
         {props.altNewtab
@@ -276,69 +278,7 @@ const App = (props) => {
       </div>
     );
   }, [props.altNewtab]);
-  const chromeHistory = (term) => {
-    const isNameSearch =
-      termToCommand(term, props.identifier, {
-        ...defaultCommands,
-        ...props.commands,
-      }).name === "search";
-    const searchSuggest = (term) => {
-      if (!isNameSearch)
-        return {
-          url: defaultCommands["search"](term)(),
-          header: {
-            className: "fontawe search",
-          },
-          title: term,
-        };
-    };
-    const onSearchComplete = (e) => {
-      
-      setResults([searchSuggest(term), ...e]);
-    };
 
-    try {
-      switch (props.isHistory) {
-        case 3: {
-          chrome.tabs.query({}, (allTabs) => {
-            onSearchComplete(
-              allTabs
-                .flatMap(({ url, title, windowId, index: tabs }) => {
-                  if (
-                    url.toLowerCase().includes(term.toLowerCase()) ||
-                    title.toLowerCase().includes(term.toLowerCase())
-                  )
-                    return { windowId, tabs, title, url };
-                })
-                .filter((e) => e)
-                .slice(0, 3 + isNameSearch)
-            );
-          });
-          break;
-        }
-        case 2:
-          chrome.bookmarks.search({ query: term }, (res) => {
-            onSearchComplete(res.slice(0, 3 + isNameSearch));
-          });
-          break;
-        case 1:
-          chrome.history.search(
-            {
-              text: term,
-              startTime: Date.now() - 14 * 24 * 3600 * 1000,
-              maxResults: 3 + isNameSearch,
-            },
-            (res) => {
-              onSearchComplete(res);
-            }
-          );
-          break;
-        default:
-          setResults([searchSuggest(term)]);
-          break;
-      }
-    } catch (error) {}
-  };
   useEffect(() => {
     setIsTerminal(!!props.term);
   }, [props.term]);
@@ -446,41 +386,13 @@ const App = (props) => {
             </div>
           ) : null}
 
-          <Terminal ref={terminal} />
+          <Terminal
+            ref={terminal}
+            commands={commands}
+            commandIcons={commandIcons}
+          />
 
-          <div style={{ marginTop: "50px" }} className="search-results">
-            {results
-              .filter((e) => !!e)
-              .map((e, i) => {
-                return (
-                  <SearchResult
-                    onClick={() => {
-                      
-                      if (e.windowId === undefined) {
-                        if (typeof e.url === "string") {
-                          if (props.altNewtab) document.location = e.url;
-                          else window.open(e.url);
-                        } else {
-                          e.url(props.altNewtab);
-                        }
-                      } else {
-                        const { tabs, windowId } = e;
-                        browser.windows.update(windowId, { focused: true });
-                        browser.tabs.highlight({ tabs, windowId });
-                        if (props.altNewtab) window.close();
-                      }
-                    }}
-                    key={i}
-                    header={{
-                      text: e.title,
-                      className: e.header ? e.header.className : "",
-                    }}
-                  >
-                    {e.url}
-                  </SearchResult>
-                );
-              })}
-          </div>
+          <SearchResultList />
         </div>
       </React.Fragment>
     );
@@ -535,10 +447,13 @@ const App = (props) => {
   );
 };
 const mapStateToProp = ({ data, ui }) => {
+  const { timerEditFocus, background, term, isTaskbarEdit } = ui;
   return {
     ...data,
-    ...ui,
-    background: ui.background,
+    timerEditFocus,
+    background,
+    term,
+    isTaskbarEdit,
   };
 };
 export default connect(mapStateToProp, actions)(App);

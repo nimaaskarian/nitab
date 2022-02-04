@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { setWeatherData, setWeatherCity } from "../actions";
 import Dropdown from "react-dropdown";
-import { cities } from "../utils";
+import { cities } from "../utils/cities";
 
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";

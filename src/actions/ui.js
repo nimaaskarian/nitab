@@ -19,9 +19,3 @@ export function setBackground(bg) {
     payload: bg,
   };
 }
-export function setIsTerminal(isTerminal) {
-  return {
-    type: "SET_ISTERMINAL",
-    payload: isTerminal,
-  };
-}

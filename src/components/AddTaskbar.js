@@ -2,14 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
 import "../css/AddTaskbar.css";
-import { isUrl } from "../utils";
+import { isUrl } from "../utils/isUrl";
 import { connect } from "react-redux";
 import {
   toggleTaskbarEdit,
   addTaskbarIcon,
   editEmptyTaskbarIcon,
   editTaskbarIcon,
-  deleteTaskbarIcon,
 } from "../actions";
 const AddTaskbar = (props) => {
   const [icon, setIcon] = useState("");
@@ -92,10 +91,7 @@ const AddTaskbar = (props) => {
           <div className="field">
             <label className="label" htmlFor="#add-taskbar-input">
               Icon(find some from{" "}
-              <a
-                href="https://fontawesome.com/v6.0/icons"
-                target="_blank"
-              >
+              <a href="https://fontawesome.com/v6.0/icons" target="_blank">
                 here
               </a>
               ):
