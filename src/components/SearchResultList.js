@@ -1,13 +1,13 @@
 /*global browser*/
 /*global chrome*/
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import SearchResult from "./SearchResult";
-import defaultCommands, { termToCommand } from "../js/commands";
+import { termToCommand } from "../js/commands";
 
-const SearchResultList = () => {
+const SearchResultList = ({ commands }) => {
   const term = useSelector(({ ui }) => ui.term);
   const identifier = useSelector(({ data }) => data.identifier);
   const isHistory = useSelector(({ data }) => data.isHistory);
@@ -15,13 +15,11 @@ const SearchResultList = () => {
   const [results, setResults] = useState([]);
   useEffect(() => {
     const isNameSearch =
-      termToCommand(term, identifier, {
-        ...defaultCommands,
-      }).name === "search";
+      termToCommand(term, identifier, commands).name === "search";
     function searchSuggest(term) {
       if (!isNameSearch)
         return {
-          url: defaultCommands["search"](term)(),
+          url: commands["search"](term)(),
           header: {
             className: "fontawe search",
           },

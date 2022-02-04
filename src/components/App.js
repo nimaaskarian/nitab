@@ -13,7 +13,6 @@ import { useAlert } from "react-alert";
 import { useDropzone } from "react-dropzone";
 import { connect } from "react-redux";
 import Helmet from "react-helmet";
-import dataToCommands from "../utils/dataToCommands";
 
 import AddTaskbar from "./AddTaskbar";
 import Terminal from "./Terminal";
@@ -33,13 +32,12 @@ import * as actions from "../actions";
 import "../css/App.css";
 import "../css/fa.css";
 import SearchResultList from "./SearchResultList";
+import useCommands from "../hooks/useCommands";
 
 const App = (props) => {
   console.log("first");
   //bookmark === 0, history === 1, nothing === 0
-  const { commands, icons: commandIcons } = useMemo(() => {
-    return dataToCommands(props.commands);
-  }, [props.commands]);
+  const { commands, icons: commandIcons } = useCommands();
   const [isTerminal, setIsTerminal] = useState(false);
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
   const [prevCommands, setPrevCommands] = useState(null);
@@ -392,7 +390,7 @@ const App = (props) => {
             commandIcons={commandIcons}
           />
 
-          <SearchResultList />
+          <SearchResultList commands={commands}/>
         </div>
       </React.Fragment>
     );
