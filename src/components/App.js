@@ -6,7 +6,6 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useMemo,
 } from "react";
 
 import { useAlert } from "react-alert";
@@ -19,21 +18,18 @@ import Terminal from "./Terminal";
 import Clock from "./Clock";
 import Timer from "./Timer";
 import TaskbarIcon from "./TaskbarIcon";
+import SearchResultList from "./SearchResultList";
 
-import {
-  isDark,
-  getImageLightness,
-  setBackground,
-  mutedKeys,
-  useDidMountEffect,
-} from "../utils";
 import { unsplash } from "../apis";
 import * as actions from "../actions";
+
+import useCommands from "../hooks/useCommands";
+import useDidMountEffect from "../hooks/useDidMountEffect"
+import useIsTermEmpty from "../hooks/useIsTermEmpty";
+import { isDark, getImageLightness, setBackground, mutedKeys } from "../utils";
+
 import "../css/App.css";
 import "../css/fa.css";
-import SearchResultList from "./SearchResultList";
-import useCommands from "../hooks/useCommands";
-import useIsTermEmpty from "../hooks/useIsTermEmpty";
 
 const App = (props) => {
   //bookmark === 0, history === 1, nothing === 0
@@ -59,9 +55,9 @@ const App = (props) => {
     );
   };
   useEffect(() => {
-    setIsTerminal(!isTermEmpty)
+    setIsTerminal(!isTermEmpty);
   }, [isTermEmpty]);
-  
+
   const onDropAccepted = useCallback((files) => {
     alert.show(
       <div className="alert">
