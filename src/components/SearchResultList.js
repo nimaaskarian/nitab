@@ -30,6 +30,7 @@ const SearchResultList = ({ commands }) => {
       setResults([searchSuggest(term), ...e]);
     }
     try {
+      if(chrome || browser)
       getAsyncResults();
     } catch (error) {}
 

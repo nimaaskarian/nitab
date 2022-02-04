@@ -10,9 +10,10 @@ const dataToCommands = (data) => {
       const _styleIndex = document.styleSheets.length - 1;
       const stylesheet = document.styleSheets[_styleIndex];
       stylesheet.insertRule(
-        `.${command}::selection{background-color:${data[command].color};color:${
-          isDark(data[command].color) ? "#CCC" : "#333"
-        };}`,
+        `.${command}::selection{background-color:${
+          data[command].color
+        } !important;
+        color:${isDark(data[command].color) ? "#CCC" : "#333"} !important;}`,
         stylesheet.rules.length
       );
       document.documentElement.style.setProperty(
