@@ -1,6 +1,6 @@
 {
   "name": "nitab",
-  "version": "3.21.8",
+  "version": "3.22.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
@@ -28,6 +28,7 @@
     "redux-persist": "^6.0.0",
     "redux-persist-webextension-storage": "^1.0.2",
     "redux-thunk": "^2.4.1",
+    "reselect": "^4.1.5",
     "tippy.js": "^6.3.7",
     "web-vitals": "^2.1.4",
     "zen-observable": "^0.8.15"

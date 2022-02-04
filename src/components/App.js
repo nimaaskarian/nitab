@@ -33,12 +33,13 @@ import "../css/App.css";
 import "../css/fa.css";
 import SearchResultList from "./SearchResultList";
 import useCommands from "../hooks/useCommands";
+import useIsTermEmpty from "../hooks/useIsTermEmpty";
 
 const App = (props) => {
-  console.log("first");
   //bookmark === 0, history === 1, nothing === 0
   const { commands, icons: commandIcons } = useCommands();
-  const [isTerminal, setIsTerminal] = useState(false);
+  const isTermEmpty = useIsTermEmpty();
+  const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const [addtaskbarIndex, setAddtaskbarIndex] = useState(null);
   const [prevCommands, setPrevCommands] = useState(null);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
@@ -57,6 +58,10 @@ const App = (props) => {
       stylesheet.rules.length
     );
   };
+  useEffect(() => {
+    setIsTerminal(!isTermEmpty)
+  }, [isTermEmpty]);
+  
   const onDropAccepted = useCallback((files) => {
     alert.show(
       <div className="alert">
@@ -211,7 +216,7 @@ const App = (props) => {
     const onKeydown = (e) => {
       if (
         mutedKeys.includes(e.key) ||
-        (e.code === "Space" && !props.term) ||
+        (e.code === "Space" && isTermEmpty) ||
         (e.code === "KeyI" && e.ctrlKey && e.shiftKey) ||
         (e.code === "KeyC" && e.ctrlKey && e.shiftKey)
       )
@@ -251,7 +256,7 @@ const App = (props) => {
       if (["Meta", "Control", "Shift"].includes(e.key)) {
         return;
       }
-      if (e.key === "Backspace" && !props.term) return;
+      if (e.key === "Backspace" && isTermEmpty) return;
       if (!e.altKey) {
         if (!props.timerEditFocus) {
           setIsTerminal(true);
@@ -276,10 +281,6 @@ const App = (props) => {
       </div>
     );
   }, [props.altNewtab]);
-
-  useEffect(() => {
-    setIsTerminal(!!props.term);
-  }, [props.term]);
   useEffect(() => {
     if (props.isTaskbarEdit) props.setTerm("");
   }, [props.isTaskbarEdit]);
@@ -390,7 +391,7 @@ const App = (props) => {
             commandIcons={commandIcons}
           />
 
-          <SearchResultList commands={commands}/>
+          <SearchResultList commands={commands} />
         </div>
       </React.Fragment>
     );
@@ -445,12 +446,11 @@ const App = (props) => {
   );
 };
 const mapStateToProp = ({ data, ui }) => {
-  const { timerEditFocus, background, term, isTaskbarEdit } = ui;
+  const { timerEditFocus, background, isTaskbarEdit } = ui;
   return {
     ...data,
     timerEditFocus,
     background,
-    term,
     isTaskbarEdit,
   };
 };
