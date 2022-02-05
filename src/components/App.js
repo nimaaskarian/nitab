@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Helmet from "react-helmet";
 
 import AddTaskbar from "./AddTaskbar";
@@ -9,12 +9,15 @@ import Clock from "./Clock";
 import Timer from "./Timer";
 import SearchResultList from "./SearchResultList";
 
-import { unsplash } from "../apis";
-import * as actions from "../actions";
+import {
+  setTerm,
+  toggleAltNewtab,
+  addIsHistory,
+} from "../actions";
 
 import useCommands from "../hooks/useCommands";
 import useIsTermEmpty from "../hooks/useIsTermEmpty";
-import { isDark, getImageLightness, setBackground, mutedKeys } from "../utils";
+import { setBackground, mutedKeys } from "../utils";
 import onForegroundChange from "../utils/onForegroundChange";
 
 import "../css/App.css";
@@ -25,39 +28,37 @@ import ImageDropzone from "./ImageDropzone";
 import useImageDrop from "../hooks/useImageDrop";
 import Alert from "./Alert";
 
-const App = (props) => {
+const App = () => {
   //bookmark === 0, history === 1, nothing === 0
   const { commands, icons: commandIcons } = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const { isDragAccept, getRootProps, getInputProps } = useImageDrop();
   const terminal = useRef();
+  const timerEditFocus = useSelector(({ ui }) => ui.timerEditFocus);
+  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const foreground = useSelector(({ data }) => data.foreground);
+  const isHistory = useSelector(({ data }) => data.isHistory);
+  const isClock = useSelector(({ data }) => data.isClock);
+  const gradient = useSelector(({ data }) => data.gradient);
+  const identifier = useSelector(({ data }) => data.identifier);
+  const font = useSelector(({ data }) => data.font);
+
+  const dispatch = useDispatch();
   Alert();
   useEffect(() => {
     setIsTerminal(!isTermEmpty);
   }, [isTermEmpty]);
 
   useEffect(() => {
-    if (props.background === "unsplash") {
-      unsplash
-        .get("/random", {
-          params: {
-            collections: props.unsplashCollections,
-          },
-        })
-        .then(async ({ data }) => {
-          const blob = await fetch(data.urls.full).then((r) => r.blob());
-          setBackground(blob);
-        });
-    }
-  }, [props.background]);
-  useEffect(() => {
     setBackground();
-    props.setTerm(new URLSearchParams(window.location.search).get("t") || "");
+    dispatch(
+      setTerm(new URLSearchParams(window.location.search).get("t") || "")
+    );
   }, []);
   useEffect(() => {
     const _styleIndex = document.styleSheets.length - 1;
-    onForegroundChange(document.styleSheets[_styleIndex], props.foreground);
+    onForegroundChange(document.styleSheets[_styleIndex], foreground);
     return () => {
       document.styleSheets[_styleIndex].deleteRule(
         document.styleSheets[_styleIndex].cssRules.length - 2
@@ -66,30 +67,8 @@ const App = (props) => {
         document.styleSheets[_styleIndex].cssRules.length - 1
       );
     };
-  }, [props.foreground]);
-  useEffect(() => {
-    if (props.background && props.isForegroundAuto) {
-      getImageLightness(
-        props.background
-          .replace(/^url\('|^url\("/g, "")
-          .replace(/"\)|'\)/g, ""),
-        (br) => {
-          if (br !== null)
-            props.setForeground(
-              `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
-                br < 127.5 ? 255 : 0
-              })`
-            );
-          else
-            props.setForeground(
-              `rgb(${isDark(props.background) ? 255 : 0},${
-                isDark(props.background) ? 255 : 0
-              },${isDark(props.background) ? 255 : 0})`
-            );
-        }
-      );
-    }
-  }, [props.background, props.isForegroundAuto]);
+  }, [foreground]);
+
   useEffect(() => {
     const onKeydown = (e) => {
       if (
@@ -101,9 +80,9 @@ const App = (props) => {
         return;
       e.stopPropagation();
       if (e.ctrlKey && e.code === "KeyB") {
-        props.toggleAltNewtab();
+        dispatch(toggleAltNewtab());
       }
-      if (e.ctrlKey && e.code === "KeyQ") props.addIsHistory();
+      if (e.ctrlKey && e.code === "KeyQ") dispatch(addIsHistory());
 
       if (e.key === "Escape") {
         setIsTerminal(false);
@@ -136,7 +115,7 @@ const App = (props) => {
       }
       if (e.key === "Backspace" && isTermEmpty) return;
       if (!e.altKey) {
-        if (!props.timerEditFocus) {
+        if (!timerEditFocus) {
           setIsTerminal(true);
           terminal.current.focus();
         }
@@ -144,15 +123,15 @@ const App = (props) => {
         e.preventDefault();
       }
     };
-    if (!props.isTaskbarEdit) window.addEventListener("keydown", onKeydown);
+    if (!isTaskbarEdit) window.addEventListener("keydown", onKeydown);
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, props.isHistory, props.isTaskbarEdit, props.timerEditFocus]);
+  }, [isTerminal, isHistory, isTaskbarEdit, timerEditFocus]);
 
   useEffect(() => {
-    if (props.isTaskbarEdit) props.setTerm("");
-  }, [props.isTaskbarEdit]);
+    if (isTaskbarEdit) dispatch(setTerm(""));
+  }, [isTaskbarEdit]);
 
   const RenderedContent = useCallback(() => {
     if (!isTerminal)
@@ -163,11 +142,11 @@ const App = (props) => {
             getInputProps={getInputProps}
           />
 
-          {props.isTaskbarEdit ? (
+          {isTaskbarEdit ? (
             <AddTaskbar />
           ) : isDragAccept ? (
             <h1 className="foreground-change">Drop the picture...</h1>
-          ) : props.isClock ? (
+          ) : isClock ? (
             <Clock />
           ) : (
             <Timer />
@@ -177,13 +156,13 @@ const App = (props) => {
       );
     return (
       <div>
-        {props.isHistory ? (
+        {isHistory ? (
           <div
             className={`search-mode foreground-change ${
-              props.gradient ? "" : "no-gradient"
+              gradient ? "" : "no-gradient"
             }`}
           >
-            {["History", "Bookmark", "Tabs"][props.isHistory - 1]}
+            {["History", "Bookmark", "Tabs"][isHistory - 1]}
           </div>
         ) : null}
 
@@ -203,36 +182,27 @@ const App = (props) => {
     getRootProps,
     isDragAccept,
     isTerminal,
-    props.gradient,
-    props.isClock,
-    props.isHistory,
-    props.isTaskbarEdit,
+    gradient,
+    isClock,
+    isHistory,
+    isTaskbarEdit,
   ]);
 
   return (
     <React.Fragment>
       <Helmet>
-        <title>
-          {props.identifier === "NONE" ? "" : props.identifier}Niotab
-        </title>
+        <title>{identifier === "NONE" ? "" : identifier}Niotab</title>
       </Helmet>
       <Background isTerminal={isTerminal} />
 
       <div
         className={`keepcentered ${isTerminal ? "" : "no-terminal"}`}
-        style={{ fontFamily: `${props.font}, IranSans` }}
+        style={{ fontFamily: `${font}, IranSans` }}
       >
         <RenderedContent />
       </div>
     </React.Fragment>
   );
 };
-const mapStateToProp = ({ data, ui }) => {
-  const { timerEditFocus, isTaskbarEdit } = ui;
-  return {
-    ...data,
-    timerEditFocus,
-    isTaskbarEdit,
-  };
-};
-export default connect(mapStateToProp, actions)(App);
+
+export default App;

@@ -105,7 +105,17 @@ export default (state = INITIAL_STATE, { payload, type }) => {
         },
       };
     case "ADD_TASKBAR":
-      return { ...state, taskbarIcons: [...state.taskbarIcons, payload] };
+      return {
+        ...state,
+        taskbarIcons: [
+          ...state.taskbarIcons.slice(0, payload.index),
+          payload,
+          ...state.taskbarIcons.slice(
+            payload.index,
+            state.taskbarIcons.length
+          ),
+        ],
+      };
 
     case "EDIT_TASKBAR": {
       return {
@@ -165,7 +175,6 @@ export default (state = INITIAL_STATE, { payload, type }) => {
     case "ADD_TODO":
       return { ...state, todo: [...state.todo, payload] };
     case "REMOVE_TODO": {
-      
       return { ...state, todo: state.todo.delete(payload) };
     }
     case "SET_FONT":

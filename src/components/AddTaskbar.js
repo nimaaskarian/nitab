@@ -1,9 +1,10 @@
 /*global chrome*/
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { SketchPicker } from "react-color";
 import "../css/AddTaskbar.css";
 import { isUrl } from "../utils/isUrl";
 import { connect, useSelector } from "react-redux";
+
 import {
   toggleTaskbarEdit,
   addTaskbarIcon,
@@ -11,9 +12,10 @@ import {
   editTaskbarIcon,
   setAddTaskbarIndex,
 } from "../actions";
+import ToggleSwitch from "./ToggleSwitch";
 const AddTaskbar = (props) => {
   const addtaskbarIndex = useSelector(({ ui }) => ui.addtaskbarIndex);
-
+  const [isEditToggle, setIsEditToggle] = useState(false);
   const [icon, setIcon] = useState("");
   const [color, setColor] = useState("#fff");
   const [url, setUrl] = useState("");
@@ -25,10 +27,17 @@ const AddTaskbar = (props) => {
       return parseInt(nonEmpty[index].index);
     } else return -1;
   };
+  const isAdd = useMemo(() => {
+    return (
+      isEditToggle ||
+      (indexToOutput(index, props.taskbarIcons) === -1 &&
+        [null, undefined].includes(addtaskbarIndex))
+    );
+  }, [addtaskbarIndex, index, props.taskbarIcons, isEditToggle]);
+
   const onSubmit = ({ icon, url, color, index }) => {
-    const realIndex = props.taskbarIcons.length;
-    if (index === -1)
-      props.addTaskbarIcon({ icon, url, color, index: realIndex });
+    const realIndex = index === -1 ? props.taskbarIcons.length : index + 1;
+    if (isAdd) props.addTaskbarIcon({ icon, url, color, index: realIndex });
     else {
       if (icon === "empty")
         props.editEmptyTaskbarIcon({ icon, url, color, index });
@@ -142,31 +151,34 @@ const AddTaskbar = (props) => {
             }}
           />
         </div>
-        <div className="field">
-          <label className="label" htmlFor="#add-taskbar-url">
-            URL:
-          </label>
+        <div className="space-between">
+          <div className="field">
+            <label className="label" htmlFor="#add-taskbar-url">
+              URL:
+            </label>
 
-          <input
-            style={{ color: isUrl(url) ? "#36b0c3" : "white" }}
-            id="add-taskbar-url"
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="somehost.com"
-          />
+            <input
+              style={{ color: isUrl(url) ? "#36b0c3" : "white" }}
+              id="add-taskbar-url"
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="somehost.com"
+            />
+          </div>
+          <div className="field" style={{ width: "40%" }}>
+            <label className="label" htmlFor="#add-taskbar-url">
+              Force Add:
+            </label>
+            <ToggleSwitch onChange={setIsEditToggle} />
+          </div>
         </div>
 
         <div className="space-between">
           <input
             className="ui inverted basic green button"
             type="submit"
-            value={
-              indexToOutput(index, props.taskbarIcons) === -1 &&
-              [null, undefined].includes(addtaskbarIndex)
-                ? "Add"
-                : "Edit"
-            }
+            value={isAdd ? "Add" : "Edit"}
           />
           <input
             className="ui inverted basic red button"
@@ -182,12 +194,7 @@ const AddTaskbar = (props) => {
           <input
             className="ui inverted basic button"
             type="button"
-            value={
-              indexToOutput(index, props.taskbarIcons) === -1 &&
-              [null, undefined].includes(addtaskbarIndex)
-                ? "Whitespace at end"
-                : "Whitespace before"
-            }
+            value={isAdd ? "Whitespace at end" : "Whitespace before"}
             onClick={() => {
               onSubmit({
                 icon: "empty",
