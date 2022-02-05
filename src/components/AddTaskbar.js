@@ -3,14 +3,17 @@ import React, { useState, useEffect } from "react";
 import { SketchPicker } from "react-color";
 import "../css/AddTaskbar.css";
 import { isUrl } from "../utils/isUrl";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import {
   toggleTaskbarEdit,
   addTaskbarIcon,
   editEmptyTaskbarIcon,
   editTaskbarIcon,
+  setAddTaskbarIndex,
 } from "../actions";
 const AddTaskbar = (props) => {
+  const addtaskbarIndex = useSelector(({ ui }) => ui.addtaskbarIndex);
+
   const [icon, setIcon] = useState("");
   const [color, setColor] = useState("#fff");
   const [url, setUrl] = useState("");
@@ -40,11 +43,11 @@ const AddTaskbar = (props) => {
     }
   }, [props.taskbarIcons]);
   useEffect(() => {
-    const i = ![null, undefined].includes(props.selectedIndex)
-      ? props.selectedIndex
+    const i = ![null, undefined].includes(addtaskbarIndex)
+      ? addtaskbarIndex
       : indexToOutput(parseInt(index), props.taskbarIcons);
     let _index = 0;
-    if (![null, undefined].includes(props.selectedIndex)) {
+    if (![null, undefined].includes(addtaskbarIndex)) {
       setIndex(
         props.taskbarIcons
           .filter((e) => e.icon !== "empty")
@@ -61,7 +64,7 @@ const AddTaskbar = (props) => {
     setIcon(icon);
     setUrl(url);
     setColor(color);
-  }, [index, props.selectedIndex]);
+  }, [index, addtaskbarIndex]);
 
   useEffect(() => {
     const closeOnEscape = (e) => {
@@ -81,8 +84,8 @@ const AddTaskbar = (props) => {
             icon,
             color,
             url,
-            index: ![null, undefined].includes(props.selectedIndex)
-              ? props.selectedIndex
+            index: ![null, undefined].includes(addtaskbarIndex)
+              ? addtaskbarIndex
               : indexToOutput(index, props.taskbarIcons),
           });
         }}
@@ -117,7 +120,7 @@ const AddTaskbar = (props) => {
               placeholder="-1 = last, 0 = first"
               value={index}
               onChange={(e) => {
-                props.onIndexChange();
+                props.setAddTaskbarIndex(null);
                 setIndex(e.target.value);
               }}
             />
@@ -160,7 +163,7 @@ const AddTaskbar = (props) => {
             type="submit"
             value={
               indexToOutput(index, props.taskbarIcons) === -1 &&
-              [null, undefined].includes(props.selectedIndex)
+              [null, undefined].includes(addtaskbarIndex)
                 ? "Add"
                 : "Edit"
             }
@@ -181,7 +184,7 @@ const AddTaskbar = (props) => {
             type="button"
             value={
               indexToOutput(index, props.taskbarIcons) === -1 &&
-              [null, undefined].includes(props.selectedIndex)
+              [null, undefined].includes(addtaskbarIndex)
                 ? "Whitespace at end"
                 : "Whitespace before"
             }
@@ -190,8 +193,8 @@ const AddTaskbar = (props) => {
                 icon: "empty",
                 color: "",
                 url: "",
-                index: ![null, undefined].includes(props.selectedIndex)
-                  ? props.selectedIndex
+                index: ![null, undefined].includes(addtaskbarIndex)
+                  ? addtaskbarIndex
                   : indexToOutput(index, props.taskbarIcons),
               });
             }}
@@ -209,4 +212,5 @@ export default connect(mapStateToProp, {
   addTaskbarIcon,
   editTaskbarIcon,
   editEmptyTaskbarIcon,
+  setAddTaskbarIndex,
 })(AddTaskbar);

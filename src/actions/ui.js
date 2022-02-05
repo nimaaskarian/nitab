@@ -19,3 +19,9 @@ export function setBackground(bg) {
     payload: bg,
   };
 }
+export function setAddTaskbarIndex(index) {
+  return {
+    type: "SET_ADD_TASKBAR_INDEX",
+    payload: index,
+  };
+}

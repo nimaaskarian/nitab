@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   term: "",
   results: [],
   isTerminal: false,
+  addtaskbarIndex: null,
 };
 
 const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
@@ -20,6 +21,8 @@ const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, timerEditFocus: payload };
     case "SET_RESULTS":
       return { ...state, results: payload };
+    case "SET_ADD_TASKBAR_INDEX":
+      return { ...state, addtaskbarIndex: payload };
     default:
       return { ...state };
   }
