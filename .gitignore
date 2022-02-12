@@ -23,5 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
-build.rar
+build.bat
 .vscode/settings.json
