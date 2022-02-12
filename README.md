@@ -53,9 +53,41 @@ for example, if you have a command like this: `[iden]ytOrIg youtube.com%?%instag
 
 
 # Identifier
+The character or string of characters that cause Nitab to understand that you're typing a command. (default is `/`)
 # Todo
+One of the defaults commands that allow you to set a reminder (todo) for yourself. you can use it using the following syntax:  
+`[iden]todo walk the dog`  
+you can temporarily delete a todo using the X icon or you can permanently delete it via clicking on its circle.
 # Clock
 # Background
+You can set Nitab's background using a proper css background value using the follwoing syntax:  
+`[iden]bg cssBackgroundValue`  
+for example:  
+`[iden]bg white`  
+`[iden]bg url("somedomain/path/to/wallpaper.jpg")`  
+`[iden]bg linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)`  
+and etc
 # Foreground
+you can change text color (foreground color) using the following syntax:  
+`[iden]fg properCssColor`  
+for example:  
+`[iden]fg white`  
+`[iden]fg #b19ed4`  
+`[iden]fg rgb(104, 111, 207)`  
+you can override other commands color using `ovr` before the css color:  
+`[iden]fg ovr white`  
+and etc
+
 # Taskbar 
+if you add icons to your taskbar, they will apear at the bottom of the main(clock) page. they will be also accessible using alt + <num-keys>
+## Taskbar Icons
+you can add them using a GUI modal after calling `[iden]taskbar` command.  
+set a icon from fontawesome 6 icon pack (make sure that the icons is valid, otherwise you gonna have a hard time deleting it)  
+insert index determines where the edit will take effect. -1 means after the last icon.  
+any other numbers will edit the icon unless the Force Add toggle is turned on. in that case it will add the icon after the selected index.  
+you can select a icon using clicks. or you can delete it using double clicks.
+## Whitespaces
+adding whitespaces will help you in orginizing the taskbar. you can add whitespace at end (insert index = -1) or before a certain icon (selecting it using clicks or typing its index manually).  
+you can delete a whitespace using clicks.
 # Autocomplete
+theres a autocomplete feature that can suggest up to 8 search terms or urls. very useful if you ask me!
