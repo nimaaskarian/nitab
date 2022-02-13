@@ -1,9 +1,9 @@
 import { openWeather } from "../apis";
 
-export function addCommand(name, args, icon,color) {
+export function addCommand(name, args, icon, color) {
   return {
     type: "ADD_COMMAND",
-    payload: { name, args, icon,color },
+    payload: { name, args, icon, color },
   };
 }
 export function setIsForegoundAuto(isFgAuto) {
@@ -113,14 +113,23 @@ export function removeTodo(index) {
 }
 export function importData() {
   return async (dispatch) => {
-    const [handle] = await window.showOpenFilePicker();
-    const file = await handle.getFile();
     const fileReader = new window.FileReader();
-
-    fileReader.readAsText(file);
-    fileReader.onload = ({ target }) => {
-      dispatch({ type: "IMPORT_DATA", payload: JSON.parse(target.result) });
-    };
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.style.opacity = "0";
+    input.style.position = "absolute";
+    input.style.bottom = "0";
+    document.body.appendChild(input);
+    input.click();
+    input.addEventListener("change", () => {
+      if (!input.files.length || input.files.length > 1) return;
+      fileReader.readAsText(input.files[0]);
+      fileReader.onload = ({ target }) => {
+        console.log(target);
+        dispatch({ type: "IMPORT_DATA", payload: JSON.parse(target.result) });
+      };
+    });
   };
 }
 

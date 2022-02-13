@@ -72,7 +72,7 @@ const Terminal = React.forwardRef((props, ref) => {
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
         appended = true;
-      }, 150);
+      }, 100);
     }
     return () => {
       if (term) {

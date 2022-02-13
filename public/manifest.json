@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Nitab",
-  "version": "3.22.2",
+  "version": "3.22.3",
   "description": "A Neat, advanced and customizable start page for your browser.",
   "icons": {
     "16": "icons/16.png",

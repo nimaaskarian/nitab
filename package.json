@@ -1,6 +1,6 @@
 {
   "name": "nitab",
-  "version": "3.22.2",
+  "version": "3.22.3",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
