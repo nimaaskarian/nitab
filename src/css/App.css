@@ -63,7 +63,7 @@
 .background.isTerminal:after {
   opacity: 1;
 }
-.taskbar {
+.taskbar-element {
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), filter 200ms ease-out;
   opacity: 1;
   justify-self: end;
@@ -72,18 +72,18 @@
   position: absolute;
   margin-bottom: 20px;
 }
-.taskbar.no-gradient {
+.taskbar-element.no-gradient {
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
   background-color: rgba(0, 0, 0, 0);
 }
-.taskbar,
+.taskbar-element,
 .search-mode,
 .input-label-wrapper {
   border-radius: 5px;
 }
 .input-label-wrapper,
 .search-mode,
-.taskbar {
+.taskbar-element {
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.3);
 }

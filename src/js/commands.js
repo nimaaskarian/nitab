@@ -1,6 +1,6 @@
 /*global chrome*/
 
-import { isUrl,setBackground } from "../utils";
+import { isUrl, setBackground } from "../utils";
 import * as actions from "../actions";
 import { store } from "../store";
 const defaultCommands = {
@@ -39,7 +39,8 @@ const defaultCommands = {
   par(input) {
     if (!parseFloat(input))
       return () => () => store.dispatch(actions.toggleIsParallax());
-    return () => () => store.dispatch(actions.setParallaxFactor(parseFloat(input)));
+    return () => () =>
+      store.dispatch(actions.setParallaxFactor(parseFloat(input)));
   },
   c(input) {
     const sums = {
@@ -128,7 +129,8 @@ const defaultCommands = {
     return () => "https://unsplash.com/collections";
   },
   commandCl(input) {
-    if (input === "CONFIRM") return () => () => store.dispatch(actions.clearCommands());
+    if (input === "CONFIRM")
+      return () => () => store.dispatch(actions.clearCommands());
   },
   command(input) {
     let [commandName, ...commandFunctions] = input
@@ -164,7 +166,9 @@ const defaultCommands = {
             );
         case "remove":
           return () =>
-            store.dispatch(actions.removeFromCommand(commandName, commandFunctions));
+            store.dispatch(
+              actions.removeFromCommand(commandName, commandFunctions)
+            );
         default:
           return () =>
             store.dispatch(
@@ -258,16 +262,16 @@ const defaultCommands = {
     };
   },
   search(input) {
-    // if (chrome)
-    //   if (chrome.search)
-    //     if (chrome.search.query)
-    //       return () =>
-    //         ({ altKey }) => {
-    //           chrome.search.query({
-    //             disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-    //             text: input,
-    //           });
-    //         };
+    try {
+      if (chrome.search.query)
+        return () =>
+          ({ altKey }) => {
+            chrome.search.query({
+              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+              text: input,
+            });
+          };
+    } catch (error) {}
     return this.g(input);
   },
   g(input) {

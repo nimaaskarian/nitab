@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { removeTodo } from "../actions";
 import useDidMountEffect from "../hooks/useDidMountEffect";
 

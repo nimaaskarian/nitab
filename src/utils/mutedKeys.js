@@ -1,4 +1,5 @@
 export const mutedKeys = [
+  "OS",
   "Meta",
   "Shift",
   "Control",

@@ -1,42 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
 import { setTerm } from "../actions";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import "../css/Autocomplete.css";
 
-const Autocomplete = ({ ac, setTerm, term, style }) => {
+const Autocomplete = ({ style }) => {
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState(0);
+  const ac = useSelector(({ ui }) => ui.ac || [], shallowEqual);
 
   useEffect(() => {
+    console.log(ac);
     setSelected(0);
-  }, [term]);
+  }, [ac]);
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (ac[selected]) 
-      switch (e.code) {
-        case "ArrowDown":
-          e.preventDefault();
-          if (selected + 1 === ac.length) setSelected(0);
-          else setSelected(selected + 1);
-          break;
+      if (ac[selected])
+        switch (e.code) {
+          case "ArrowDown":
+            e.preventDefault();
+            if (selected + 1 === ac.length) setSelected(0);
+            else setSelected(selected + 1);
+            break;
 
-        case "ArrowUp":
-          e.preventDefault();
-          if (selected) setSelected(selected - 1);
-          else setSelected(ac.length - 1);
-          break;
-        case "Tab":
-          if (ac[selected]) setTerm(ac[selected].phrase);
-          break;
-        default:
-          break;
-      }
+          case "ArrowUp":
+            e.preventDefault();
+            if (selected) setSelected(selected - 1);
+            else setSelected(ac.length - 1);
+            break;
+          case "Tab":
+            if (ac[selected]) dispatch(setTerm(ac[selected].phrase));
+            break;
+          default:
+            break;
+        }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selected, ac]);
-  
+
   return (
     <div className="autocomplete">
       {ac
@@ -46,7 +49,7 @@ const Autocomplete = ({ ac, setTerm, term, style }) => {
                 style={style}
                 key={i}
                 onClick={() => {
-                  setTerm(ac[i].phrase);
+                  dispatch(setTerm(ac[i].phrase));
                 }}
                 onMouseEnter={() => {
                   setSelected(i);
@@ -55,6 +58,13 @@ const Autocomplete = ({ ac, setTerm, term, style }) => {
                   selected === i ? "selected" : ""
                 }`}
               >
+                {e.icon ? (
+                  <span
+                    className={e.icon}
+                    style={{ marginRight: "5px" }}
+                  ></span>
+                ) : null}
+
                 {e.phrase}
               </div>
             );
@@ -63,11 +73,5 @@ const Autocomplete = ({ ac, setTerm, term, style }) => {
     </div>
   );
 };
-const mapStateToProp = (state) => {
-  const _ac = state.ui.ac || [];
-  return {
-    ac: _ac.filter((e) => e.phrase !== state.ui.term),
-    term: state.ui.term,
-  };
-};
-export default connect(mapStateToProp, { setTerm })(Autocomplete);
+
+export default Autocomplete;

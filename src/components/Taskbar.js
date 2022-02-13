@@ -22,7 +22,7 @@ const Taskbar = () => {
   };
   return (
     <div
-      className={`taskbar ${gradient ? "" : "no-gradient"}`}
+      className={`taskbar-element ${gradient ? "" : "no-gradient"}`}
       onMouseEnter={onTaskbarMouseMove}
       onMouseMove={onTaskbarMouseMove}
       onMouseOut={() => {
