@@ -32,7 +32,7 @@ const Terminal = React.forwardRef((props, ref) => {
       const iden = identifier === "NONE" ? "" : identifier;
       const _ac = [
         ...Object.keys(props.commands)
-          .filter((e) => e.includes(term))
+          .filter((e) => (iden + e).includes(term))
           .sort()
           .map((phrase) => {
             console.log(props.commandIcons[phrase], phrase, props.commandIcons);
