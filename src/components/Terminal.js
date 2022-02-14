@@ -83,14 +83,14 @@ const Terminal = React.forwardRef((props, ref) => {
 
     dispatch(setAc([]));
     if (term) {
-      timeoutId = setTimeout(() => {
-        document.body.appendChild(script);
-        appended = true;
-      }, 100);
+      // timeoutId = setTimeout(() => {
+      document.body.appendChild(script);
+      appended = true;
+      // }, 20);
     }
     return () => {
       if (term) {
-        clearTimeout(timeoutId);
+        // clearTimeout(timeoutId);
         if (appended) document.body.removeChild(script);
       }
     };
