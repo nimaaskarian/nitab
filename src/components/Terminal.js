@@ -106,8 +106,7 @@ const Terminal = React.forwardRef((props, ref) => {
       if (e.code === "Enter" && onSubmit) {
         let _output = onSubmit(args);
         if (typeof _output === "string") {
-          const prevTitle = document.title;
-          window.document.title = term + " - " + prevTitle;
+          window.document.title = `${term} - ${identifier === "NONE"?"":identifier}Niotab`;
           history.push({ search: "?t=" + term });
           if (e.altKey !== altNewtab) document.location = _output;
           else {
