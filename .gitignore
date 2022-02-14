@@ -10,6 +10,7 @@
 
 # production
 /build
+/build.bat
 
 # misc
 .DS_Store
@@ -23,5 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
-build.bat
 .vscode/settings.json
