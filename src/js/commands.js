@@ -79,6 +79,13 @@ const defaultCommands = {
   gr() {
     return () => () => store.dispatch(actions.toggleGradient());
   },
+  ac(input) {
+    return () => () => {
+      if (!+input && input !== "0")
+        store.dispatch(actions.toggleIsAcCommands());
+      else store.dispatch(actions.setAcCommands(+input));
+    };
+  },
   bl(input) {
     const [notTerminal, terminal, setting] = input.split(/\s/g);
     return () => () =>

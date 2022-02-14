@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { setTerm } from "../actions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import "../css/Autocomplete.css";
@@ -9,7 +9,6 @@ const Autocomplete = ({ style }) => {
   const ac = useSelector(({ ui }) => ui.ac || [], shallowEqual);
 
   useEffect(() => {
-    console.log(ac);
     setSelected(0);
   }, [ac]);
   useEffect(() => {

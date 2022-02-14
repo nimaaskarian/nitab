@@ -11,6 +11,8 @@ const Alert = () => {
   const dipatch = useDispatch();
   const currentCommands = useSelector(({ data }) => data.commands);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
+  const acCommands = useSelector(({ data }) => data.acCommands);
+  const isAcCommands = useSelector(({ data }) => data.isAcCommands);
   useDidMountEffect(() => {
     alert.show(
       <div className="alert">
@@ -20,7 +22,25 @@ const Alert = () => {
       </div>
     );
   }, [altNewtab]);
-
+  useDidMountEffect(() => {
+    alert.show(
+      <div className="alert">
+        Autocomplete now suggests{" "}
+        {`${acCommands ? acCommands : "no"} command${
+          acCommands === 1 ? "" : "s"
+        }`}
+      </div>
+    );
+  }, [acCommands]);
+  useDidMountEffect(() => {
+    alert.show(
+      <div className="alert">
+        {`You turned ${
+          isAcCommands ? "on" : "off"
+        } autocomplete command suggestions`}
+      </div>
+    );
+  }, [isAcCommands]);
   useEffect(() => {
     alert.removeAll();
     todo.forEach((e, i) => {

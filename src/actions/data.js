@@ -295,3 +295,9 @@ export function setWeatherCity(q) {
 export function setUnsplash(un) {
   return { type: "SET_UNSPLASH", payload: un };
 }
+export function toggleIsAcCommands() {
+  return { type: "TOGGLE_IS_AC_COMMANDS" };
+}
+export function setAcCommands(acCommands) {
+  return { type: "SET_AC_COMMANDS", payload: acCommands };
+}

@@ -46,6 +46,8 @@ const INITIAL_STATE = {
   },
   isForegroundAuto: false,
   todo: [],
+  acCommands: 4,
+  isAcCommands: true,
 };
 Array.prototype.before = function (index, item) {
   return this.flatMap((e, i) => {
@@ -110,10 +112,7 @@ export default (state = INITIAL_STATE, { payload, type }) => {
         taskbarIcons: [
           ...state.taskbarIcons.slice(0, payload.index),
           payload,
-          ...state.taskbarIcons.slice(
-            payload.index,
-            state.taskbarIcons.length
-          ),
+          ...state.taskbarIcons.slice(payload.index, state.taskbarIcons.length),
         ],
       };
 
@@ -215,6 +214,12 @@ export default (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, isWeatherActive: !state.isWeatherActive };
     case "TOGGLE_DATE_ACTIVE":
       return { ...state, isDateActive: !state.isDateActive };
+
+    case "TOGGLE_IS_AC_COMMANDS":
+      return { ...state, isAcCommands: !state.isAcCommands };
+
+    case "SET_AC_COMMANDS":
+      return { ...state, acCommands: payload };
     default:
       return { ...state };
   }

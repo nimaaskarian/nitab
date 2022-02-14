@@ -14,7 +14,11 @@ const Terminal = React.forwardRef((props, ref) => {
   const identifier = useSelector(({ data }) => data.identifier);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
-
+  const acCommands = useSelector(({ data }) => data.acCommands, shallowEqual);
+  const isAcCommands = useSelector(
+    ({ data }) => data.isAcCommands,
+    shallowEqual
+  );
   const currentCommand = useMemo(() => {
     return termToCommand(term, identifier, props.commands);
   }, [term, identifier, props.commands]);
@@ -27,29 +31,39 @@ const Terminal = React.forwardRef((props, ref) => {
   }, [currentCommand, props.commandIcons]);
 
   useEffect(() => {
-    console.log(props.commandIcons);
     const acHandler = ({ ac }) => {
       const iden = identifier === "NONE" ? "" : identifier;
-      const _ac = [
-        ...Object.keys(props.commands)
-          .filter((e) => (iden + e).includes(term))
-          .sort()
-          .map((phrase) => {
-            console.log(props.commandIcons[phrase], phrase, props.commandIcons);
-            return {
-              phrase: iden + phrase,
-              icon: props.commandIcons[phrase] || `fontawe ${phrase}`,
-            };
-          }),
-        ...ac,
-      ];
-      dispatch(setAc(_ac.filter(({ phrase }) => phrase !== term).slice(0, 8)));
+      let commandsSuggestions = Object.keys(props.commands)
+        .filter((e) => (iden + e).includes(term))
+        .sort()
+        .sort(function (a, b) {
+          if (a.startsWith(term)) {
+            if (b.startsWith(term)) return 0;
+            return -1;
+          }
+          return 1;
+        })
+        .slice(0, acCommands)
+        .map((phrase) => {
+          return {
+            phrase: iden + phrase,
+            icon: props.commandIcons[phrase] || `fontawe ${phrase}`,
+          };
+        });
+      if (!isAcCommands) commandsSuggestions = [];
+      dispatch(
+        setAc(
+          [...commandsSuggestions, ...ac]
+            .filter(({ phrase }) => phrase !== term)
+            .slice(0, 8)
+        )
+      );
     };
     document.addEventListener("autocomplete", acHandler, false);
     return () => {
       document.removeEventListener("autocomplete", acHandler);
     };
-  }, [term, props.commands, identifier, props.commandIcons]);
+  }, [term, props.commands, identifier, props.commandIcons, isAcCommands]);
   useEffect(() => {
     const command = currentCommand;
     let input;
