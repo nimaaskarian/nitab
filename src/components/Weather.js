@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { setWeatherData, setWeatherCity } from "../actions";
 import Dropdown from "react-dropdown";
-import { cities } from "../utils/cities";
-
 import Tippy from "@tippyjs/react";
+
+import { setWeatherData, setWeatherCity } from "store/actions";
+
+import cities from "services/Lists/cities";
+
 import "tippy.js/dist/tippy.css";
 
 const icons = {
@@ -102,12 +104,14 @@ const Weather = (props) => {
         </>
       );
     } else {
-      return <div className="weather-unloaded">
-        <i className="fas fa-spinner"></i>
-      </div>;
+      return (
+        <div className="weather-unloaded">
+          <i className="fas fa-spinner"></i>
+        </div>
+      );
     }
   };
-  
+
   return (
     <div className="weather">
       <div style={{ marginRight: "5px" }} className="weather-selector">

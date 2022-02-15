@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import dataToCommands from "../utils/dataToCommands";
-import defaultCommands from "../js/commands";
+import { defaultCommands, dataToCommands } from "services/Commands";
+
 const useCommands = () => {
   const commands = useSelector(({ data }) => data.commands);
   const output = useMemo(() => {

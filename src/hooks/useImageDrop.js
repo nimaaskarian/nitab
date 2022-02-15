@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { setBackground } from "../utils";
+import setBackground from "services/Images/setBackground";
 import { useAlert } from "react-alert";
 
 const useImageDrop = () => {

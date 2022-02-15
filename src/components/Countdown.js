@@ -5,7 +5,7 @@ import {
   setCountingTo,
   setTimerIsPaused,
   addTimerFlags,
-} from "../actions";
+} from "../store/actions";
 
 const Countdown = (props) => {
   const [timeoutID, setTimeoutID] = useState(null);

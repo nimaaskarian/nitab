@@ -1,0 +1,123 @@
+.keepcentered {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  line-height: 1;
+}
+.tippy-box {
+  font-size: 16px;
+}
+
+.background {
+  background-color: #333;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+  font-family: Inconsolata;
+  color: rgb(255, 255, 255);
+  align-items: center;
+  background-position-x: center !important;
+  background-position-y: center !important;
+  background-size: cover !important;
+  transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), margin 300ms ease-out;
+}
+.background:after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 2;
+  transition: opacity 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+.background.no-gradient:after {
+  transition: opacity 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  opacity: 0 !important;
+}
+
+.background.super-blured {
+  transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  filter: blur(30px);
+}
+.background:not(.isTerminal)::after {
+  opacity: 0;
+}
+.background.isTerminal:after {
+  opacity: 1;
+}
+.taskbar-element {
+  transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), filter 200ms ease-out;
+  opacity: 1;
+  justify-self: end;
+  display: flex;
+  bottom: 0;
+  position: absolute;
+  margin-bottom: 20px;
+}
+.taskbar-element.no-gradient {
+  transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  background-color: rgba(0, 0, 0, 0);
+}
+.taskbar-element,
+.search-mode,
+.input-label-wrapper {
+  border-radius: 5px;
+}
+.input-label-wrapper,
+.search-mode,
+.taskbar-element {
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.alert {
+  text-transform: initial !important;
+  font-family: "Inconsolata", "IranSans";
+  font-size: 1.5rem;
+}
+
+.search-mode {
+  animation: moveFromLeft 0.75s ease-out;
+  transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  margin-top: 20px;
+  margin-left: 5vw;
+  font-size: 24px;
+}
+.search-mode.no-gradient,
+.input-label-wrapper.no-gradient {
+  padding: 0px;
+  background-color: rgba(0, 0, 0, 0);
+}
+body {
+  margin: 0;
+  background-color: #333;
+}
+
+@font-face {
+  font-family: Inconsolata;
+  src: url(fonts/Inconsolata.ttf);
+}
+@font-face {
+  font-family: IranSans;
+  src: url(fonts/IRANSansWeb_Light.woff);
+}

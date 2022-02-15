@@ -5,7 +5,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import SearchResult from "./SearchResult";
-import { termToCommand } from "../js/commands";
+
+import termToCommand from "services/Commands/termToCommand";
 
 const SearchResultList = ({ commands }) => {
   const term = useSelector(({ ui }) => ui.term);
