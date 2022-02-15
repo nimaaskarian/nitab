@@ -3,7 +3,7 @@
   margin-top: 5px;
 }
 .autocomplete-item{
-  animation: fadeIn .2s ease-out backwards;
+  animation: fadeIn 30ms ease-out backwards;
 
   cursor: pointer;
   padding: 1px;
