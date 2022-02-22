@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { SketchPicker } from "react-color";
-import { isUrl } from "../../services/Commands";
+import { isUrl } from "services/Commands";
 import { connect, useSelector } from "react-redux";
 
 import "./style.css";
@@ -11,7 +11,7 @@ import {
   editEmptyTaskbarIcon,
   editTaskbarIcon,
   setAddTaskbarIndex,
-} from "../../store/actions";
+} from "store/actions";
 import ToggleSwitch from "../ToggleSwitch";
 const AddTaskbar = (props) => {
   const addtaskbarIndex = useSelector(({ ui }) => ui.addtaskbarIndex);

@@ -27,17 +27,17 @@
 
 /* Track */
 .search-result::-webkit-scrollbar-track {
-  background: #f1f1f100;
+  background: transparent;
 }
 
 /* Handle */
 .search-result::-webkit-scrollbar-thumb {
-  background: #fff0;
+  background: transparent;
 }
 
 /* Handle on hover */
 .search-result::-webkit-scrollbar-thumb:hover {
-  background: #5550;
+  background: transparent;
 }
 @keyframes fadeIn {
   0% {

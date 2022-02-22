@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { setTerm } from "../../store/actions";
+import { setTerm } from "store/actions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import "./style.css";
+import AutocompleteLogic from "./bl";
 
 const Autocomplete = ({ style }) => {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(0);
   const ac = useSelector(({ ui }) => ui.ac || [], shallowEqual);
-
+  AutocompleteLogic();
   useEffect(() => {
     setSelected(0);
   }, [ac]);

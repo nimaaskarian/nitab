@@ -1,6 +1,5 @@
 /* eslint-disable no-extend-native */
 /* eslint-disable import/no-anonymous-default-export */
-import defaultCommands from "services/Commands/defaultCommands";
 const INITIAL_STATE = {
   timerData: {
     hours: null,
@@ -29,7 +28,75 @@ const INITIAL_STATE = {
   isParallax: false,
   identifier: "/",
   parallaxFactor: 5,
-  commands: defaultCommands,
+  commands: {
+    rgx: {
+      args: ["regexr.com%?%google.com/search?q=%input%%20site:regexr.com"],
+      icon: "fa fa-poop",
+      color: "#70b0e0",
+    },
+    w3: {
+      args: [
+        "w3schools.com%?%google.com/search?q=%input%%20site:w3schools.com",
+      ],
+      color: "#04aa6d",
+    },
+    git: {
+      args: ["regexr.com%?%google.com/search?q=sss%20site:regexr.com"],
+      icon: "fab fa-github",
+    },
+    sp: {
+      args: ["open.spotify.com%?%open.spotify.com/search/%input%"],
+      icon: "fab fa-spotify",
+      color: "#1db954",
+    },
+    wa: {
+      args: ["web.whatsapp.com"],
+      icon: "fab fa-whatsapp",
+      color: "#25d366",
+    },
+    imdb: {
+      args: ["imdb.com%?%imdb.com/find?q=%input%"],
+      icon: "fab fa-imdb",
+      color: "#f5c518",
+    },
+    stack: {
+      args: [
+        "stackoverflow.com%?%google.com/search?q=%input%%20site:stackoverflow.com",
+      ],
+      icon: "fab fa-discord",
+      color: "#7772bd",
+    },
+    yt: {
+      args: ["youtube.com%?%youtube.com/results?search_query=%input%"],
+      icon: "fab fa-youtube",
+      color: "#fe0000",
+    },
+    r: {
+      args: ["reddit.com%?%reddit.com/r/%input%"],
+      icon: "fab fa-reddit",
+      color: "#ff4500",
+    },
+    fa: {
+      args: ["fontawesome.com/v6%?%fontawesome.com/v6/icons?q=%input%"],
+      icon: "fa fa-font-awesome",
+      color: "#1c7ed6",
+    },
+    gate: {
+      args: ["192.168.1.1"],
+    },
+    lh: {
+      args: ["localhost:3000%?%localhost:%input%"],
+      icon: "fal fa-ethernet",
+    },
+    des: {
+      args: ["desmos.com/calculator"],
+      icon: "fal fa-function",
+    },
+    math: {
+      args: ["math.microsoft.com/en%?%symbolab.com/"],
+      icon: "fal fa-calculator",
+    },
+  },
   font: "Inconsolata",
   clockPos: "center",
   clockAlign: "center",

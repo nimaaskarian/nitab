@@ -14,7 +14,6 @@ import Background from "../Background";
 import ImageDropzone from "../ImageDropzone";
 import SearchResultList from "../SearchResultList";
 
-
 import useCommands from "hooks/useCommands";
 import useIsTermEmpty from "hooks/useIsTermEmpty";
 import useImageDrop from "hooks/useImageDrop";
@@ -23,6 +22,8 @@ import useAlert from "hooks/useAlert";
 import mutedKeys from "services/Lists/mutedKeys";
 import onForegroundChange from "services/Styles/onForegroundChange";
 import setBackground from "services/Images/setBackground";
+
+import CommandsContext from "context/CommandsContext";
 
 import "./style.css";
 
@@ -163,12 +164,9 @@ const App = () => {
             {["History", "Bookmark", "Tabs"][isHistory - 1]}
           </div>
         ) : null}
-
-        <Terminal
-          ref={terminal}
-          commands={commands}
-          commandIcons={commandIcons}
-        />
+        <CommandsContext.Provider value={{ commands, commandIcons }}>
+          <Terminal ref={terminal} />
+        </CommandsContext.Provider>
 
         <SearchResultList commands={commands} />
       </div>
