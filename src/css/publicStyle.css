@@ -1,0 +1,89 @@
+:root {
+  --url: #037fec;
+  --fg: #ffb900;
+}
+
+.url::selection {
+  background-color: var(--url) !important;
+}
+.fg::selection {
+  background-color: var(--fg) !important;
+}
+::-webkit-scrollbar {
+  width: 0 !important;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+body {
+  overflow: overlay;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: transparent !important;
+}
+.fontawe.w3::before {
+  content: "\e822";
+  font-family: fa-w3;
+}
+
+.fontawe {
+  font-family: "Font Awesome 6 Brands", "Font Awesome 6 Pro" !important;
+}
+@font-face {
+  font-family: fa-w3;
+  src: url(fonts/fa-w3.woff);
+}
+.fontawe.url:before {
+  content: "\f0ac";
+}
+.fontawe.bg:before {
+  content: "\f03e";
+}
+.fontawe.fg::before {
+  content: "\1f3a8";
+}
+.fontawe.font:before {
+  content: "\f031";
+}
+.fontawe.br:before {
+  content: "\e0c9";
+}
+.fontawe.g:before {
+  content: "\f1a0";
+}
+.fontawe.tr:before {
+  content: "\f1ab";
+}
+.fontawe.search:before {
+  content: "\f002";
+}
+.fontawe.un:before {
+  content: "\e07c";
+}
+.fontawe.c:before {
+  content: "\f268";
+}
+.fontawe.b:before {
+  content: "\f02e";
+}
+.fontawe:before {
+  content: "\f120";
+}
+.fontawe.exp:before {
+  content: "\f56e";
+}
+.fontawe.imp:before {
+  content: "\f56f";
+}
+.fontawe.iden:before {
+  content: "\f69f";
+}

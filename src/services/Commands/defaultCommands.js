@@ -204,16 +204,6 @@ const defaultCommands = {
         return "https://www.imdb.com/";
       };
   },
-  math(input) {
-    if (input)
-      return () => {
-        return "https://math.microstackt.com/en";
-      };
-    else
-      return () => {
-        return "https://www.symbolab.com/";
-      };
-  },
   stack(input) {
     if (input)
       return () => {
@@ -259,11 +249,6 @@ const defaultCommands = {
         return "https://open.spotify.com/search/" + input;
       };
   },
-  gate() {
-    return () => {
-      return "http://192.168.1.1";
-    };
-  },
   dis() {
     return () => {
       return "https://discord.com/channels/@me";
@@ -287,89 +272,7 @@ const defaultCommands = {
       return "https://www.google.com/search?q=" + input;
     };
   },
-  des(input) {
-    if (input) {
-      return () => {
-        return "https://www.desmos.com/scientific";
-      };
-    } else {
-      return () => {
-        return "https://www.desmos.com/calculator";
-      };
-    }
-  },
-  wa() {
-    return () => {
-      return "https://web.whatsapp.com/";
-    };
-  },
-  eu(input) {
-    if (input)
-      return () => {
-        return "https://projecteuler.net/problem=" + input;
-      };
-    else
-      return () => {
-        return "https://projecteuler.net/archives";
-      };
-  },
-  yt(input) {
-    if (input)
-      return () => {
-        return (
-          "https://www.youtube.com/results?search_query=" + encodeURI(input)
-        );
-      };
-    else
-      return () => {
-        return "https://www.youtube.com";
-      };
-  },
-  w3(input) {
-    if (input) {
-      return () => {
-        return (
-          "https://www.google.com/search?q=" + input + " site:w3schools.com"
-        );
-      };
-    } else {
-      return () => {
-        return "https://www.w3schools.com/";
-      };
-    }
-  },
-  rgx(input) {
-    if (input) {
-      return () => {
-        return "https://www.google.com/search?q=" + input + " site:regexr.com";
-      };
-    } else {
-      return () => {
-        return "https://regexr.com/";
-      };
-    }
-  },
-  fa(input) {
-    if (input) {
-      return () => {
-        return "https://fontawesome.com/v6.0/icons?q=" + input;
-      };
-    } else {
-      return () => {
-        return "https://fontawesome.com/v6.0/icons";
-      };
-    }
-  },
-  st(input) {
-    if (!input)
-      return () => {
-        return "https://store.steampowered.com/";
-      };
-    else
-      return () => {
-        return "https://store.steampowered.com/search/?term=" + input;
-      };
-  },
+
   b(input) {
     let [title, url, parentId] = input.split(/\s/g);
     let tempObj;
@@ -413,30 +316,6 @@ const defaultCommands = {
         return "https://translate.google.com/";
       };
     }
-  },
-  sft(input) {
-    if (input) {
-      return () => {
-        return "https://www.google.com/search?q=" + input + " site:soft98.ir";
-      };
-    } else {
-      return () => {
-        return "https://soft98.ir/";
-      };
-    }
-  },
-  dic(input) {
-    if (/[\u0600-\u06FF\s]+/.test(input))
-      return () => {
-        return (
-          "https://abadis.ir/?lntype=fatoen,dehkhoda,fatofa,moeen,amid,name,wiki,wikiislamic&word=" +
-          encodeURI(input)
-        );
-      };
-    else
-      return () => {
-        return "https://www.dictionary.com/browse/" + input;
-      };
   },
   taskbar() {
     return () => () => store.dispatch(actions.toggleTaskbarEdit());
