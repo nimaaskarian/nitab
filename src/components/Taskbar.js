@@ -20,6 +20,7 @@ const Taskbar = () => {
         i.style.fontSize = parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
       });
   };
+  if(!taskbarIcons.length) return null
   return (
     <div
       className={`taskbar-element ${gradient ? "" : "no-gradient"}`}
