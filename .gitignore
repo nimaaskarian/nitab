@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/build
+/build/web-ext-artifacts
 /build.bat
 /build.sh
 
