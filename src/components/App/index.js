@@ -43,7 +43,6 @@ const App = () => {
   const identifier = useSelector(({ data }) => data.identifier);
   const font = useSelector(({ data }) => data.font);
   useAlert();
-
   const dispatch = useDispatch();
   useEffect(() => {
     setIsTerminal(!isTermEmpty);
