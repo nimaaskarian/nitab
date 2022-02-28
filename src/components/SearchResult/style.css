@@ -18,8 +18,6 @@
 .search-result:hover {
   text-overflow: clip;
   transition: 500ms ease-out;
-  display: absolut;
-  overflow: overlay !important;
 }
 @keyframes fadeIn {
   0% {
