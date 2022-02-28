@@ -63,7 +63,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     return () => {
       window.removeEventListener("keydown", handleSubmit);
     };
-  }, [currentCommand]);
+  }, [handleSubmit]);
   const { className, icons } = termClass();
   return (
     <div
