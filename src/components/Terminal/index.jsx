@@ -24,13 +24,12 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       ? {}
       : { icons: commandIcons[name], className: name };
   }, [currentCommand, commandIcons]);
-
-  useEffect(() => {
-    let onSubmit;
-    try {
-      onSubmit = commands[currentCommand.name](currentCommand.args);
-    } catch (error) {}
-    const onSubmitHelper = (e) => {
+  const handleSubmit = useCallback(
+    (e) => {
+      let onSubmit;
+      try {
+        onSubmit = commands[currentCommand.name](currentCommand.args);
+      } catch (error) {}
       const { args } = currentCommand;
       if (e.code === "Enter" && onSubmit) {
         let _output = onSubmit(args);
@@ -49,12 +48,22 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           });
         }
       }
-    };
-    window.addEventListener("keydown", onSubmitHelper);
+    },
+    [altNewtab, currentCommand, identifier, term, commands]
+  );
+  useEffect(() => {
+    const isSelfSubmit =
+      new URLSearchParams(window.location.search).get("selfSubmit") === "true";
+    if (isSelfSubmit) {
+      handleSubmit({ code: "Enter" });
+    }
+  }, []);
+  useEffect(() => {
+    window.addEventListener("keydown", handleSubmit);
     return () => {
-      window.removeEventListener("keydown", onSubmitHelper);
+      window.removeEventListener("keydown", handleSubmit);
     };
-  }, [currentCommand]);
+  }, [handleSubmit]);
   const { className, icons } = termClass();
   return (
     <div

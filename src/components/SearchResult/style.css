@@ -18,26 +18,6 @@
 .search-result:hover {
   text-overflow: clip;
   transition: 500ms ease-out;
-  display: absolut;
-  overflow: overlay !important;
-}
-.search-result::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-.search-result::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Handle */
-.search-result::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
-/* Handle on hover */
-.search-result::-webkit-scrollbar-thumb:hover {
-  background: transparent;
 }
 @keyframes fadeIn {
   0% {

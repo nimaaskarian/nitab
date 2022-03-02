@@ -16,21 +16,15 @@
   height: 10px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: transparent !important;
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+*::-webkit-scrollbar {
+  display: none;
 }
 body {
   overflow: overlay;
-}
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: transparent !important;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: transparent !important;
 }
 .fontawe.w3::before {
   content: "\e822";

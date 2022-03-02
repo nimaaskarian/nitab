@@ -126,7 +126,6 @@ export function importData() {
       if (!input.files.length || input.files.length > 1) return;
       fileReader.readAsText(input.files[0]);
       fileReader.onload = ({ target }) => {
-        console.log(target);
         dispatch({ type: "IMPORT_DATA", payload: JSON.parse(target.result) });
       };
     });

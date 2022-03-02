@@ -19,7 +19,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 //App component
 import App from "./components/App";
-
+import AppErrorBoundry from "components/AppErrorBoundry";
 // Alert default options
 const alertOptions = {
   position: positions.BOTTOM_LEFT,
@@ -33,7 +33,9 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <AlertProvider template={AlertTemplate} {...alertOptions}>
-        <App />
+        <AppErrorBoundry>
+          <App />
+        </AppErrorBoundry>
       </AlertProvider>
     </PersistGate>
   </Provider>,

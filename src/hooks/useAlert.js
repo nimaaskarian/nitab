@@ -3,7 +3,7 @@ import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { removeTodo } from "store/actions";
 import useDidMountEffect from "./useDidMountEffect";
-
+import AlertComponent from "components/Alert";
 const Alert = () => {
   const alert = useAlert();
   const [prevCommands, setPrevCommands] = useState(null);
@@ -13,39 +13,40 @@ const Alert = () => {
   const altNewtab = useSelector(({ data }) => data.altNewtab);
   const acCommands = useSelector(({ data }) => data.acCommands);
   const isAcCommands = useSelector(({ data }) => data.isAcCommands);
+
   useDidMountEffect(() => {
     alert.show(
-      <div className="alert">
+      <AlertComponent>
         {altNewtab
           ? "Default enter behaviour is now current tab"
           : "Default enter behaviour is now new tab"}
-      </div>
+      </AlertComponent>
     );
   }, [altNewtab]);
   useDidMountEffect(() => {
     alert.show(
-      <div className="alert">
+      <AlertComponent>
         Autocomplete now suggests{" "}
         {`${acCommands ? acCommands : "no"} command${
           acCommands === 1 ? "" : "s"
         }`}
-      </div>
+      </AlertComponent>
     );
   }, [acCommands]);
   useDidMountEffect(() => {
     alert.show(
-      <div className="alert">
+      <AlertComponent>
         {`You turned ${
           isAcCommands ? "on" : "off"
         } autocomplete command suggestions`}
-      </div>
+      </AlertComponent>
     );
   }, [isAcCommands]);
   useEffect(() => {
     alert.removeAll();
     todo.forEach((e, i) => {
       alert.show(
-        <div
+        <AlertComponent
           style={{
             direction: `${/^[\u0600-\u06FF\s]+/.test(e) ? "rtl" : "ltr"}`,
             display: "flex",
@@ -53,7 +54,6 @@ const Alert = () => {
             alignItems: "center",
             justifyContent: "space-between",
           }}
-          className="alert"
         >
           <div>{e}</div>
           <a
@@ -66,7 +66,7 @@ const Alert = () => {
               }, 350);
             }}
           />
-        </div>,
+        </AlertComponent>,
         { timeout: 0 }
       );
     });
@@ -92,11 +92,11 @@ const Alert = () => {
       });
       updates.forEach((e) => {
         alert.show(
-          <div className="alert">
+          <AlertComponent>
             {e.type === "add"
               ? `You've added "${e.key}" to your commands`
               : `You've deleted "${e.key}" from your commands`}
-          </div>
+          </AlertComponent>
         );
       });
     }
