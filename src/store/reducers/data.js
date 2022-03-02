@@ -22,7 +22,7 @@ const INITIAL_STATE = {
   weatherCity: "Tehran",
   weatherData: {},
   background: null,
-  foreground: "white",
+  foreground: { color: "white", priority: "" },
   gradient: true,
   magnify: true,
   isParallax: false,
@@ -31,7 +31,6 @@ const INITIAL_STATE = {
   commands: {
     rgx: {
       args: ["regexr.com%?%google.com/search?q=%input%%20site:regexr.com"],
-      icon: "fa fa-poop",
       color: "#70b0e0",
     },
     w3: {

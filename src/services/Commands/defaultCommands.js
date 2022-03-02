@@ -114,16 +114,16 @@ const defaultCommands = {
   },
   fg(input) {
     if (input) {
-      if (input === "default") input = "white";
+      let color, priority;
+      if (input === "default") color = "white";
       if (input === "auto")
         return () => () => store.dispatch(actions.setIsForegoundAuto(true));
-      const [first, second] = input.includes("ovr")
-        ? ["ovr", input.replace(/ovr\s/, "")]
-        : [];
-      if (first && second && first === "ovr") input = second + " !important";
+
+      color = input.replace(/ovr\s/, "");
+      priority = input.includes("ovr") ? "!important" : "";
 
       return () => () => {
-        store.dispatch(actions.setForeground(input));
+        store.dispatch(actions.setForeground({ color, priority }));
         store.dispatch(actions.setIsForegoundAuto(false));
       };
     }

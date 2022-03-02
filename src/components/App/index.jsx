@@ -20,13 +20,12 @@ import useImageDrop from "hooks/useImageDrop";
 import useAlert from "hooks/useAlert";
 
 import mutedKeys from "services/Lists/mutedKeys";
-import onForegroundChange from "services/Styles/onForegroundChange";
 import setBackground from "services/Images/setBackground";
 
 import CommandsContext from "context/CommandsContext";
 
 import "./style.css";
-
+import { AppContainer } from "./style";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
   const { commands, icons: commandIcons } = useCommands();
@@ -55,19 +54,6 @@ const App = () => {
       setTerm(new URLSearchParams(window.location.search).get("t") || "")
     );
   }, []);
-  useEffect(() => {
-    const _styleIndex = document.styleSheets.length - 1;
-    onForegroundChange(document.styleSheets[_styleIndex], foreground);
-    return () => {
-      document.styleSheets[_styleIndex].deleteRule(
-        document.styleSheets[_styleIndex].cssRules.length - 2
-      );
-      document.styleSheets[_styleIndex].deleteRule(
-        document.styleSheets[_styleIndex].cssRules.length - 1
-      );
-    };
-  }, [foreground]);
-
   useEffect(() => {
     const onKeydown = (e) => {
       if (
@@ -191,12 +177,13 @@ const App = () => {
       </Helmet>
       <Background isTerminal={isTerminal} />
 
-      <div
-        className={`keepcentered ${isTerminal ? "" : "no-terminal"}`}
-        style={{ fontFamily: `${font}, IranSans` }}
+      <AppContainer
+        foreground={foreground}
+        font={font}
+        className={`foreground-change ${isTerminal ? "" : "no-terminal"}`}
       >
         <RenderedContent />
-      </div>
+      </AppContainer>
     </React.Fragment>
   );
 };

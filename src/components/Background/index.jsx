@@ -6,7 +6,7 @@ import { setForeground } from "store/actions";
 
 import unsplash from "apis/unsplash";
 import useParallax from "hooks/useParallax";
-
+import { BackgroundDiv, BackgroundWrapperDiv } from "./style";
 import { getImageLightness, setBackground } from "services/Images";
 import isDark from "services/Styles/isdark-min";
 const Background = ({ isTerminal }) => {
@@ -14,13 +14,12 @@ const Background = ({ isTerminal }) => {
   const parallax = useParallax();
   const background = useSelector(({ ui }) => ui.background);
   const isParallax = useSelector(({ data }) => data.isParallax);
+  const parallaxFactor = useSelector(({ data }) => data.parallaxFactor);
   const blur = useSelector(({ data }) => data.blur);
   const brightness = useSelector(({ data }) => data.brightness);
-  const parallaxFactor = useSelector(({ data }) => data.parallaxFactor);
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
   const gradient = useSelector(({ data }) => data.gradient);
   const isForegroundAuto = useSelector(({ data }) => data.isForegroundAuto);
-
   const unsplashCollections = useSelector(
     ({ data }) => data.unsplashCollections
   );
@@ -65,32 +64,30 @@ const Background = ({ isTerminal }) => {
   }, [background]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
-      <div
-        style={{
-          marginLeft: isParallax ? `${parallax.x * parallaxFactor}vw` : "0",
-          marginTop: isParallax ? `${parallax.y * parallaxFactor}vh` : "0",
-          transform: isParallax ? `scale(${1 + parallaxFactor / 100})` : null,
-          background: background || "#222",
-          filter: `blur(${
-            isTaskbarEdit
-              ? blur.setting
-              : isTerminal
-              ? blur.terminal
-              : blur.notTerminal
-          }px) brightness(${
-            isTaskbarEdit
-              ? brightness.setting
-              : isTerminal
-              ? brightness.terminal
-              : brightness.notTerminal
-          })`,
-        }}
-        className={`background ${isTerminal ? "isTerminal" : ""} ${
-          gradient ? "" : "no-gradient"
-        } ${isTaskbarEdit ? "super-blured" : ""}`}
+    <BackgroundWrapperDiv>
+      <BackgroundDiv
+        parallax={parallax}
+        scale={isParallax ? 1 + parallaxFactor / 100 : 1}
+        background={background}
+        blur={
+          isTaskbarEdit
+            ? blur.setting
+            : isTerminal
+            ? blur.terminal
+            : blur.notTerminal
+        }
+        brightness={
+          isTaskbarEdit
+            ? brightness.setting
+            : isTerminal
+            ? brightness.terminal
+            : brightness.notTerminal
+        }
+        // className={`${isTerminal ? "isTerminal" : ""} ${
+        //   gradient ? "" : "no-gradient"
+        // } ${isTaskbarEdit ? "super-blured" : ""}`}
       />
-    </div>
+    </BackgroundWrapperDiv>
   );
 };
 
