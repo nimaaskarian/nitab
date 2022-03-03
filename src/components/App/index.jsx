@@ -24,7 +24,6 @@ import setBackground from "services/Images/setBackground";
 
 import CommandsContext from "context/CommandsContext";
 
-import "./style.css";
 import { AppContainer } from "./style";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0

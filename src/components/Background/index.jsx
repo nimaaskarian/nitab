@@ -18,7 +18,6 @@ const Background = ({ isTerminal }) => {
   const blur = useSelector(({ data }) => data.blur);
   const brightness = useSelector(({ data }) => data.brightness);
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const gradient = useSelector(({ data }) => data.gradient);
   const isForegroundAuto = useSelector(({ data }) => data.isForegroundAuto);
   const unsplashCollections = useSelector(
     ({ data }) => data.unsplashCollections

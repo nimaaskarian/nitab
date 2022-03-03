@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { isDark } from "services/Styles";
 export const TerminalDiv = styled.div`
-  direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")}
+  direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
   align-items: center;
   display: flex;
   margin-top: -10px;
