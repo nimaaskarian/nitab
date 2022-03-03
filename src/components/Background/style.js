@@ -15,26 +15,13 @@ export const BackgroundDiv = styled.div`
   align-content: center;
   height: 100%;
   width: 100%;
-  font-family: Inconsolata;
+  font-family: FiraCode;
   color: rgb(255, 255, 255);
   align-items: center;
   background-position-x: center !important;
   background-position-y: center !important;
   background-size: cover !important;
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), margin 300ms ease-out;
-  &::after {
-    content: "";
-    display: block;
-    height: 100%;
-    width: 100%;
-    background-image: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.3) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    z-index: 2;
-    transition: opacity 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
-  }
 `;
 export const BackgroundWrapperDiv = styled.div`
   width: 100vw;

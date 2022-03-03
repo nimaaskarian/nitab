@@ -10,7 +10,7 @@ import "./font-awesome/css/brands.min.css";
 import "./font-awesome/css/light.min.css";
 import "./font-awesome/css/solid.min.css";
 import "./font-awesome/css/fontawesome.min.css";
-import "./css/publicStyle.css";
+import "./css/style.css";
 
 // Redux Provider, Presistor, Store
 import store, { persistor } from "store";

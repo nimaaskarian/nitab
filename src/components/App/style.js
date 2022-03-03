@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { isDark } from "services/Styles";
 export const AppContainer = styled.div`
-  font-family: ${({ font }) => `${font}, Inconsolata, IranSans`};
+  font-family: ${({ font }) => `${font}, FiraCode, IranSans`};
   ${({ foreground: { color, priority } }) => {
     return ` & *{
       color:${color} ${priority};
@@ -11,7 +11,9 @@ export const AppContainer = styled.div`
     color:${isDark(color) ? "#CCC" : "#333"} ${priority};
   }`;
   }}
-
+  & * {
+    transition: color 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  }
   overflow: hidden;
   display: flex;
   justify-content: center;

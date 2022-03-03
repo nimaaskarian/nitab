@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import TaskbarIcon from "./TaskbarIcon";
-
+import TaskbarIcon from "../TaskbarIcon";
+import { TaskbarDiv } from "./style";
 const Taskbar = () => {
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
   const taskbarIcons = useSelector(({ data }) => data.taskbarIcons);
@@ -20,10 +20,9 @@ const Taskbar = () => {
         i.style.fontSize = parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
       });
   };
-  if(!taskbarIcons.length) return null
+  if (!taskbarIcons.length) return null;
   return (
-    <div
-      className={`taskbar-element ${gradient ? "" : "no-gradient"}`}
+    <TaskbarDiv
       onMouseEnter={onTaskbarMouseMove}
       onMouseMove={onTaskbarMouseMove}
       onMouseOut={() => {
@@ -50,7 +49,7 @@ const Taskbar = () => {
           />
         );
       })}
-    </div>
+    </TaskbarDiv>
   );
 };
 

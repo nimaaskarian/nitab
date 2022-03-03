@@ -7,6 +7,13 @@ import { setTerm } from "store/actions";
 import CurrentCommandContext from "context/CurrentCommandContext";
 import "./style.css";
 import CommandsContext from "context/CommandsContext";
+import {
+  TerminalInput,
+  TerminalOutput,
+  TerminalInputWrapper,
+  TerminalDiv,
+} from "./style";
+
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const { commands, commandIcons } = useContext(CommandsContext);
   const dispatch = useDispatch();
@@ -22,7 +29,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     const { name } = currentCommand;
     return ["taskbar", "command"].includes(name)
       ? {}
-      : { icons: commandIcons[name], className: name };
+      : { icons: commandIcons[name], commandColorVariableName: name };
   }, [currentCommand, commandIcons]);
   const handleSubmit = useCallback(
     (e) => {
@@ -64,21 +71,16 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       window.removeEventListener("keydown", handleSubmit);
     };
   }, [handleSubmit]);
-  const { className, icons } = termClass();
+  const { commandColorVariableName, icons } = termClass();
   return (
-    <div
-      style={{
-        direction: `${/^[\u0600-\u06FF\s]+/.test(term) ? "rtl" : "ltr"}`,
-      }}
-      className="terminal foreground-change"
-    >
-      <div>
-        <input
-          style={{
-            color: `var(--${className})`,
-          }}
+    <TerminalDiv isRtl={/^[\u0600-\u06FF\s]+/.test(term)}>
+      <TerminalInputWrapper
+        color={getComputedStyle(document.documentElement).getPropertyValue(
+          `--${commandColorVariableName}`
+        )}
+      >
+        <TerminalInput
           value={term}
-          className={className}
           ref={forwardedRef}
           autoFocus
           onChange={(e) => {
@@ -86,16 +88,11 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           }}
         />
         <CurrentCommandContext.Provider value={currentCommand}>
-          <Autocomplete style={{ color: `var(--${className})` }} />
+          <Autocomplete />
         </CurrentCommandContext.Provider>
-      </div>
-      <span
-        style={{
-          color: `var(--${className})`,
-        }}
-        className={`terminal-output ${className} ${icons || "fontawe"}`}
-      ></span>
-    </div>
+      </TerminalInputWrapper>
+      <TerminalOutput className={`${icons || "fontawe"}`} />
+    </TerminalDiv>
   );
 });
 

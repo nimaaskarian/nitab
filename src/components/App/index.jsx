@@ -13,7 +13,7 @@ import Taskbar from "../Taskbar";
 import Background from "../Background";
 import ImageDropzone from "../ImageDropzone";
 import SearchResultList from "../SearchResultList";
-
+import SearchMode from "components/SearchMode";
 import useCommands from "hooks/useCommands";
 import useIsTermEmpty from "hooks/useIsTermEmpty";
 import useImageDrop from "hooks/useImageDrop";
@@ -38,7 +38,6 @@ const App = () => {
   const foreground = useSelector(({ data }) => data.foreground);
   const isHistory = useSelector(({ data }) => data.isHistory);
   const isClock = useSelector(({ data }) => data.isClock);
-  const gradient = useSelector(({ data }) => data.gradient);
   const identifier = useSelector(({ data }) => data.identifier);
   const font = useSelector(({ data }) => data.font);
   useAlert();
@@ -117,7 +116,7 @@ const App = () => {
     if (isTaskbarEdit) dispatch(setTerm(""));
   }, [isTaskbarEdit]);
 
-  const RenderedContent = useCallback(() => {
+  const RenderedContent = () => {
     if (!isTerminal)
       return (
         <React.Fragment>
@@ -129,7 +128,7 @@ const App = () => {
           {isTaskbarEdit ? (
             <AddTaskbar />
           ) : isDragAccept ? (
-            <h1 className="foreground-change">Drop the picture...</h1>
+            <h1>Drop the picture...</h1>
           ) : isClock ? (
             <Clock />
           ) : (
@@ -140,15 +139,7 @@ const App = () => {
       );
     return (
       <div>
-        {isHistory ? (
-          <div
-            className={`search-mode foreground-change ${
-              gradient ? "" : "no-gradient"
-            }`}
-          >
-            {["History", "Bookmark", "Tabs"][isHistory - 1]}
-          </div>
-        ) : null}
+        <SearchMode isHistory={isHistory} />
         <CommandsContext.Provider value={{ commands, commandIcons }}>
           <Terminal ref={terminal} />
         </CommandsContext.Provider>
@@ -156,18 +147,7 @@ const App = () => {
         <SearchResultList commands={commands} />
       </div>
     );
-  }, [
-    commandIcons,
-    commands,
-    getInputProps,
-    getRootProps,
-    isDragAccept,
-    isTerminal,
-    gradient,
-    isClock,
-    isHistory,
-    isTaskbarEdit,
-  ]);
+  };
 
   return (
     <React.Fragment>

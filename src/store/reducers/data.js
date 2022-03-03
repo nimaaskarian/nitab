@@ -96,7 +96,7 @@ const INITIAL_STATE = {
       icon: "fal fa-calculator",
     },
   },
-  font: "Inconsolata",
+  font: "FiraCode",
   clockPos: "center",
   clockAlign: "center",
   isClock: true,
