@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.e646466e.css",
-    "main.js": "./static/js/main.5c129e2a.js",
+    "main.css": "./static/css/main.e32a388d.css",
+    "main.js": "./static/js/main.af3e2f28.js",
     "static/media/fa-light-300.woff2": "./static/media/fa-light-300.1eba6b025aa717396b2c.woff2",
     "static/media/fa-solid-900.woff2": "./static/media/fa-solid-900.86985b86e3f2ac58f473.woff2",
     "static/media/FiraCode.ttf": "./static/media/FiraCode.befaa34a41917c3493b8.ttf",
@@ -9,11 +9,11 @@
     "static/media/IRANSansWeb_Light.woff": "./static/media/IRANSansWeb_Light.c155096a5b1dc2a8557b.woff",
     "static/media/fa-w3.woff": "./static/media/fa-w3.07297be84c881d1a1bb8.woff",
     "index.html": "./index.html",
-    "main.e646466e.css.map": "./static/css/main.e646466e.css.map",
-    "main.5c129e2a.js.map": "./static/js/main.5c129e2a.js.map"
+    "main.e32a388d.css.map": "./static/css/main.e32a388d.css.map",
+    "main.af3e2f28.js.map": "./static/js/main.af3e2f28.js.map"
   },
   "entrypoints": [
-    "static/css/main.e646466e.css",
-    "static/js/main.5c129e2a.js"
+    "static/css/main.e32a388d.css",
+    "static/js/main.af3e2f28.js"
   ]
 }
