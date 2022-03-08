@@ -5,9 +5,11 @@
 
 .url::selection {
   background-color: var(--url) !important;
+  color: #ccc;
 }
 .fg::selection {
   background-color: var(--fg) !important;
+  color: #333;
 }
 ::-webkit-scrollbar {
   width: 0 !important;
