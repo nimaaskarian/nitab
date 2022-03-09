@@ -2,13 +2,13 @@ import styled from "styled-components";
 import { isDark } from "services/Styles";
 export const AppContainer = styled.div`
   font-family: ${({ font }) => `${font}, FiraCode, IranSans`};
-  ${({ foreground: { color, priority } }) => {
+  ${({ foreground: { color } }) => {
     return ` & *{
-      color:${color} ${priority};
+      color:${color};
     }
   & *::selection{
-    background-color:${color} ${priority};
-    color:${isDark(color) ? "#CCC" : "#333"} ${priority};
+    background-color:${color};
+    color:${isDark(color) ? "#CCC" : "#333"};
   }`;
   }}
   & * {

@@ -15,31 +15,38 @@ import {
 } from "./style";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
-  const { commands, commandIcons } = useContext(CommandsContext);
+  const { commands } = useContext(CommandsContext);
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.identifier);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
-  const term = useSelector(({ ui }) => ui.term, shallowEqual);
+  const { color, isOvr } = useSelector(({ data }) => data.foreground);
 
+  const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const currentCommand = useMemo(() => {
-    return termToCommand(term, identifier, commands);
+    const { name, args } = termToCommand(term, identifier, commands);
+
+    return { ...commands[name], args };
   }, [term, identifier, commands]);
 
-  const termClass = useCallback(() => {
-    const { name } = currentCommand;
-    return ["taskbar", "command"].includes(name)
-      ? {}
-      : { icons: commandIcons[name], commandColorVariableName: name };
-  }, [currentCommand, commandIcons]);
+  const currentColor = useMemo(() => {
+    console.log("**** isOvr");
+
+    console.log(isOvr, color, currentCommand.color);
+    return isOvr ? color : currentCommand.color;
+  }, [isOvr, color, currentCommand.color]);
+
   const handleSubmit = useCallback(
     (e) => {
+      console.log(currentCommand);
       let onSubmit;
       try {
-        onSubmit = commands[currentCommand.name](currentCommand.args);
-      } catch (error) {}
-      const { args } = currentCommand;
+        onSubmit = currentCommand.function(currentCommand.args);
+      } catch (error) {
+        console.log(error);
+      }
+      // const { args } = currentCommand;
       if (e.code === "Enter" && onSubmit) {
-        let _output = onSubmit(args);
+        let _output = onSubmit();
         if (typeof _output === "string") {
           window.document.title = `${term} - ${
             identifier === "NONE" ? "" : identifier
@@ -71,14 +78,9 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       window.removeEventListener("keydown", handleSubmit);
     };
   }, [handleSubmit]);
-  const { commandColorVariableName, icons } = termClass();
   return (
-    <TerminalDiv isRtl={/^[\u0600-\u06FF\s]+/.test(term)}>
-      <TerminalInputWrapper
-        color={getComputedStyle(document.documentElement).getPropertyValue(
-          `--${commandColorVariableName}`
-        )}
-      >
+    <TerminalDiv isRtl={/^[\u0600-\u06FF\s]+/.test(term)} color={currentColor}>
+      <div>
         <TerminalInput
           value={term}
           ref={forwardedRef}
@@ -90,8 +92,8 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         <CurrentCommandContext.Provider value={currentCommand}>
           <Autocomplete />
         </CurrentCommandContext.Provider>
-      </TerminalInputWrapper>
-      <TerminalOutput className={`${icons || "fontawe"}`} />
+      </div>
+      <TerminalOutput className={currentCommand.icon || "fontawe"} />
     </TerminalDiv>
   );
 });

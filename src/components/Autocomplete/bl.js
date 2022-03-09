@@ -54,9 +54,9 @@ const AutocompleteLogic = () => {
     const command = currentCommand;
     let input;
     if (command.name && command.name !== "search") {
-      if (commands[command.name](command.args))
-        if (typeof commands[command.name](command.args)() === "string")
-          input = commands[command.name](command.args)();
+      if (commands[command.name].function(command.args))
+        if (typeof commands[command.name].function(command.args)() === "string")
+          input = commands[command.name].function(command.args)();
     }
     if (!input) input = term;
     const url =

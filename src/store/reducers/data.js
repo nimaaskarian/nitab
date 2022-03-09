@@ -22,7 +22,7 @@ const INITIAL_STATE = {
   weatherCity: "Tehran",
   weatherData: {},
   background: null,
-  foreground: { color: "white", priority: "" },
+  foreground: { color: "white", isOvr: false },
   gradient: true,
   magnify: true,
   isParallax: false,

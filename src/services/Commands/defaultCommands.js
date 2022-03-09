@@ -112,21 +112,23 @@ const defaultCommands = {
   bg(input) {
     if (input) return () => () => setBackground(input);
   },
-  fg(input) {
-    if (input) {
-      let color, priority;
-      if (input === "default") color = "white";
-      if (input === "auto")
-        return () => () => store.dispatch(actions.setIsForegoundAuto(true));
+  fg: {
+    function(input) {
+      if (input) {
+        let color, isOvr;
+        if (input === "default") color = "white";
+        if (input === "auto")
+          return () => () => store.dispatch(actions.setIsForegoundAuto(true));
 
-      color = input.replace(/ovr\s/, "");
-      priority = input.includes("ovr") ? "!important" : "";
+        color = input.replace(/ovr\s/, "");
+        isOvr = input.includes("ovr");
 
-      return () => () => {
-        store.dispatch(actions.setForeground({ color, priority }));
-        store.dispatch(actions.setIsForegoundAuto(false));
-      };
-    }
+        return () => () => {
+          store.dispatch(actions.setForeground({ color, isOvr }));
+          store.dispatch(actions.setIsForegoundAuto(false));
+        };
+      }
+    },
   },
   un(input) {
     if (input)
@@ -140,59 +142,68 @@ const defaultCommands = {
     if (input === "CONFIRM")
       return () => () => store.dispatch(actions.clearCommands());
   },
-  command(input) {
-    let [commandName, ...commandFunctions] = input
-      .replace(/icon:".*"/g, "")
-      .replace(/color:".*"/g, "")
-      .split(/\s/g)
-      .filter((e) => !!e);
-    const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
-    const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
-    if (icon) {
-      document.querySelector(
-        ".terminal-output"
-      ).className = `terminal-output ${icon}`;
-    } else {
-      document.querySelector(".terminal-output").className =
-        "terminal-output fontawe";
-    }
+  command: {
+    function(input) {
+      let [commandName, ...commandFunctions] = input
+        .replace(/icon:".*"/g, "")
+        .replace(/color:".*"/g, "")
+        .split(/\s/g)
+        .filter((e) => !!e);
+      const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
+      const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
+      // if (icon) {
+      //   document.querySelector(
+      //     ".terminal-output"
+      //   ).className = `terminal-output ${icon}`;
+      // } else {
+      //   document.querySelector(".terminal-output").className =
+      //     "terminal-output fontawe";
+      // }
 
-    if (
-      ["command", "commandCl"].includes(commandName) ||
-      !commandFunctions.length
-    )
-      return;
+      if (
+        ["command", "commandCl"].includes(commandName) ||
+        !commandFunctions.length
+      )
+        return;
 
-    return () => {
-      switch (commandFunctions[0].toLowerCase()) {
-        case "delete":
-          return () => store.dispatch(actions.deleteCommand(commandName));
-        case "add":
-          return () =>
-            store.dispatch(
-              actions.addToCommand(commandName, commandFunctions.delete(0))
-            );
-        case "remove":
-          return () =>
-            store.dispatch(
-              actions.removeFromCommand(commandName, commandFunctions)
-            );
-        default:
-          return () =>
-            store.dispatch(
-              actions.addCommand(commandName, commandFunctions, icon, color)
-            );
-      }
-    };
+      return () => {
+        switch (commandFunctions[0].toLowerCase()) {
+          case "delete":
+            return () => store.dispatch(actions.deleteCommand(commandName));
+          case "add":
+            return () =>
+              store.dispatch(
+                actions.addToCommand(commandName, commandFunctions.delete(0))
+              );
+          case "remove":
+            return () =>
+              store.dispatch(
+                actions.removeFromCommand(commandName, commandFunctions)
+              );
+          default:
+            return () =>
+              store.dispatch(
+                actions.addCommand(commandName, commandFunctions, icon, color)
+              );
+        }
+      };
+    },
   },
   rr: () => () => () => store.dispatch(actions.resetStorage()),
-  url(input) {
-    return () => {
-      if (!input.match(/^http[s]?:\/\//i) && !input.match(/^((..?)?\/)+.*/i)) {
-        input = "http://" + input;
-      }
-      return input;
-    };
+  url: {
+    function(input) {
+      return () => {
+        if (
+          !input.match(/^http[s]?:\/\//i) &&
+          !input.match(/^((..?)?\/)+.*/i)
+        ) {
+          input = "http://" + input;
+        }
+        return input;
+      };
+    },
+    color: "#037fec",
+    icon: "fas fa-globe",
   },
   imdb(input) {
     if (input)
@@ -254,31 +265,35 @@ const defaultCommands = {
       return "https://discord.com/channels/@me";
     };
   },
-  search(input) {
-    try {
-      if (chrome.search.query)
-        return () =>
-          ({ altKey }) => {
-            chrome.search.query({
-              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-              text: input,
-            });
-          };
-    } catch (error) {}
-    return this.g(input);
+  search: {
+    function(input) {
+      try {
+        if (chrome.search.query)
+          return () =>
+            ({ altKey }) => {
+              chrome.search.query({
+                disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+                text: input,
+              });
+            };
+      } catch (error) {}
+      return defaultCommands.g.function(input);
+    },
+    icon: "fal fa-search",
   },
-  g(input) {
-    return () => {
-      return "https://www.google.com/search?q=" + input;
-    };
+  g: {
+    function(input) {
+      return () => {
+        return "https://www.google.com/search?q=" + input;
+      };
+    },
   },
-
   b(input) {
     let [title, url, parentId] = input.split(/\s/g);
     let tempObj;
     if (title && url) {
       tempObj = {
-        url: this.url(url)(),
+        url: defaultCommands.url.function(url)(),
         title,
         parentId: parentId || "1",
       };

@@ -9,13 +9,23 @@ export const TerminalDiv = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 0 5vw;
+  ${({ color }) => {
+    console.log("color", color);
+    return `& *{
+      color:${color} !important;
+    }
+  & *::selection{
+    background-color:${color} !important;
+    color:${isDark(color) ? "#CCC" : "#333"}!important;
+  }`;
+  }}
 `;
 export const TerminalInput = styled.input`
   font-family: inherit !important;
   margin: 0;
-  width: calc(90vw - 55px);
+  flex-grow: 9;
   border: none;
-  background-color: rgba(51, 51, 51, 0);
+  background-color: transparent;
   box-shadow: none;
   font-size: 36px;
   font-weight: 500 !important;
@@ -27,21 +37,10 @@ export const TerminalInput = styled.input`
 `;
 export const TerminalOutput = styled.span`
   border: none;
-  background-color: rgba(51, 51, 51, 0);
+
+  background-color: transparent;
   box-shadow: none;
   font-size: 36px;
   animation: moveFromBottom 0.375s ease-out backwards;
   animation-delay: 0.5625;
-`;
-export const TerminalInputWrapper = styled.div`
-  ${({ color }) => {
-    console.log(color);
-    return `& *{
-      color:${color} !important;
-    }
-  & *::selection{
-    background-color:${color} !important;
-    color:${isDark(color) ? "#CCC" : "#333"}!important;
-  }`;
-  }}
 `;

@@ -5,24 +5,11 @@ const dataToCommands = (data) => {
   let commands = {},
     icons = {};
   Object.keys(data).forEach((command) => {
-    if (data[command].icon) icons[command] = data[command].icon;
-    if (data[command].color) {
-      const _styleIndex = document.styleSheets.length - 1;
-      const stylesheet = document.styleSheets[_styleIndex];
-      stylesheet.insertRule(
-        `.${command}::selection{background-color:${
-          data[command].color
-        } !important;
-        color:${isDark(data[command].color) ? "#CCC" : "#333"} !important;}`,
-        stylesheet.rules.length
-      );
-      document.documentElement.style.setProperty(
-        `--${command}`,
-        data[command].color
-      );
-    }
+    commands[command] = {};
+    const { color, icon } = data[command];
+    commands[command] = { color, icon };
 
-    commands[command] = (input) => {
+    commands[command].function = (input) => {
       if (!data[command].args) return;
       if (data[command].args.length === 1)
         return () => {
