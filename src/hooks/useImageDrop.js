@@ -2,25 +2,23 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import setBackground from "services/Images/setBackground";
 import { useAlert } from "react-alert";
-
+import Alert from "components/Alert";
 const useImageDrop = () => {
   const alert = useAlert();
   const onDropAccepted = useCallback((files) => {
     alert.show(
-      <div className="alert">
-        {files[0].name} has been set as your background picture
-      </div>
+      <Alert>{files[0].name} has been set as your background picture</Alert>
     );
     const bgBlob = new Blob([files[0]], { type: "image/*" });
     setBackground(bgBlob);
   }, []);
   const onDropRejected = useCallback((files, e) => {
     alert.error(
-      <div className="alert">
+      <Alert>
         {files[0].errors[0].code === "file-invalid-type"
           ? files[0].file.name + "'s file format is not supported"
           : files[0].errors[0].message}
-      </div>
+      </Alert>
     );
   }, []);
   const { isDragAccept, getRootProps, getInputProps } = useDropzone({
@@ -29,7 +27,6 @@ const useImageDrop = () => {
     accept: "image/*",
     multiple: false,
   });
-
   return { isDragAccept, getRootProps, getInputProps };
 };
 
