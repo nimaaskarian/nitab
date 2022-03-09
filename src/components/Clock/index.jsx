@@ -23,17 +23,12 @@ const Clock = (props) => {
   const isPersianDate = useSelector(({ data }) => data.persianDate);
   const clockFormat = useSelector(({ data }) => data.clockFormat);
   return (
-    <div
+    <ClockDiv
       onContextMenu={(e) => {
         e.preventDefault();
         toggleIsClock();
       }}
-      className="clock foreground-change"
-      style={{
-        position: clockPos !== "center" ? "absolute" : null,
-        top: clockPos !== "center" ? "20px" : null,
-        [clockPos]: "5vw",
-      }}
+      clockPos={clockPos}
     >
       <ClockWrapperDiv
         style={{
@@ -53,7 +48,7 @@ const Clock = (props) => {
         ) : null}
         {isWeatherActive ? <Weather /> : null}
       </ClockWrapperDiv>
-    </div>
+    </ClockDiv>
   );
 };
 const mapStateToProp = (state) => {

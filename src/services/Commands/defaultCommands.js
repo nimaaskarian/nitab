@@ -3,6 +3,7 @@
 import setBackground from "services/Images/setBackground";
 import * as actions from "store/actions";
 import store from "store";
+import { setTempColor, setTempIcon } from "store/actions";
 
 const defaultCommands = {
   date() {
@@ -16,20 +17,22 @@ const defaultCommands = {
       store.dispatch(actions.setTerm(""));
     };
   },
-  clock(input) {
-    if (input) {
-      const [position, align] = input.toLowerCase().split(/\s/);
-      if (position && align)
-        return () => () => {
-          store.dispatch(actions.setClockPosition(position));
-          store.dispatch(
-            actions.setClockAlign(
-              ["end", "start"].includes(align) ? "flex-" + align : align
-            )
-          );
-          store.dispatch(actions.setTerm(""));
-        };
-    }
+  clock: {
+    function(input) {
+      if (input) {
+        const [position, align] = input.toLowerCase().split(/\s/);
+        if (position && align)
+          return () => () => {
+            store.dispatch(actions.setClockPosition(position));
+            store.dispatch(
+              actions.setClockAlign(
+                ["end", "start"].includes(align) ? "flex-" + align : align
+              )
+            );
+            store.dispatch(actions.setTerm(""));
+          };
+      }
+    },
   },
   font(input) {
     return () => () => store.dispatch(actions.setFont(input));
@@ -151,14 +154,9 @@ const defaultCommands = {
         .filter((e) => !!e);
       const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
       const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
-      // if (icon) {
-      //   document.querySelector(
-      //     ".terminal-output"
-      //   ).className = `terminal-output ${icon}`;
-      // } else {
-      //   document.querySelector(".terminal-output").className =
-      //     "terminal-output fontawe";
-      // }
+      store.dispatch(setTempColor(color));
+
+      store.dispatch(setTempIcon(icon));
 
       if (
         ["command", "commandCl"].includes(commandName) ||

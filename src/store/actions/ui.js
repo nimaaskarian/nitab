@@ -25,3 +25,16 @@ export function setAddTaskbarIndex(index) {
     payload: index,
   };
 }
+export function setTempColor(color) {
+  return {
+    type: "SET_TEMP_COLOR",
+    payload: color,
+  };
+}
+
+export function setTempIcon(icon) {
+  return {
+    type: "SET_TEMP_ICON",
+    payload: icon,
+  };
+}

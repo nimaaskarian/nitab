@@ -5,10 +5,17 @@ const INITIAL_STATE = {
   results: [],
   isTerminal: false,
   addtaskbarIndex: null,
+  tempColor: null,
+  tempIcon: null,
 };
 
 const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
   switch (type) {
+    case "SET_TEMP_COLOR":
+      return { ...state, tempColor: payload };
+
+    case "SET_TEMP_ICON":
+      return { ...state, tempIcon: payload };
     case "TOGGLE_TASKBAR_EDIT":
       return { ...state, isTaskbarEdit: payload };
     case "SET_TERM":

@@ -5,19 +5,22 @@ export const ClockWrapperDiv = styled.div`
   flex-direction: column;
 `;
 export const ClockDiv = styled.div`
+  ${({ clockPos }) => {
+    return `
+    position: ${clockPos === "center" ? "" : "absolute"};
+    top: ${clockPos === "center" ? "" : "20px"};
+    ${clockPos}: 5vw;
+    `;
+  }}
   z-index: 5;
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1);
   user-select: none;
-  position: absolute;
-  top: 50%;
 `;
 export const ClockDateDiv = styled.div`
-  animation: moveFromRight 0.8s ease-out;
   font-size: 28px;
   cursor: pointer;
 `;
 export const ClockTimeDiv = styled.div`
-  animation: moveFromLeft 0.8s ease-out;
   cursor: pointer;
   font-weight: 600;
   margin-bottom: 8px;

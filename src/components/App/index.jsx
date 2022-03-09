@@ -27,7 +27,7 @@ import CommandsContext from "context/CommandsContext";
 import { AppContainer } from "./style";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
-  const { commands, icons: commandIcons } = useCommands();
+  const { commands } = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const { isDragAccept, getRootProps, getInputProps } = useImageDrop();
@@ -139,7 +139,7 @@ const App = () => {
     return (
       <div>
         <SearchMode isHistory={isHistory} />
-        <CommandsContext.Provider value={{ commands, commandIcons }}>
+        <CommandsContext.Provider value={{ commands }}>
           <Terminal ref={terminal} />
         </CommandsContext.Provider>
 

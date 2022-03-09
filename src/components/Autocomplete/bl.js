@@ -5,7 +5,7 @@ import CurrentCommandContext from "context/CurrentCommandContext";
 import { setAc } from "store/actions";
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
-  const { commands, commandIcons } = useContext(CommandsContext);
+  const { commands } = useContext(CommandsContext);
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const acCommands = useSelector(({ data }) => data.acCommands, shallowEqual);
   const isAcCommands = useSelector(
@@ -32,7 +32,7 @@ const AutocompleteLogic = () => {
         .map((phrase) => {
           return {
             phrase: iden + phrase,
-            icon: commandIcons[phrase] || `fontawe ${phrase}`,
+            icon: commands[phrase].icon || `fal fa-terminal`,
           };
         });
     const acHandler = ({ ac }) => {
@@ -48,7 +48,7 @@ const AutocompleteLogic = () => {
     return () => {
       document.removeEventListener("autocomplete", acHandler);
     };
-  }, [term, commands, identifier, commandIcons, isAcCommands, acCommands]);
+  }, [term, commands, identifier, isAcCommands, acCommands]);
 
   useEffect(() => {
     const command = currentCommand;

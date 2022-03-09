@@ -10,8 +10,8 @@ import CommandsContext from "context/CommandsContext";
 import {
   TerminalInput,
   TerminalOutput,
-  TerminalInputWrapper,
   TerminalDiv,
+  TerminalAutoCompleteWrapper,
 } from "./style";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
@@ -24,25 +24,22 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const currentCommand = useMemo(() => {
     const { name, args } = termToCommand(term, identifier, commands);
-
     return { ...commands[name], args };
   }, [term, identifier, commands]);
+  console.error("SEX",currentCommand);
+  const tempColor = useSelector(({ ui }) => ui.tempColor);
+  const tempIcon = useSelector(({ ui }) => ui.tempIcon);
 
   const currentColor = useMemo(() => {
-    console.log("**** isOvr");
-
-    console.log(isOvr, color, currentCommand.color);
     return isOvr ? color : currentCommand.color;
   }, [isOvr, color, currentCommand.color]);
 
   const handleSubmit = useCallback(
     (e) => {
-      console.log(currentCommand);
       let onSubmit;
       try {
         onSubmit = currentCommand.function(currentCommand.args);
       } catch (error) {
-        console.log(error);
       }
       // const { args } = currentCommand;
       if (e.code === "Enter" && onSubmit) {
@@ -79,8 +76,11 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     };
   }, [handleSubmit]);
   return (
-    <TerminalDiv isRtl={/^[\u0600-\u06FF\s]+/.test(term)} color={currentColor}>
-      <div>
+    <TerminalDiv
+      isRtl={/^[\u0600-\u06FF\s]+/.test(term)}
+      color={tempColor || currentColor}
+    >
+      <TerminalAutoCompleteWrapper>
         <TerminalInput
           value={term}
           ref={forwardedRef}
@@ -92,8 +92,10 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         <CurrentCommandContext.Provider value={currentCommand}>
           <Autocomplete />
         </CurrentCommandContext.Provider>
-      </div>
-      <TerminalOutput className={currentCommand.icon || "fontawe"} />
+      </TerminalAutoCompleteWrapper>
+      <TerminalOutput
+        className={tempIcon || currentCommand.icon || "fal fa-terminal"}
+      />
     </TerminalDiv>
   );
 });

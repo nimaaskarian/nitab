@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { isDark } from "services/Styles";
 export const TerminalDiv = styled.div`
   direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
+  & > span {
+    padding-${({ isRtl }) => (isRtl ? "right" : "left")}:15px;
+  }
   align-items: center;
   display: flex;
   margin-top: -10px;
@@ -10,7 +13,6 @@ export const TerminalDiv = styled.div`
   justify-content: space-between;
   padding: 0 5vw;
   ${({ color }) => {
-    console.log("color", color);
     return `& *{
       color:${color} !important;
     }
@@ -23,7 +25,7 @@ export const TerminalDiv = styled.div`
 export const TerminalInput = styled.input`
   font-family: inherit !important;
   margin: 0;
-  flex-grow: 9;
+  width: 100%;
   border: none;
   background-color: transparent;
   box-shadow: none;
@@ -37,10 +39,10 @@ export const TerminalInput = styled.input`
 `;
 export const TerminalOutput = styled.span`
   border: none;
-
   background-color: transparent;
   box-shadow: none;
   font-size: 36px;
-  animation: moveFromBottom 0.375s ease-out backwards;
-  animation-delay: 0.5625;
+`;
+export const TerminalAutoCompleteWrapper = styled.div`
+  flex-grow: 1;
 `;

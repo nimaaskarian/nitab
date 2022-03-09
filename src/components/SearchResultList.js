@@ -22,7 +22,7 @@ const SearchResultList = ({ commands }) => {
         return {
           url: commands["search"](term)(),
           header: {
-            className: "fontawe search",
+            className: "fal fa-search",
           },
           title: term,
         };

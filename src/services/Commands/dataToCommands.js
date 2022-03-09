@@ -1,9 +1,7 @@
 import defaultCommands from "./defaultCommands";
-import { isDark } from "services/Styles";
 
 const dataToCommands = (data) => {
-  let commands = {},
-    icons = {};
+  let commands = {};
   Object.keys(data).forEach((command) => {
     commands[command] = {};
     const { color, icon } = data[command];
@@ -38,7 +36,7 @@ const dataToCommands = (data) => {
           };
     };
   });
-  return { commands: { ...defaultCommands, ...commands }, icons };
+  return { commands: { ...defaultCommands, ...commands } };
 };
 
 export default dataToCommands;
