@@ -1,6 +1,4 @@
-.weather-selector > * {
-  display: inline-block;
-}
+
 .Dropdown-arrow-wrapper {
   margin-left: 5px;
   font-size: 10px;
@@ -8,28 +6,4 @@
 .Dropdown-arrow-wrapper,
 .Dropdown-placeholder {
   display: inline-block;
-}
-.weather-selector {
-  display: inline-block;
-
-  cursor: pointer;
-  max-height: 200px;
-  overflow-y: scroll;
-}
-
-.weather,
-.weather-unloaded {
-  display: flex;
-  flex-direction: row;
-  font-size: 24px;
-  margin-top: auto;
-  margin-bottom: auto;
-}
-.weather {
-  animation: moveFromBottom 0.5s 0.75s ease-out backwards;
-  margin-top: 12px;
-}
-.weather-unloaded .fa-spinner {
-  animation: spin-right 1s ease-in-out infinite;
-  font-size: 18px;
 }

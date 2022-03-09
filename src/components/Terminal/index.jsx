@@ -26,12 +26,11 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     const { name, args } = termToCommand(term, identifier, commands);
     return { ...commands[name], args };
   }, [term, identifier, commands]);
-  console.error("SEX",currentCommand);
   const tempColor = useSelector(({ ui }) => ui.tempColor);
   const tempIcon = useSelector(({ ui }) => ui.tempIcon);
 
   const currentColor = useMemo(() => {
-    return isOvr ? color : currentCommand.color;
+    return isOvr ? color : currentCommand.color || color;
   }, [isOvr, color, currentCommand.color]);
 
   const handleSubmit = useCallback(
@@ -39,8 +38,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       let onSubmit;
       try {
         onSubmit = currentCommand.function(currentCommand.args);
-      } catch (error) {
-      }
+      } catch (error) {}
       // const { args } = currentCommand;
       if (e.code === "Enter" && onSubmit) {
         let _output = onSubmit();
@@ -60,7 +58,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         }
       }
     },
-    [altNewtab, currentCommand, identifier, term, commands]
+    [altNewtab, currentCommand, identifier, term]
   );
   useEffect(() => {
     const isSelfSubmit =

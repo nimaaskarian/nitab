@@ -1,5 +1,4 @@
 .search-result {
-  animation: fadeIn 0.3s ease-out;
   font-size: 20px;
   padding: 10px;
   width: 40%;
@@ -18,12 +17,4 @@
 .search-result:hover {
   text-overflow: clip;
   transition: 500ms ease-out;
-}
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }

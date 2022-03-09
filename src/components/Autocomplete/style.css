@@ -3,8 +3,6 @@
   margin-top: 5px;
 }
 .autocomplete-item{
-  animation: fadeIn 30ms ease-out backwards;
-
   cursor: pointer;
   padding: 1px;
   font-size: 15px;

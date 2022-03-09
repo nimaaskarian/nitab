@@ -119,11 +119,6 @@ const App = () => {
     if (!isTerminal)
       return (
         <React.Fragment>
-          <ImageDropzone
-            getRootProps={getRootProps}
-            getInputProps={getInputProps}
-          />
-
           {isTaskbarEdit ? (
             <AddTaskbar />
           ) : isDragAccept ? (
@@ -137,29 +132,29 @@ const App = () => {
         </React.Fragment>
       );
     return (
-      <div>
+      <React.Fragment>
         <SearchMode isHistory={isHistory} />
         <CommandsContext.Provider value={{ commands }}>
           <Terminal ref={terminal} />
         </CommandsContext.Provider>
 
         <SearchResultList commands={commands} />
-      </div>
+      </React.Fragment>
     );
   };
 
   return (
     <React.Fragment>
+      <ImageDropzone
+        getRootProps={getRootProps}
+        getInputProps={getInputProps}
+      />
       <Helmet>
         <title>{identifier === "NONE" ? "" : identifier}Niotab</title>
       </Helmet>
       <Background isTerminal={isTerminal} />
 
-      <AppContainer
-        foreground={foreground}
-        font={font}
-        className={`foreground-change ${isTerminal ? "" : "no-terminal"}`}
-      >
+      <AppContainer color={foreground.color} font={font}>
         <RenderedContent />
       </AppContainer>
     </React.Fragment>

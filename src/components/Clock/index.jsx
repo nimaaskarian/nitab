@@ -1,5 +1,5 @@
 import React from "react";
-import { connect, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import persianDate from "persian-date";
 import { format12h, format24h } from "services/Format/time";
 import Weather from "components/Weather";
@@ -11,9 +11,9 @@ import {
 import useTime from "hooks/useTime";
 
 import "./style.css";
-import { ClockDiv, ClockWrapperDiv, ClockDateDiv, ClockTimeDiv } from "./style";
+import { ClockDiv, ClockDateDiv, ClockTimeDiv } from "./style";
 
-const Clock = (props) => {
+const Clock = () => {
   const time = useTime();
   const isDateActive = useSelector(({ data }) => data.isDateActive);
   const clockPos = useSelector(({ data }) => data.clockPos);
@@ -22,47 +22,35 @@ const Clock = (props) => {
   const clockAlign = useSelector(({ data }) => data.clockAlign);
   const isPersianDate = useSelector(({ data }) => data.persianDate);
   const clockFormat = useSelector(({ data }) => data.clockFormat);
+
+  const dispatch = useDispatch();
+
   return (
     <ClockDiv
       onContextMenu={(e) => {
         e.preventDefault();
-        toggleIsClock();
+        dispatch(toggleIsClock());
       }}
       clockPos={clockPos}
+      clockAlign={clockAlign}
     >
-      <ClockWrapperDiv
-        style={{
-          alignItems: clockAlign,
-        }}
+      <ClockTimeDiv
+        className="clock-time"
+        onClick={() => dispatch(toggleClockFormat())}
       >
-        <ClockTimeDiv className="clock-time" onClick={toggleClockFormat}>
-          {clockFormat === "12" ? format12h(time) : format24h(time)}
-        </ClockTimeDiv>
-        {isDateActive ? (
-          <ClockDateDiv onClick={togglePersianDate}>
-            {new persianDate()
-              .toLocale(isPersianDate ? "fa" : "en")
-              .toCalendar(isPersianDate ? "persian" : "gregorian")
-              .format(isPersianDate ? "dddd D MMMM" : "dddd, MMMM D")}
-          </ClockDateDiv>
-        ) : null}
-        {isWeatherActive ? <Weather /> : null}
-      </ClockWrapperDiv>
+        {clockFormat === "12" ? format12h(time) : format24h(time)}
+      </ClockTimeDiv>
+      {isDateActive ? (
+        <ClockDateDiv onClick={() => dispatch(togglePersianDate())}>
+          {new persianDate()
+            .toLocale(isPersianDate ? "fa" : "en")
+            .toCalendar(isPersianDate ? "persian" : "gregorian")
+            .format(isPersianDate ? "dddd D MMMM" : "dddd, MMMM D")}
+        </ClockDateDiv>
+      ) : null}
+      {isWeatherActive ? <Weather /> : null}
     </ClockDiv>
   );
 };
-const mapStateToProp = (state) => {
-  return {
-    isDateActive: state.data.isDateActive,
-    isWeatherActive: state.data.isWeatherActive,
-    clockPos: state.data.clockPos,
-    clockAlign: state.data.clockAlign,
-    persianDate: state.data.persianDate,
-    clockFormat: state.data.clockFormat,
-  };
-};
-export default connect(mapStateToProp, {
-  togglePersianDate,
-  toggleClockFormat,
-  toggleIsClock,
-})(Clock);
+
+export default Clock;

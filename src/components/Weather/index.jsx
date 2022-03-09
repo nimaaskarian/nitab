@@ -5,6 +5,7 @@ import Tippy from "@tippyjs/react";
 
 import { setWeatherData, setWeatherCity } from "store/actions";
 
+import { WeatherWrapper, WeatherLoading, WeatherSelector } from "./style";
 import cities from "services/Lists/cities";
 
 import "tippy.js/dist/tippy.css";
@@ -113,8 +114,8 @@ const Weather = (props) => {
   };
 
   return (
-    <div className="weather">
-      <div style={{ marginRight: "5px" }} className="weather-selector">
+    <WeatherWrapper>
+      <WeatherSelector>
         <Dropdown
           options={["Automatic", ...cities]}
           onChange={(q) => {
@@ -124,10 +125,10 @@ const Weather = (props) => {
           arrowClosed={<span className="fa fa-chevron-down" />}
           arrowOpen={<span className="fa fa-chevron-up" />}
         />
-      </div>
+      </WeatherSelector>
 
       {renderedWeather(props)}
-    </div>
+    </WeatherWrapper>
   );
 };
 const mapStateToProp = ({ data }) => {

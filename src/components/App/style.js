@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { isDark } from "services/Styles";
 export const AppContainer = styled.div`
   font-family: ${({ font }) => `${font}, FiraCode, IranSans`};
-  ${({ foreground: { color } }) => {
+  ${({ color }) => {
     return ` & *{
       color:${color};
     }
@@ -25,6 +25,5 @@ export const AppContainer = styled.div`
   align-items: center;
   position: absolute;
   top: 0;
-  z-index: 2;
   line-height: 1;
 `;

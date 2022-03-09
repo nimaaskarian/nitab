@@ -12,13 +12,14 @@ export const TerminalDiv = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 0 5vw;
+
   ${({ color }) => {
     return `& *{
       color:${color} !important;
     }
   & *::selection{
     background-color:${color} !important;
-    color:${isDark(color) ? "#CCC" : "#333"}!important;
+    color:${isDark(color) ? "#CCC" : "#333"} !important;
   }`;
   }}
 `;
