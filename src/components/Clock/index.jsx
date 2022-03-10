@@ -34,10 +34,7 @@ const Clock = () => {
       clockPos={clockPos}
       clockAlign={clockAlign}
     >
-      <ClockTimeDiv
-        className="clock-time"
-        onClick={() => dispatch(toggleClockFormat())}
-      >
+      <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
         {clockFormat === "12" ? format12h(time) : format24h(time)}
       </ClockTimeDiv>
       {isDateActive ? (

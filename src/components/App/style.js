@@ -3,7 +3,7 @@ import { isDark } from "services/Styles";
 export const AppContainer = styled.div`
   font-family: ${({ font }) => `${font}, FiraCode, IranSans`};
   ${({ color }) => {
-    return ` & *{
+    return `& *{
       color:${color};
     }
   & *::selection{

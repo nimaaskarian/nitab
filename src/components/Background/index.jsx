@@ -6,7 +6,7 @@ import { setForeground } from "store/actions";
 
 import unsplash from "apis/unsplash";
 import useParallax from "hooks/useParallax";
-import { BackgroundDiv, BackgroundWrapperDiv } from "./style";
+import { BackgroundDiv, BackgroundWrapper } from "./style";
 import { getImageLightness, setBackground } from "services/Images";
 import isDark from "services/Styles/isdark-min";
 const Background = ({ isTerminal }) => {
@@ -63,7 +63,7 @@ const Background = ({ isTerminal }) => {
   }, [background]);
 
   return (
-    <BackgroundWrapperDiv>
+    <BackgroundWrapper>
       <BackgroundDiv
         parallax={parallax}
         scale={isParallax ? 1 + parallaxFactor / 100 : 1}
@@ -82,11 +82,8 @@ const Background = ({ isTerminal }) => {
             ? brightness.terminal
             : brightness.notTerminal
         }
-        // className={`${isTerminal ? "isTerminal" : ""} ${
-        //   gradient ? "" : "no-gradient"
-        // } ${isTaskbarEdit ? "super-blured" : ""}`}
       />
-    </BackgroundWrapperDiv>
+    </BackgroundWrapper>
   );
 };
 

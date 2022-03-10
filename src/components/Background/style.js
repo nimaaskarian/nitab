@@ -23,7 +23,7 @@ export const BackgroundDiv = styled.div`
   background-size: cover !important;
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), margin 300ms ease-out;
 `;
-export const BackgroundWrapperDiv = styled.div`
+export const BackgroundWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
