@@ -3,8 +3,9 @@ import { isDark } from "services/Styles";
 export const TerminalDiv = styled.div`
   direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
   & > span {
-    padding-${({ isRtl }) => (isRtl ? "right" : "left")}:15px;
+    ${({ isRtl }) => (isRtl ? "padding-right" : "padding-left")}:15px;
   }
+  z-index: 4;
   align-items: center;
   display: flex;
   margin-top: -10px;
