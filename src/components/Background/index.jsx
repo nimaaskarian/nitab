@@ -48,18 +48,18 @@ const Background = ({ isTerminal }) => {
     }
   }, [background, isForegroundAuto]);
   useEffect(() => {
-    if (background === "unsplash") {
-      unsplash
-        .get("/random", {
-          params: {
-            collections: unsplashCollections,
-          },
-        })
-        .then(async ({ data }) => {
-          const blob = await fetch(data.urls.full).then((r) => r.blob());
-          setBackground(blob);
-        });
-    }
+    // if (background === "unsplash") {
+    //   unsplash
+    //     .get("/random", {
+    //       params: {
+    //         collections: unsplashCollections,
+    //       },
+    //     })
+    //     .then(async ({ data }) => {
+    //       const blob = await fetch(data.urls.full).then((r) => r.blob());
+    //       setBackground(blob);
+    //     });
+    // }
   }, [background]);
 
   return (
@@ -68,20 +68,20 @@ const Background = ({ isTerminal }) => {
         parallax={parallax}
         scale={isParallax ? 1 + parallaxFactor / 100 : 1}
         background={background}
-        blur={
-          isTaskbarEdit
-            ? blur.setting
-            : isTerminal
-            ? blur.terminal
-            : blur.notTerminal
-        }
-        brightness={
-          isTaskbarEdit
-            ? brightness.setting
-            : isTerminal
-            ? brightness.terminal
-            : brightness.notTerminal
-        }
+        // blur={
+        //   isTaskbarEdit
+        //     ? blur.setting
+        //     : isTerminal
+        //     ? blur.terminal
+        //     : blur.notTerminal
+        // }
+        // brightness={
+        //   isTaskbarEdit
+        //     ? brightness.setting
+        //     : isTerminal
+        //     ? brightness.terminal
+        //     : brightness.notTerminal
+        // }
       />
     </BackgroundWrapper>
   );

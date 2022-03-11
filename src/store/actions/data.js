@@ -132,11 +132,11 @@ export function importData() {
   };
 }
 
-export function toggleMagnify() {
+export function toggleTaskbarMagnify() {
   return (dispatch, getStore) => {
     const prevMagnify = getStore().data.magnify;
     dispatch({
-      type: "TOGGLE_MAGNIFY",
+      type: "TOGGLE_TASKBAR_MAGNIFY",
       payload: !prevMagnify,
     });
   };
@@ -160,14 +160,16 @@ export function toggleClockFormat() {
     });
   };
 }
-
-export function toggleGradient() {
-  return (dispatch, getStore) => {
-    const prevGradient = getStore().data.gradient;
-    dispatch({
-      type: "TOGGLE_GRADIENT",
-      payload: !prevGradient,
-    });
+export function addBackground(background) {
+  return {
+    type: "ADD_BACKGROUND",
+    payload: background,
+  };
+}
+export function completeTodo(index) {
+  return {
+    type: "COMPLETE_TODO",
+    payload: index,
   };
 }
 export function setGradient(gradient) {

@@ -13,6 +13,7 @@
     "html-react-parser": "^1.4.6",
     "localforage": "^1.10.0",
     "localforage-observable": "^2.1.1",
+    "nanoid": "^3.3.1",
     "persian-date": "^1.1.0",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",

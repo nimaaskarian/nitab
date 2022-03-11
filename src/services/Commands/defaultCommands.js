@@ -37,8 +37,10 @@ const defaultCommands = {
   font(input) {
     return () => () => store.dispatch(actions.setFont(input));
   },
-  todo(input) {
-    return () => () => store.dispatch(actions.addTodo(input));
+  todo: {
+    function(input) {
+      return () => () => store.dispatch(actions.addTodo({ message: input }));
+    },
   },
   par(input) {
     if (!parseFloat(input))
@@ -71,11 +73,15 @@ const defaultCommands = {
     if (input.trim())
       return () => () => store.dispatch(actions.setIndentifier(input.trim()));
   },
-  exp() {
-    return () => () => store.dispatch(actions.exportData());
+  exp: {
+    function() {
+      return () => () => store.dispatch(actions.exportData());
+    },
   },
-  imp() {
-    return () => () => store.dispatch(actions.importData());
+  imp: {
+    function() {
+      return () => () => store.dispatch(actions.importData());
+    },
   },
   mag() {
     return () => () => store.dispatch(actions.toggleMagnify());

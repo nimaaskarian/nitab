@@ -39,7 +39,7 @@ const App = () => {
   const isClock = useSelector(({ data }) => data.isClock);
   const identifier = useSelector(({ data }) => data.identifier);
   const font = useSelector(({ data }) => data.font);
-  useAlert();
+  useAlert({ isTerminal });
   const dispatch = useDispatch();
   useEffect(() => {
     setIsTerminal(!isTermEmpty);

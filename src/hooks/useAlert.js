@@ -1,13 +1,15 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useEffect, useState } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { removeTodo } from "store/actions";
+import { completeTodo, removeTodo } from "store/actions";
 import useDidMountEffect from "./useDidMountEffect";
 import AlertComponent from "components/Alert";
-const Alert = () => {
+const Alert = (props) => {
   const alert = useAlert();
   const [prevCommands, setPrevCommands] = useState(null);
-  const todo = useSelector(({ data }) => data.todo);
+  const todos = useSelector(({ data }) => data.todos);
   const dipatch = useDispatch();
   const currentCommands = useSelector(({ data }) => data.commands);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
@@ -44,33 +46,43 @@ const Alert = () => {
   }, [isAcCommands]);
   useEffect(() => {
     alert.removeAll();
-    todo.forEach((e, i) => {
-      alert.show(
-        <AlertComponent
-          style={{
-            direction: `${/^[\u0600-\u06FF\s]+/.test(e) ? "rtl" : "ltr"}`,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>{e}</div>
-          <a
-            style={{ marginLeft: "5px", cursor: "pointer" }}
-            className="fal fa-circle"
-            onClick={async (e) => {
-              e.target.className = "fal fa-check-circle";
-              setTimeout(() => {
-                dipatch(removeTodo(i));
-              }, 350);
+    if (!props.isTerminal)
+      todos.forEach((todo, index) => {
+        alert.show(
+          <AlertComponent
+            style={{
+              direction: `${/^[\u0600-\u06FF\s]+/.test(todo.message) ? "rtl" : "ltr"}`,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
-          />
-        </AlertComponent>,
-        { timeout: 0 }
-      );
-    });
-  }, [todo]);
+          >
+            <div>{todo.message}</div>
+            <a
+              style={{ marginLeft: "5px", cursor: "pointer" }}
+              className="fal fa-circle"
+              onClick={(e) => {
+                e.target.className = "fal fa-check-circle";
+                setTimeout(() => {
+                  dipatch(completeTodo(index));
+                }, 350);
+              }}
+            />
+            <a
+              style={{ marginLeft: "5px", cursor: "pointer", color: "red" }}
+              className="fal fa-trash"
+              onClick={(e) => {
+                setTimeout(() => {
+                  dipatch(removeTodo(index));
+                }, 350);
+              }}
+            />
+          </AlertComponent>,
+          { timeout: 0 }
+        );
+      });
+  }, [todos, props.isTerminal]);
 
   useEffect(() => {
     if (!prevCommands) setPrevCommands({ ...currentCommands });
