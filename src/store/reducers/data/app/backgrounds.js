@@ -26,6 +26,6 @@ export default function backgroundsReducer(state = [], action) {
       return [...state, new Background(action.payload)];
 
     default:
-      return { ...state };
+      return state;
   }
 }

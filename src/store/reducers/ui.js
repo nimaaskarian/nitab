@@ -31,7 +31,7 @@ const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
     case "SET_ADD_TASKBAR_INDEX":
       return { ...state, addtaskbarIndex: payload };
     default:
-      return { ...state };
+      return state;
   }
 };
 export default uiReducer;

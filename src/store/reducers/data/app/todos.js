@@ -12,7 +12,7 @@ function todosReducer(state = [], action) {
       return state.replace(action.payload, { ...thisTodo, completed: true });
     }
     default:
-      return { ...state };
+      return state;
   }
 }
 

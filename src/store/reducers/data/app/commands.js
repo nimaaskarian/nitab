@@ -109,6 +109,6 @@ export default function commandsReducer(state = INITIAL_STATE, action) {
     case types.CLEAR_COMMANDS:
       return { ...state, commands: INITIAL_STATE.commands };
     default:
-      return { ...state };
+      return state;
   }
 }

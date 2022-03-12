@@ -16,15 +16,15 @@ const types = {
   REMOVE_TODO: "remove-todo",
   COMPLETE_TODO: "complete-todo",
 
-  ADD_TASKBAR: "add-taskbar",
-  EDIT_TASKBAR: "edit-taskbar",
-  EDIT_EMPTY_TASKBAR: "edit-empty-taskbar",
-  DELETE_TASKBAR: "delete-taskbar",
+  ADD_TASKBAR_ICON: "add-taskbar-icon",
+  EDIT_TASKBAR_ICON: "edit-taskbar-icon",
+  EDIT_EMPTY_ICON_TASKBAR: "edit-empty-taskbar-icon",
+  DELETE_TASKBAR_ICON: "delete-taskbar-icon",
   TOGGLE_TASKBAR_MAGNIFY: "toggle-taskbar-magnify",
 
   SET_CLOCK_POSITION: "set-clock-position",
   SET_CLOCK_ALIGN: "set-clock-align",
-  SET_CLOCK_FORMAT: "set-clock-format",
+  TOGGLE_CLOCK_FORMAT: "set-clock-format",
   TOGGLE_CLOCK_ENABLED: "toggle-clock-enabled",
 
   CIRCLE_SEARCHMODE: "circle-searchmode",
@@ -32,16 +32,16 @@ const types = {
   TOGGLE_ENTER_OPENS_NEWTAB: "toggle-enter-opens-newtab",
 
   TOGGLE_SUGGEST_COMMANDS_ENABLED: "toggle-suggest-commands-enabled",
-  TOGGLE_SUGGEST_COMMANDS_COUNT: "toggle-suggest-commands-count",
+  SET_SUGGEST_COMMANDS_COUNT: "set-suggest-commands-count",
 
   SET_FOREGROUND: "set-foreground",
-  SET_UNSPLASH: "set-unsplash",
+  SET_UNSPLASH_COLLECTIONS: "set-unsplash-collections",
   SET_FONT: "set-font",
   SET_ISFOREGROUND_AUTO: "set-isforeground-auto",
 
   IMPORT_DATA: "import-data",
   RESET_STORAGE: "reset-storage",
-  
+
   ADD_BACKGROUND: "add-background",
 };
 

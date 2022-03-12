@@ -4,7 +4,7 @@ import persianDate from "persian-date";
 import { format12h, format24h } from "services/Format/time";
 import Weather from "components/Weather";
 import {
-  togglePersianDate,
+  toggleDateIsPersian,
   toggleClockFormat,
   toggleIsClock,
 } from "store/actions";
@@ -15,13 +15,16 @@ import { ClockDiv, ClockDateDiv, ClockTimeDiv } from "./style";
 
 const Clock = () => {
   const time = useTime();
-  const isDateActive = useSelector(({ data }) => data.isDateActive);
-  const clockPos = useSelector(({ data }) => data.clockPos);
-  const isWeatherActive = useSelector(({ data }) => data.isWeatherActive);
 
-  const clockAlign = useSelector(({ data }) => data.clockAlign);
-  const isPersianDate = useSelector(({ data }) => data.persianDate);
-  const clockFormat = useSelector(({ data }) => data.clockFormat);
+  const dateEnabled = useSelector(({ data }) => data.date.enabled);
+  const weatherEnabled = useSelector(({ data }) => data.weather.enabled);
+
+  const position = useSelector(({ data }) => data.clock.position);
+  const align = useSelector(({ data }) => data.clockAlign);
+  const format = useSelector(({ data }) => data.clock.format);
+
+  const isDatePersian = useSelector(({ data }) => data.date.isPersian);
+
 
   const dispatch = useDispatch();
 
@@ -31,21 +34,21 @@ const Clock = () => {
         e.preventDefault();
         dispatch(toggleIsClock());
       }}
-      clockPos={clockPos}
-      clockAlign={clockAlign}
+      clockPos={position}
+      clockAlign={align}
     >
       <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
-        {clockFormat === "12" ? format12h(time) : format24h(time)}
+        {format === "12" ? format12h(time) : format24h(time)}
       </ClockTimeDiv>
-      {isDateActive ? (
-        <ClockDateDiv onClick={() => dispatch(togglePersianDate())}>
+      {dateEnabled ? (
+        <ClockDateDiv onClick={() => dispatch(toggleDateIsPersian())}>
           {new persianDate()
-            .toLocale(isPersianDate ? "fa" : "en")
-            .toCalendar(isPersianDate ? "persian" : "gregorian")
-            .format(isPersianDate ? "dddd D MMMM" : "dddd, MMMM D")}
+            .toLocale(isDatePersian ? "fa" : "en")
+            .toCalendar(isDatePersian ? "persian" : "gregorian")
+            .format(isDatePersian ? "dddd D MMMM" : "dddd, MMMM D")}
         </ClockDateDiv>
       ) : null}
-      {isWeatherActive ? <Weather /> : null}
+      {weatherEnabled ? <Weather /> : null}
     </ClockDiv>
   );
 };

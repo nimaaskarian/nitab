@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import Tippy from "@tippyjs/react";
 
 const rotate = keyframes`
 from{
@@ -32,4 +33,9 @@ export const WeatherLoading = styled.div`
     animation: ${rotate} 1s ease-in-out infinite;
     font-size: 18px;
   }
+`;
+
+export const StyledTippy = styled(Tippy)`
+  z-index: 10;
+  font-family: ${({ font }) => font};
 `;

@@ -8,7 +8,7 @@ import "./style.css";
 import {
   toggleTaskbarEdit,
   addTaskbarIcon,
-  editEmptyTaskbarIcon,
+  editEmptyIconTaskbar,
   editTaskbarIcon,
   setAddTaskbarIndex,
 } from "store/actions";
@@ -216,8 +216,8 @@ const mapStateToProp = (state) => {
 };
 export default connect(mapStateToProp, {
   toggleTaskbarEdit,
-  addTaskbarIcon,
-  editTaskbarIcon,
-  editEmptyTaskbarIcon,
+  addTaskbarIcon: addTaskbarIcon,
+  editTaskbarIcon: editTaskbarIcon,
+  editEmptyTaskbarIcon: editEmptyIconTaskbar,
   setAddTaskbarIndex,
 })(AddTaskbar);

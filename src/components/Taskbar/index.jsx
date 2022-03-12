@@ -5,9 +5,8 @@ import TaskbarIcon from "../TaskbarIcon";
 import { TaskbarDiv } from "./style";
 const Taskbar = () => {
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const taskbarIcons = useSelector(({ data }) => data.taskbarIcons);
-  const gradient = useSelector(({ data }) => data.gradient);
-  const magnify = useSelector(({ data }) => data.magnify);
+  const icons = useSelector(({ data }) => data.taskbar.icons);
+  const magnify = useSelector(({ data }) => data.taskbar.magnify);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
 
   const onTaskbarMouseMove = (e) => {
@@ -20,7 +19,7 @@ const Taskbar = () => {
         i.style.fontSize = parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
       });
   };
-  if (!taskbarIcons.length) return null;
+  if (!icons.length) return null;
   return (
     <TaskbarDiv
       onMouseEnter={onTaskbarMouseMove}
@@ -31,7 +30,7 @@ const Taskbar = () => {
         });
       }}
     >
-      {taskbarIcons.map((e, i) => {
+      {icons.map((e, i) => {
         return (
           <TaskbarIcon
             key={i}

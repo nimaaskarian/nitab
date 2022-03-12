@@ -2,10 +2,13 @@
 
 import { combineReducers } from "redux";
 
-import backgroundsReducer from "./backgrounds";
-import commandsReducer from "./commands";
-import taskbarReducer from "./taskbar";
-import todosReducer from "./todos";
+import backgroundsReducer from "./app/backgrounds";
+import commandsReducer from "./app/commands";
+import taskbarReducer from "./app/taskbar";
+import todosReducer from "./app/todos";
+import terminalReducer from "./app/terminal";
+import themeReducer from "./app/theme";
+import clockReducer from "./app/clock";
 
 import types from "store/types";
 
@@ -29,26 +32,7 @@ Array.prototype.delete = function (index) {
   output.splice(index, 1);
   return output;
 };
-const CLOCK_INITIAL_STATE = {
-  position: "center",
-  align: "center",
-  format: "24",
-  enabled: true,
-};
-function clockReducer(state = CLOCK_INITIAL_STATE, action) {
-  switch (action.type) {
-    case types.SET_CLOCK_POSITION:
-      return { ...state, position: action.payload };
-    case types.SET_CLOCK_ALIGN:
-      return { ...state, align: action.payload };
-    case types.SET_CLOCK_FORMAT:
-      return { ...state, format: action.payload };
-    case types.TOGGLE_CLOCK_ENABLED:
-      return { ...state, enabled: !state.enabled };
-    default:
-      return { ...state };
-  }
-}
+
 const WEATHER_INITIAL_STATE = {
   data: {},
   city: "Automatic",
@@ -74,7 +58,7 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
         enabled: !state.enabled,
       };
     default:
-      break;
+      return state;
   }
 }
 const DATE_INITIAL_STATE = {
@@ -88,33 +72,12 @@ function dateReducer(state = DATE_INITIAL_STATE, action) {
     case types.TOGGLE_DATE_ENABLED:
       return { ...state, enabled: !state.enabled };
     default:
-      break;
+      return state;
   }
 }
-const THEME_INITIAL_STATE = {
-  unsplashCollections: "9389477,908506,219941",
-  foreground: { color: "white", isOvr: false },
 
-  font: "FiraCode",
-  isForegroundAuto: false,
-};
-function themeReducer(state = THEME_INITIAL_STATE, action) {
-  switch (action.type) {
-    case types.SET_FOREGROUND:
-      return { ...state, foreground: action.payload };
-    case types.SET_UNSPLASH:
-      return { ...state, unsplashCollections: action.payload };
-
-    case types.SET_FONT:
-      return { ...state, font: action.payload };
-
-    case types.SET_ISFOREGROUND_AUTO:
-      return { ...state, isForegroundAuto: action.payload };
-    default:
-      break;
-  }
-}
 const appReducer = combineReducers({
+  terminal: terminalReducer,
   clock: clockReducer,
   theme: themeReducer,
   date: dateReducer,
@@ -122,7 +85,7 @@ const appReducer = combineReducers({
   todos: todosReducer,
   commands: commandsReducer,
   backgrounds: backgroundsReducer,
-  taskbarIcons: taskbarReducer,
+  taskbar: taskbarReducer,
 });
 
 const rootReducer = (state = {}, action) => {

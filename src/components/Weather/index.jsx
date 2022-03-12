@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import Dropdown from "react-dropdown";
-import Tippy from "@tippyjs/react";
 
 import { setWeatherData, setWeatherCity } from "store/actions";
 
-import { WeatherWrapper, WeatherLoading, WeatherSelector } from "./style";
+import {
+  WeatherWrapper,
+  WeatherLoading,
+  WeatherSelector,
+  StyledTippy,
+} from "./style";
 import cities from "services/Lists/cities";
 
 import "tippy.js/dist/tippy.css";
@@ -39,6 +43,10 @@ const icons = {
   "50n": "fa-fog",
 };
 const Weather = (props) => {
+  const data = useSelector(({ data }) => data.weather.data);
+  const city = useSelector(({ data }) => data.weather.city);
+  const fontFamily = useSelector(({ data }) => data.theme.font);
+
   const [conditionVisible, setConditionVisible] = useState(false);
   const conditionShow = () => setConditionVisible(true);
   const conditionHide = () => setConditionVisible(false);
@@ -49,36 +57,30 @@ const Weather = (props) => {
 
   const spanStyle = { margin: "0 5px" };
   useEffect(() => {
-    props.setWeatherData(props.city);
-  }, [props.city]);
-  useEffect(() => {
-    const stylesheet = document.styleSheets[document.styleSheets.length - 2];
-    stylesheet.insertRule(
-      `.tippy-box{font-family:${props.font};}`,
-      stylesheet.rules.length
-    );
-  }, [props.font]);
+    setWeatherData(city);
+  }, [city]);
 
   const renderedWeather = (props) => {
-    if (props.data && props.data.main) {
+    if (data && data.main) {
       return (
         <>
-          <Tippy
+          <StyledTippy
+            font={fontFamily}
             allowHTML
             onClickOutside={tempHide}
             content={
               <div>
                 <span style={spanStyle}>
                   <i className="fa fa-temperature-half" />
-                  {props.data.main.temp}°
+                  {data.main.temp}°
                 </span>
                 <span style={spanStyle}>
                   <i className="fa fa-droplet-percent" />
-                  {props.data.main.humidity}%
+                  {data.main.humidity}%
                 </span>
                 <span style={spanStyle}>
-                  {props.data.main.feels_like !== props.data.main.temp
-                    ? `Feels Like: ${props.data.main.feels_like}°`
+                  {data.main.feels_like !== data.main.temp
+                    ? `Feels Like: ${data.main.feels_like}°`
                     : ""}
                 </span>
               </div>
@@ -87,21 +89,22 @@ const Weather = (props) => {
             placement="bottom"
           >
             <span onClick={tempVisible ? tempHide : tempShow}>
-              {Math.round(props.data.main.temp)}&#176;C
+              {Math.round(data.main.temp)}&#176;C
             </span>
-          </Tippy>
-          <Tippy
+          </StyledTippy>
+          <StyledTippy
+            font={fontFamily}
             onClickOutside={conditionHide}
-            content={props.data.weather[0].description}
+            content={data.weather[0].description}
             visible={conditionVisible}
             placement="bottom"
           >
             <i
               onClick={conditionVisible ? conditionHide : conditionShow}
               style={{ marginLeft: "5px" }}
-              className={`fa ${icons[props.data.weather[0].icon]}`}
+              className={`fa ${icons[data.weather[0].icon]}`}
             />
-          </Tippy>
+          </StyledTippy>
         </>
       );
     } else {
@@ -119,9 +122,9 @@ const Weather = (props) => {
         <Dropdown
           options={["Automatic", ...cities]}
           onChange={(q) => {
-            props.setWeatherCity(q.value);
+            setWeatherCity(q.value);
           }}
-          value={props.city}
+          value={city}
           arrowClosed={<span className="fa fa-chevron-down" />}
           arrowOpen={<span className="fa fa-chevron-up" />}
         />
@@ -131,14 +134,5 @@ const Weather = (props) => {
     </WeatherWrapper>
   );
 };
-const mapStateToProp = ({ data }) => {
-  if (data.weatherData && data.weatherCity)
-    return {
-      data: data.weatherData.data,
-      city: data.weatherCity,
-      font: data.font,
-    };
-};
-export default connect(mapStateToProp, { setWeatherData, setWeatherCity })(
-  Weather
-);
+
+export default Weather;

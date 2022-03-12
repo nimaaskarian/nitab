@@ -1,17 +1,18 @@
 import { openWeather } from "apis";
+import types from "store/types";
 
 export function addCommand(name, args, icon, color) {
   return {
-    type: "ADD_COMMAND",
+    type: types.ADD_COMMAND,
     payload: { name, args, icon, color },
   };
 }
 export function setIsForegoundAuto(isFgAuto) {
-  return { type: "SET_ISFOREGROUND_AUTO", payload: isFgAuto };
+  return { type: types.SET_ISFOREGROUND_AUTO, payload: isFgAuto };
 }
 export function clearCommands() {
   return {
-    type: "CLEAR_COMMANDS",
+    type: types.CLEAR_COMMANDS,
   };
 }
 
@@ -81,33 +82,32 @@ export function setClockAlign(align) {
     payload: align,
   };
 }
-export function toggleAltNewtab() {
-  return (dispatch, getStore) => {
-    const prevAltNewtab = getStore().data.altNewtab;
-    dispatch({ type: "TOGGLE_ALT_NEWTAB", payload: !prevAltNewtab });
+export function toggleEnterOpensNewtab() {
+  return {
+    type: types.TOGGLE_ENTER_OPENS_NEWTAB,
   };
 }
 export function setFont(font) {
   return {
-    type: "SET_FONT",
+    type: types.SET_FONT,
     payload: font,
   };
 }
 export function setIndentifier(iden) {
   return {
-    type: "SET_IDENTIFIER",
+    type: types.SET_IDENTIFIER,
     payload: iden,
   };
 }
 export function addTodo(todo) {
   return {
-    type: "ADD_TODO",
+    type: types.ADD_TODO,
     payload: todo,
   };
 }
 export function removeTodo(index) {
   return {
-    type: "REMOVE_TODO",
+    type: types.REMOVE_TODO,
     payload: index,
   };
 }
@@ -126,115 +126,88 @@ export function importData() {
       if (!input.files.length || input.files.length > 1) return;
       fileReader.readAsText(input.files[0]);
       fileReader.onload = ({ target }) => {
-        dispatch({ type: "IMPORT_DATA", payload: JSON.parse(target.result) });
+        dispatch({
+          type: types.IMPORT_DATA,
+          payload: JSON.parse(target.result),
+        });
       };
     });
   };
 }
 
 export function toggleTaskbarMagnify() {
-  return (dispatch, getStore) => {
-    const prevMagnify = getStore().data.magnify;
-    dispatch({
-      type: "TOGGLE_TASKBAR_MAGNIFY",
-      payload: !prevMagnify,
-    });
+  return {
+    type: types.TOGGLE_TASKBAR_MAGNIFY,
   };
 }
-export function togglePersianDate() {
-  return (dispatch, getStore) => {
-    const prevPD = getStore().data.persianDate;
-    dispatch({
-      type: "TOGGLE_PERSIAN_DATE",
-      payload: !prevPD,
-    });
+export function toggleDateIsPersian() {
+  return {
+    type: types.TOGGLE_DATE_ISPERSIAN,
   };
 }
 
 export function toggleClockFormat() {
-  return (dispatch, getStore) => {
-    const output = getStore().data.clockFormat === "12" ? "24" : "12";
-    dispatch({
-      type: "TOGGLE_CLOCK_FORMAT",
-      payload: output,
-    });
+  return {
+    type: types.TOGGLE_CLOCK_FORMAT,
   };
 }
 export function addBackground(background) {
   return {
-    type: "ADD_BACKGROUND",
+    type: types.ADD_BACKGROUND,
     payload: background,
   };
 }
 export function completeTodo(index) {
   return {
-    type: "COMPLETE_TODO",
+    type: types.COMPLETE_TODO,
     payload: index,
-  };
-}
-export function setGradient(gradient) {
-  return {
-    type: "SET_GRADIENT",
-    payload: gradient,
-  };
-}
-export function setBlur(blur) {
-  return {
-    type: "SET_BLUR",
-    payload: blur,
-  };
-}
-export function setBrightness(brightness) {
-  return {
-    type: "SET_BRIGHTNESS",
-    payload: brightness,
   };
 }
 export function setForeground(color) {
   return {
-    type: "SET_FOREGROUND",
+    type: types.SET_FOREGROUND,
     payload: color,
   };
 }
-export function addIsHistory() {
+export function circleSearchMode() {
   return {
-    type: "ADD_ISHISTORY",
+    type: types.CIRCLE_SEARCHMODE,
   };
 }
-export function addTaskbarIcon(iconConfig) {
+export function addTaskbarIcon(icon) {
   return {
-    type: "ADD_TASKBAR",
-    payload: iconConfig,
+    type: types.ADD_TASKBAR_ICON,
+    payload: icon,
   };
 }
 export function deleteTaskbarIcon(index) {
   return {
-    type: "DELETE_TASKBAR",
+    type: types.DELETE_TASKBAR_ICON,
     payload: index,
   };
 }
-export function editTaskbarIcon(iconConfig) {
+export function editTaskbarIcon(icon) {
   return {
-    type: "EDIT_TASKBAR",
-    payload: iconConfig,
+    type: types.EDIT_TASKBAR_ICON,
+    payload: icon,
   };
 }
-export function editEmptyTaskbarIcon(iconConfig) {
+export function editEmptyIconTaskbar(icon) {
   return {
-    type: "EDIT_EMPTY_TASKBAR",
-    payload: iconConfig,
+    type: types.EDIT_EMPTY_ICON_TASKBAR,
+    payload: icon,
   };
 }
 export function resetStorage() {
   return {
-    type: "RESET_STORAGE",
+    type: types.RESET_STORAGE,
   };
 }
 export function exportData() {
   return (dispatch, getState) => {
     const data = getState().data;
     const type = "text/json";
-    const filename = "Exported-data.json";
+    const filename = "exported-data.json";
     var file = new Blob([JSON.stringify(data)], { type });
 
     var a = document.createElement("a"),
@@ -249,14 +222,14 @@ export function exportData() {
     }, 0);
   };
 }
-export function toggleDateActive() {
-  return { type: "TOGGLE_DATE_ACTIVE" };
+export function toggleDateEnabled() {
+  return { type: types.TOGGLE_DATE_ENABLED };
 }
-export function toggleWeatherActive() {
-  return { type: "TOGGLE_WEATHER_ACTIVE" };
+export function toggleWeatherEnabled() {
+  return { type: types.TOGGLE_WEATHER_ENABLED };
 }
 export function setWeatherData(q) {
-  const type = "SET_WEATHER_DATA";
+  const type = types.SET_WEATHER_DATA;
   return async (dispatch, getState) => {
     const result = getState().data.weatherData;
     if (!result) {
@@ -264,7 +237,7 @@ export function setWeatherData(q) {
       return;
     }
     if (result.time && result.data)
-      if (result.data.name === q)
+      if (result.data.name === q || q === "Automatic")
         if (Date.now() - result.time <= 3600 * 1000) {
           dispatch({ type, payload: { ...result } });
           return;
@@ -291,14 +264,14 @@ export function setWeatherData(q) {
   };
 }
 export function setWeatherCity(q) {
-  return { type: "SET_WEATHER_CITY", payload: q };
+  return { type: types.SET_WEATHER_CITY, payload: q };
 }
-export function setUnsplash(un) {
-  return { type: "SET_UNSPLASH", payload: un };
+export function setUnsplashCollections(un) {
+  return { type: types.SET_UNSPLASH_COLLECTIONS, payload: un };
 }
-export function toggleIsAcCommands() {
-  return { type: "TOGGLE_IS_AC_COMMANDS" };
+export function toggleSuggestCommandsEnabled() {
+  return { type: types.TOGGLE_SUGGEST_COMMANDS_ENABLED };
 }
-export function setAcCommands(acCommands) {
-  return { type: "SET_AC_COMMANDS", payload: acCommands };
+export function setSuggestCommandsCount(count) {
+  return { type: types.SET_SUGGEST_COMMANDS_COUNT, payload: count };
 }

@@ -3,17 +3,17 @@
 import setBackground from "services/Images/setBackground";
 import * as actions from "store/actions";
 import store from "store";
-import { setTempColor, setTempIcon } from "store/actions";
+import { addBackground, setTempColor, setTempIcon } from "store/actions";
 
 const defaultCommands = {
   date() {
     return () => () => {
-      store.dispatch(actions.toggleDateActive());
+      store.dispatch(actions.toggleDateEnabled());
     };
   },
   w() {
     return () => () => {
-      store.dispatch(actions.toggleWeatherActive());
+      store.dispatch(actions.toggleWeatherEnabled());
       store.dispatch(actions.setTerm(""));
     };
   },
@@ -84,42 +84,42 @@ const defaultCommands = {
     },
   },
   mag() {
-    return () => () => store.dispatch(actions.toggleMagnify());
+    return () => () => store.dispatch(actions.toggleTaskbarMagnify());
   },
-  gr() {
-    return () => () => store.dispatch(actions.toggleGradient());
-  },
+  // gr() {
+  //   return () => () => store.dispatch(actions.toggleGradient());
+  // },
   ac(input) {
     return () => () => {
       if (!+input && input !== "0")
-        store.dispatch(actions.toggleIsAcCommands());
-      else store.dispatch(actions.setAcCommands(+input));
+        store.dispatch(actions.toggleSuggestCommandsEnabled());
+      else store.dispatch(actions.setSuggestCommandsCount(+input));
     };
   },
-  bl(input) {
-    const [notTerminal, terminal, setting] = input.split(/\s/g);
-    return () => () =>
-      store.dispatch(
-        actions.setBlur({
-          terminal: terminal || 0,
-          notTerminal: notTerminal || 0,
-          setting: setting || "10",
-        })
-      );
-  },
-  br(input) {
-    const [notTerminal, terminal, setting] = input.split(/\s/g);
-    return () => () =>
-      store.dispatch(
-        actions.setBrightness({
-          terminal: terminal || 1,
-          notTerminal: notTerminal || 1,
-          setting: setting || ".8",
-        })
-      );
-  },
+  // bl(input) {
+  //   const [notTerminal, terminal, setting] = input.split(/\s/g);
+  //   return () => () =>
+  //     store.dispatch(
+  //       actions.setBlur({
+  //         terminal: terminal || 0,
+  //         notTerminal: notTerminal || 0,
+  //         setting: setting || "10",
+  //       })
+  //     );
+  // },
+  // br(input) {
+  //   const [notTerminal, terminal, setting] = input.split(/\s/g);
+  //   return () => () =>
+  //     store.dispatch(
+  //       actions.setBrightness({
+  //         terminal: terminal || 1,
+  //         notTerminal: notTerminal || 1,
+  //         setting: setting || ".8",
+  //       })
+  //     );
+  // },
   bg(input) {
-    if (input) return () => () => setBackground(input);
+    if (input) return () => () => addBackground({ cssValue: input });
   },
   fg: {
     function(input) {
@@ -142,7 +142,7 @@ const defaultCommands = {
   un(input) {
     if (input)
       return () => () => {
-        store.dispatch(actions.setUnsplash(input));
+        store.dispatch(actions.setUnsplashCollections(input));
         store.dispatch(actions.setBackground("unsplash"));
       };
     return () => "https://unsplash.com/collections";

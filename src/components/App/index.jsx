@@ -3,7 +3,11 @@ import React, { useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Helmet from "react-helmet";
 
-import { setTerm, toggleAltNewtab, addIsHistory } from "store/actions";
+import {
+  setTerm,
+  toggleEnterOpensNewtab,
+  circleSearchMode,
+} from "store/actions";
 
 import AddTaskbar from "../AddTaskbar";
 import Terminal from "../Terminal";
@@ -62,9 +66,9 @@ const App = () => {
         return;
       e.stopPropagation();
       if (e.ctrlKey && e.code === "KeyB") {
-        dispatch(toggleAltNewtab());
+        dispatch(toggleEnterOpensNewtab());
       }
-      if (e.ctrlKey && e.code === "KeyQ") dispatch(addIsHistory());
+      if (e.ctrlKey && e.code === "KeyQ") dispatch(circleSearchMode());
 
       if (e.key === "Escape") {
         setIsTerminal(false);

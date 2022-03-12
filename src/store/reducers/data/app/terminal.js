@@ -24,10 +24,10 @@ function terminalReducer(state = INITIAL_STATE, action) {
         suggestCommandsEnabled: !state.suggestCommandsEnabled,
       };
 
-    case types.TOGGLE_SUGGEST_COMMANDS_COUNT:
+    case types.SET_SUGGEST_COMMANDS_COUNT:
       return { ...state, suggestCommandsCount: action.payload };
     default:
-      return { ...state };
+      return state;
   }
 }
 
