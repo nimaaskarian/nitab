@@ -46,7 +46,7 @@ const Timer = (props) => {
         </div>
         <div className="clock-date">
           <a
-            className={`fal fa-repeat ${props.timerLoop ? null : "disabled"}`}
+            className={`far fa-repeat ${props.timerLoop ? null : "disabled"}`}
             onClick={props.toggleTimerLoop}
           />
           <a

@@ -32,7 +32,7 @@ const AutocompleteLogic = () => {
         .map((phrase) => {
           return {
             phrase: iden + phrase,
-            icon: commands[phrase].icon || `fal fa-terminal`,
+            icon: commands[phrase].icon || "far fa-terminal",
           };
         });
     const acHandler = ({ ac }) => {

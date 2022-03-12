@@ -55,15 +55,15 @@ const INITIAL_STATE = {
   },
   lh: {
     args: ["localhost:3000%?%localhost:%input%"],
-    icon: "fal fa-ethernet",
+    icon: "far fa-ethernet",
   },
   des: {
     args: ["desmos.com/calculator"],
-    icon: "fal fa-function",
+    icon: "far fa-function",
   },
   math: {
     args: ["math.microsoft.com/en%?%symbolab.com/"],
-    icon: "fal fa-calculator",
+    icon: "far fa-calculator",
   },
 };
 const deleteFromObject = (object, key) => {

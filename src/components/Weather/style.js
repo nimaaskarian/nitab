@@ -36,6 +36,7 @@ export const WeatherLoading = styled.div`
 `;
 
 export const StyledTippy = styled(Tippy)`
+  font-size: 16px;
   z-index: 10;
   font-family: ${({ font }) => font};
 `;

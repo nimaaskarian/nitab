@@ -70,9 +70,9 @@ const Alert = (props) => {
             <div>{todo.message}</div>
             <a
               style={{ marginLeft: "5px", cursor: "pointer" }}
-              className="fal fa-circle"
+              className="far fa-circle"
               onClick={(e) => {
-                e.target.className = "fal fa-check-circle";
+                e.target.className = "far fa-check-circle";
                 setTimeout(() => {
                   dipatch(completeTodo(index));
                 }, 350);
@@ -80,7 +80,7 @@ const Alert = (props) => {
             />
             <a
               style={{ marginLeft: "5px", cursor: "pointer", color: "red" }}
-              className="fal fa-trash"
+              className="far fa-trash"
               onClick={(e) => {
                 setTimeout(() => {
                   dipatch(removeTodo(index));

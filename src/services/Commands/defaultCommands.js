@@ -223,7 +223,7 @@ const defaultCommands = {
       };
     },
     color: "#037fec",
-    icon: "fas fa-globe",
+    icon: "far fa-globe",
   },
   imdb(input) {
     if (input)
@@ -299,7 +299,7 @@ const defaultCommands = {
       } catch (error) {}
       return defaultCommands.g.function(input);
     },
-    icon: "fal fa-search",
+    icon: "fa fa-search",
   },
   g: {
     function(input) {
