@@ -6,11 +6,12 @@ import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 // Global styles
-import "./font-awesome/css/brands.min.css";
-import "./font-awesome/css/light.min.css";
-import "./font-awesome/css/solid.min.css";
-import "./font-awesome/css/fontawesome.min.css";
-import "./css/style.css";
+import "fonts/font-awesome/css/brands.min.css";
+import "fonts/font-awesome/css/regular.min.css";
+import "fonts/font-awesome/css/solid.min.css";
+import "fonts/font-awesome/css/fontawesome.min.css";
+
+import "css/style.css";
 
 // Redux Provider, Presistor, Store
 import store, { persistor } from "store";
@@ -19,6 +20,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 //App component
 import App from "./components/App";
+//App boundry (error handling)
 import AppErrorBoundry from "components/AppErrorBoundry";
 // Alert default options
 const alertOptions = {
