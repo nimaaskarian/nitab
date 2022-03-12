@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-
+import localforage from "localforage";
 import { setForeground } from "store/actions";
 
 import unsplash from "apis/unsplash";
@@ -11,17 +11,37 @@ import { getImageLightness, setBackground } from "services/Images";
 import isDark from "services/Styles/isdark-min";
 const Background = ({ isTerminal }) => {
   const dispatch = useDispatch();
-  const parallax = useParallax();
-  const background = useSelector(({ ui }) => ui.background);
-  const isParallax = useSelector(({ data }) => data.isParallax);
-  const parallaxFactor = useSelector(({ data }) => data.parallaxFactor);
-  const blur = useSelector(({ data }) => data.blur);
-  const brightness = useSelector(({ data }) => data.brightness);
-  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const isForegroundAuto = useSelector(({ data }) => data.isForegroundAuto);
-  const unsplashCollections = useSelector(
-    ({ data }) => data.unsplashCollections
+  // const parallax = useParallax();
+
+  // const isParallax = useSelector(({ data }) => data.isParallax);
+  // const parallaxFactor = useSelector(({ data }) => data.parallaxFactor);
+
+  const backgrounds = useSelector(({ data }) => data.backgrounds);
+  const currentBackground = useSelector(
+    ({ data }) => data.theme.currentBackground
   );
+
+  // const blur = useSelector(({ data }) => data.blur);
+  // const brightness = useSelector(({ data }) => data.brightness);
+  // const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const isForegroundAuto = useSelector(({ data }) => data.isForegroundAuto);
+  // const unsplashCollections = useSelector(
+  //   ({ data }) => data.unsplashCollections
+  // );
+  const [background, setBackground] = useState(null);
+  useEffect(() => {
+    if (backgrounds[currentBackground]) {
+      const { id, cssValue } = backgrounds[currentBackground];
+      if (id) {
+        (async () => {
+          const blob = await localforage.getItem(id);
+          setBackground(`url('${window.URL.createObjectURL(blob)}')`);
+        })();
+      }
+      if (cssValue) setBackground(cssValue);
+    }
+  }, [backgrounds, currentBackground]);
+
   useEffect(() => {
     if (background && isForegroundAuto) {
       getImageLightness(
@@ -65,8 +85,8 @@ const Background = ({ isTerminal }) => {
   return (
     <BackgroundWrapper>
       <BackgroundDiv
-        parallax={parallax}
-        scale={isParallax ? 1 + parallaxFactor / 100 : 1}
+        parallax={{}}
+        // scale={isParallax ? 1 + parallaxFactor / 100 : 1}
         background={background}
         // blur={
         //   isTaskbarEdit

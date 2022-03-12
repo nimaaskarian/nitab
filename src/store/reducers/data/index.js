@@ -13,6 +13,7 @@ import clockReducer from "./app/clock";
 import types from "store/types";
 
 import { storage } from "..";
+import localforage from "localforage";
 
 /* eslint-disable import/no-anonymous-default-export */
 Array.prototype.before = function (index, item) {
@@ -95,6 +96,7 @@ const rootReducer = (state = {}, action) => {
 
     case types.RESET_STORAGE:
       storage.removeItem("persist:nitab");
+      localforage.clear();
       return appReducer(undefined, action);
 
     default:

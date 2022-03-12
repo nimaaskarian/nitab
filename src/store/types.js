@@ -41,8 +41,11 @@ const types = {
 
   IMPORT_DATA: "import-data",
   RESET_STORAGE: "reset-storage",
+  
+  SET_CURRENT_BACKGROUND: "set-current-background",
 
   ADD_BACKGROUND: "add-background",
+  DELETE_BACKGROUND:"delete-background"
 };
 
 export default types;

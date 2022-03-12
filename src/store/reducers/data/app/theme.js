@@ -16,7 +16,8 @@ function themeReducer(state = INITIAL_STATE, action) {
 
     case types.SET_FONT:
       return { ...state, font: action.payload };
-
+    case types.SET_CURRENT_BACKGROUND:
+      return { ...state, currentBackground: action.payload };
     case types.SET_ISFOREGROUND_AUTO:
       return { ...state, isForegroundAuto: action.payload };
     default:

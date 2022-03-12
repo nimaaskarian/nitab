@@ -3,7 +3,13 @@
 import setBackground from "services/Images/setBackground";
 import * as actions from "store/actions";
 import store from "store";
-import { addBackground, setTempColor, setTempIcon } from "store/actions";
+import {
+  addBackground,
+  deleteBackground,
+  setCurrentBackground,
+  setTempColor,
+  setTempIcon,
+} from "store/actions";
 
 const defaultCommands = {
   date() {
@@ -118,8 +124,18 @@ const defaultCommands = {
   //       })
   //     );
   // },
-  bg(input) {
-    if (input) return () => () => addBackground({ cssValue: input });
+  bg: {
+    function(input) {
+      const [first, second] = input.split(" ");
+      if (+first || first === "0") {
+        if (second === "delete")
+          return () => () => store.dispatch(deleteBackground(+first));
+        return () => () => store.dispatch(setCurrentBackground(+first));
+      }
+
+      if (input)
+        return () => () => store.dispatch(addBackground({ cssValue: input }));
+    },
   },
   fg: {
     function(input) {

@@ -15,7 +15,7 @@ const Alert = (props) => {
   const altNewtab = useSelector(({ data }) => data.altNewtab);
   const acCommands = useSelector(({ data }) => data.acCommands);
   const isAcCommands = useSelector(({ data }) => data.isAcCommands);
-
+  const backgroundsLength = useSelector(({ data }) => data.backgrounds.length);
   useDidMountEffect(() => {
     alert.show(
       <AlertComponent>
@@ -25,6 +25,13 @@ const Alert = (props) => {
       </AlertComponent>
     );
   }, [altNewtab]);
+  useDidMountEffect(() => {
+    alert.show(
+      <AlertComponent>
+        You have {backgroundsLength} backgrounds now
+      </AlertComponent>
+    );
+  }, [backgroundsLength]);
   useDidMountEffect(() => {
     alert.show(
       <AlertComponent>
@@ -51,7 +58,9 @@ const Alert = (props) => {
         alert.show(
           <AlertComponent
             style={{
-              direction: `${/^[\u0600-\u06FF\s]+/.test(todo.message) ? "rtl" : "ltr"}`,
+              direction: `${
+                /^[\u0600-\u06FF\s]+/.test(todo.message) ? "rtl" : "ltr"
+              }`,
               display: "flex",
               flexDirection: "row",
               alignItems: "center",

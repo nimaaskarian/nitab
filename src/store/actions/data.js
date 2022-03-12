@@ -1,4 +1,5 @@
 import { openWeather } from "apis";
+import localforage from "localforage";
 import types from "store/types";
 
 export function addCommand(name, args, icon, color) {
@@ -151,10 +152,30 @@ export function toggleClockFormat() {
     type: types.TOGGLE_CLOCK_FORMAT,
   };
 }
+export function setCurrentBackground(index) {
+  return {
+    type: types.SET_CURRENT_BACKGROUND,
+    payload: index,
+  };
+}
 export function addBackground(background) {
   return {
     type: types.ADD_BACKGROUND,
     payload: background,
+  };
+}
+export function deleteBackground(index) {
+  return (dispatch, getState) => {
+    try {
+      const { backgrounds, currentBackground } = getState().data;
+      const backgroundToDelete = backgrounds[currentBackground];
+      localforage.removeItem(backgroundToDelete.id);
+    } catch (error) {}
+    
+    dispatch({
+      type: types.DELETE_BACKGROUND,
+      payload: index,
+    });
   };
 }
 export function completeTodo(index) {
@@ -237,7 +258,7 @@ export function setWeatherData(q) {
       return;
     }
     if (result.time && result.data)
-      if (result.data.name === q || q === "Automatic")
+      if (result.data.name === q || q !== "Automatic")
         if (Date.now() - result.time <= 3600 * 1000) {
           dispatch({ type, payload: { ...result } });
           return;

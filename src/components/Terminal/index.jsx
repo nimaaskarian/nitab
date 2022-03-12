@@ -17,9 +17,9 @@ import {
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const { commands } = useContext(CommandsContext);
   const dispatch = useDispatch();
-  const identifier = useSelector(({ data }) => data.identifier);
-  const altNewtab = useSelector(({ data }) => data.altNewtab);
-  const { color, isOvr } = useSelector(({ data }) => data.foreground);
+  const identifier = useSelector(({ data }) => data.terminal.identifier);
+  const altNewtab = useSelector(({ data }) => data.terminal.enterOpensNewtab);
+  const { color, isOvr } = useSelector(({ data }) => data.theme.foreground);
 
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const currentCommand = useMemo(() => {

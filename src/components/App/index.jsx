@@ -36,13 +36,15 @@ const App = () => {
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const { isDragAccept, getRootProps, getInputProps } = useImageDrop();
   const terminal = useRef();
-  const timerEditFocus = useSelector(({ ui }) => ui.timerEditFocus);
+
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const foreground = useSelector(({ data }) => data.foreground);
-  const isHistory = useSelector(({ data }) => data.isHistory);
-  const isClock = useSelector(({ data }) => data.isClock);
-  const identifier = useSelector(({ data }) => data.identifier);
-  const font = useSelector(({ data }) => data.font);
+  const foreground = useSelector(({ data }) => data.theme.foreground);
+  const font = useSelector(({ data }) => data.theme.font);
+
+  const clockEnabled = useSelector(({ data }) => data.clock.enabled);
+  const identifier = useSelector(({ data }) => data.terminal.identifier);
+  const searchMode = useSelector(({ data }) => data.terminal.searchMode);
+
   useAlert({ isTerminal });
   const dispatch = useDispatch();
   useEffect(() => {
@@ -101,10 +103,8 @@ const App = () => {
       }
       if (e.key === "Backspace" && isTermEmpty) return;
       if (!e.altKey) {
-        if (!timerEditFocus) {
-          setIsTerminal(true);
-          terminal.current.focus();
-        }
+        setIsTerminal(true);
+        terminal.current.focus();
       } else {
         e.preventDefault();
       }
@@ -113,7 +113,7 @@ const App = () => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, isHistory, isTaskbarEdit, timerEditFocus]);
+  }, [isTerminal, searchMode, isTaskbarEdit]);
 
   useEffect(() => {
     if (isTaskbarEdit) dispatch(setTerm(""));
@@ -127,7 +127,7 @@ const App = () => {
             <AddTaskbar />
           ) : isDragAccept ? (
             <h1>Drop the picture...</h1>
-          ) : isClock ? (
+          ) : clockEnabled ? (
             <Clock />
           ) : (
             <Timer />
@@ -137,7 +137,7 @@ const App = () => {
       );
     return (
       <React.Fragment>
-        <SearchMode isHistory={isHistory} />
+        <SearchMode isHistory={searchMode} />
         <CommandsContext.Provider value={{ commands }}>
           <Terminal ref={terminal} />
         </CommandsContext.Provider>

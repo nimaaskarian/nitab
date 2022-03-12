@@ -24,7 +24,8 @@ export default function backgroundsReducer(state = [], action) {
   switch (action.type) {
     case types.ADD_BACKGROUND:
       return [...state, new Background(action.payload)];
-
+    case types.DELETE_BACKGROUND:
+      return state.delete(action.payload);
     default:
       return state;
   }
