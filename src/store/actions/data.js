@@ -171,7 +171,7 @@ export function deleteBackground(index) {
       const backgroundToDelete = backgrounds[currentBackground];
       localforage.removeItem(backgroundToDelete.id);
     } catch (error) {}
-    
+
     dispatch({
       type: types.DELETE_BACKGROUND,
       payload: index,
@@ -228,7 +228,8 @@ export function exportData() {
   return (dispatch, getState) => {
     const data = getState().data;
     const type = "text/json";
-    const filename = "exported-data.json";
+    const date = new Date();
+    const filename = `exported-data_${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}.json`;
     var file = new Blob([JSON.stringify(data)], { type });
 
     var a = document.createElement("a"),
