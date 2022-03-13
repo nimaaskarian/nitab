@@ -22,7 +22,7 @@ const SearchResultList = ({ commands }) => {
         return {
           url: commands["search"].function(term)(),
           header: {
-            className: "fa fa-search",
+            className: commands["search"].icon,
           },
           title: term,
         };
@@ -31,8 +31,7 @@ const SearchResultList = ({ commands }) => {
       setResults([searchSuggest(term), ...e]);
     }
     try {
-      if(chrome || browser)
-      getAsyncResults();
+      if (chrome || browser) getAsyncResults();
     } catch (error) {}
 
     async function getAsyncResults() {

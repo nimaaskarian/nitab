@@ -1,6 +1,4 @@
 /*global chrome*/
-
-import setBackground from "services/Images/setBackground";
 import * as actions from "store/actions";
 import store from "store";
 import {
@@ -10,16 +8,20 @@ import {
 } from "store/actions";
 
 const defaultCommands = {
-  date() {
-    return () => () => {
-      store.dispatch(actions.toggleDateEnabled());
-    };
+  date: {
+    function() {
+      return () => () => {
+        store.dispatch(actions.toggleDateEnabled());
+      };
+    },
   },
-  w() {
-    return () => () => {
-      store.dispatch(actions.toggleWeatherEnabled());
-      store.dispatch(actions.setTerm(""));
-    };
+  w: {
+    function() {
+      return () => () => {
+        store.dispatch(actions.toggleWeatherEnabled());
+        store.dispatch(actions.setTerm(""));
+      };
+    },
   },
   clock: {
     function(input) {
@@ -38,8 +40,10 @@ const defaultCommands = {
       }
     },
   },
-  font(input) {
-    return () => () => store.dispatch(actions.setFont(input));
+  font: {
+    function(input) {
+      return () => () => store.dispatch(actions.setFont(input));
+    },
   },
   todo: {
     function(input) {
@@ -52,26 +56,28 @@ const defaultCommands = {
   //   return () => () =>
   //     store.dispatch(actions.setParallaxFactor(parseFloat(input)));
   // },
-  c(input) {
-    const sums = {
-      his: "history",
-      ext: "extensions",
-      set: "settings",
-      [""]: "version",
-    };
-    return () =>
-      async ({ altKey }) => {
-        const url = "chrome://" + (sums[input] || input);
-        if (altKey) {
-          chrome.tabs.getCurrent(({ id, index }) => {
-            chrome.tabs.create({
-              url,
-              index,
-            });
-            chrome.tabs.remove(id);
-          });
-        } else chrome.tabs.create({ url });
+  c: {
+    function(input) {
+      const sums = {
+        his: "history",
+        ext: "extensions",
+        set: "settings",
+        [""]: "version",
       };
+      return () =>
+        async ({ altKey }) => {
+          const url = "chrome://" + (sums[input] || input);
+          if (altKey) {
+            chrome.tabs.getCurrent(({ id, index }) => {
+              chrome.tabs.create({
+                url,
+                index,
+              });
+              chrome.tabs.remove(id);
+            });
+          } else chrome.tabs.create({ url });
+        };
+    },
   },
   iden: {
     function(input) {
@@ -88,8 +94,10 @@ const defaultCommands = {
       return () => () => store.dispatch(actions.importData());
     },
   },
-  mag() {
-    return () => () => store.dispatch(actions.toggleTaskbarMagnify());
+  mag: {
+    function() {
+      return () => () => store.dispatch(actions.toggleTaskbarMagnify());
+    },
   },
   // gr() {
   //   return () => () => store.dispatch(actions.toggleGradient());
@@ -154,13 +162,15 @@ const defaultCommands = {
       }
     },
   },
-  un(input) {
-    if (input)
-      return () => () => {
-        store.dispatch(actions.setUnsplashCollections(input));
-        store.dispatch(actions.setBackground("unsplash"));
-      };
-    return () => "https://unsplash.com/collections";
+  un: {
+    function(input) {
+      if (input)
+        return () => () => {
+          store.dispatch(actions.setUnsplashCollections(input));
+          store.dispatch(actions.setBackground("unsplash"));
+        };
+      return () => "https://unsplash.com/collections";
+    },
   },
   commandCl: {
     function(input) {
@@ -205,7 +215,13 @@ const defaultCommands = {
       };
     },
   },
-  rr: () => () => () => store.dispatch(actions.resetStorage()),
+  rr: {
+    function(input) {
+      if (input === "CONFIRM") {
+        return () => () => store.dispatch(actions.resetStorage());
+      }
+    },
+  },
   url: {
     function(input) {
       return () => {
@@ -221,62 +237,6 @@ const defaultCommands = {
     color: "#037fec",
     icon: "fa fa-globe",
   },
-  imdb(input) {
-    if (input)
-      return () => {
-        return "https://www.imdb.com/find?q=" + input;
-      };
-    else
-      return () => {
-        return "https://www.imdb.com/";
-      };
-  },
-  stack(input) {
-    if (input)
-      return () => {
-        return "https://stackoverflow.com/search?q=" + input;
-      };
-    else
-      return () => {
-        return "https://stackoverflow.com";
-      };
-  },
-  mo(input) {
-    if (input)
-      return () => {
-        return "https://www.f2m.site/?s=" + input;
-      };
-    else
-      return () => {
-        return "https://www.f2m.site/";
-      };
-  },
-  t() {
-    return () => {
-      return "https://webz.telegram.org/";
-    };
-  },
-  r(input) {
-    if (!input)
-      return () => {
-        return "https://www.reddit.com/";
-      };
-    else
-      return () => {
-        return "https://www.reddit.com/r/" + input;
-      };
-  },
-  sp(input) {
-    if (!input)
-      return () => {
-        return "https://open.spotify.com/";
-      };
-    else
-      return () => {
-        return "https://open.spotify.com/search/" + input;
-      };
-  },
-
   search: {
     function(input) {
       try {
@@ -300,52 +260,58 @@ const defaultCommands = {
       };
     },
   },
-  b(input) {
-    let [title, url, parentId] = input.split(/\s/g);
-    let tempObj;
-    if (title && url) {
-      tempObj = {
-        url: defaultCommands.url.function(url)(),
-        title,
-        parentId: parentId || "1",
-      };
-    }
-    return () => () => {
-      chrome.bookmarks.create(tempObj);
-    };
-  },
-  tr(input) {
-    if (input) {
-      let inputLang;
-      let text;
-      let outputLang;
-      if (input.split(",").length === 2) {
-        inputLang = input.split(",")[0];
-        text = input.split(",")[1];
-        outputLang = "en";
-      } else if (input.split(",").length === 3) {
-        inputLang = input.split(",")[0];
-        outputLang = input.split(",")[1];
-        text = input.split(",")[2];
-      } else {
-        inputLang = "en";
-        outputLang = "fa";
-        text = input;
+  b: {
+    function(input) {
+      let [title, url, parentId] = input.split(/\s/g);
+      let tempObj;
+      if (title && url) {
+        tempObj = {
+          url: defaultCommands.url.function(url)(),
+          title,
+          parentId: parentId || "1",
+        };
       }
-
-      return () => {
-        return `https://translate.google.com/?sl=${inputLang}&tl=${outputLang}&text=${encodeURI(
-          text
-        )}&op=translate`;
+      return () => () => {
+        chrome.bookmarks.create(tempObj);
       };
-    } else {
-      return () => {
-        return "https://translate.google.com/";
-      };
-    }
+    },
   },
-  taskbar() {
-    return () => () => store.dispatch(actions.toggleTaskbarEdit());
+  tr: {
+    function(input) {
+      if (input) {
+        let inputLang;
+        let text;
+        let outputLang;
+        if (input.split(",").length === 2) {
+          inputLang = input.split(",")[0];
+          text = input.split(",")[1];
+          outputLang = "en";
+        } else if (input.split(",").length === 3) {
+          inputLang = input.split(",")[0];
+          outputLang = input.split(",")[1];
+          text = input.split(",")[2];
+        } else {
+          inputLang = "en";
+          outputLang = "fa";
+          text = input;
+        }
+
+        return () => {
+          return `https://translate.google.com/?sl=${inputLang}&tl=${outputLang}&text=${encodeURI(
+            text
+          )}&op=translate`;
+        };
+      } else {
+        return () => {
+          return "https://translate.google.com/";
+        };
+      }
+    },
+  },
+  taskbar: {
+    function() {
+      return () => () => store.dispatch(actions.toggleTaskbarEdit());
+    },
   },
 };
 
