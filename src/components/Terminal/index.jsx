@@ -92,7 +92,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         </CurrentCommandContext.Provider>
       </TerminalAutoCompleteWrapper>
       <TerminalOutput
-        className={tempIcon || currentCommand.icon || "far fa-terminal"}
+        className={tempIcon || currentCommand.icon || "fa fa-terminal"}
       />
     </TerminalDiv>
   );

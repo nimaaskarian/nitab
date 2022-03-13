@@ -223,7 +223,7 @@ const defaultCommands = {
       };
     },
     color: "#037fec",
-    icon: "far fa-globe",
+    icon: "fa fa-globe",
   },
   imdb(input) {
     if (input)

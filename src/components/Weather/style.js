@@ -30,8 +30,8 @@ export const WeatherWrapper = styled.div`
 `;
 export const WeatherLoading = styled.div`
   & > i {
-    animation: ${rotate} 1s ease-in-out infinite;
-    font-size: 18px;
+    animation: ${rotate} .7s ease-in-out infinite;
+    font-size: 22px;
   }
 `;
 

@@ -10,9 +10,6 @@ export function setTerm(term) {
 export function setTimerEditFocus(focus) {
   return { type: "SET_TIMER_EDIT_FOCUS", payload: focus };
 }
-export function setAc(term) {
-  return { type: "SET_AC", payload: term };
-}
 export function setBackground(bg) {
   return {
     type: "SET_BACKGROUND",

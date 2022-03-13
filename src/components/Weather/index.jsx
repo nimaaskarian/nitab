@@ -109,9 +109,9 @@ const Weather = (props) => {
       );
     } else {
       return (
-        <div className="weather-unloaded">
-          <i className="far fa-spinner"></i>
-        </div>
+        <WeatherLoading>
+          <i className="fa fa-spinner"></i>
+        </WeatherLoading>
       );
     }
   };
