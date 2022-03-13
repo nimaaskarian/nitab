@@ -9,7 +9,6 @@
 /coverage
 
 # production
-/build
 /build.bat
 /build.sh
 
