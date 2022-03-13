@@ -176,6 +176,7 @@ const defaultCommands = {
         .filter((e) => !!e);
       const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
       const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
+      console.log(color);
       store.dispatch(setTempColor(color));
 
       store.dispatch(setTempIcon(icon));

@@ -20,9 +20,9 @@ const SearchResultList = ({ commands }) => {
     function searchSuggest(term) {
       if (!isNameSearch)
         return {
-          url: commands["search"](term)(),
+          url: commands["search"].function(term)(),
           header: {
-            className: "far fa-search",
+            className: "fa fa-search",
           },
           title: term,
         };

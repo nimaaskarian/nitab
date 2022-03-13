@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import CommandsContext from "context/CommandsContext";
 import CurrentCommandContext from "context/CurrentCommandContext";
+import { nanoid } from "nanoid";
 
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
@@ -19,11 +20,15 @@ const AutocompleteLogic = () => {
 
   const [duckDuckAc, setDuckDuckAc] = useState([]);
 
-  const identifier = useSelector(({ data }) => data.identifier);
+  const identifier = useSelector(({ data }) => data.terminal.identifier);
 
   useEffect(() => {
     const acHandler = ({ ac }) => {
-      setDuckDuckAc(ac.filter(({ phrase }) => phrase !== term));
+      setDuckDuckAc(
+        ac.map((e) => {
+          return { ...e, key: nanoid(10) };
+        })
+      );
     };
     document.addEventListener("autocomplete", acHandler, false);
     return () => {
@@ -36,7 +41,7 @@ const AutocompleteLogic = () => {
 
     if (!suggestCommandsEnabled) return [];
     return Object.keys(commands)
-      .filter((e) => (iden + e).includes(term))
+      .filter((e) => (iden + e).includes(term.trim()))
       .sort()
       .sort(function (a, b) {
         if (a.startsWith(term)) {
@@ -48,6 +53,7 @@ const AutocompleteLogic = () => {
       .slice(0, suggestCommandsCount)
       .map((phrase) => {
         return {
+          key: nanoid(10),
           phrase: iden + phrase,
           icon: commands[phrase].icon || "fa fa-terminal",
         };
@@ -91,6 +97,14 @@ const AutocompleteLogic = () => {
       }
     };
   }, [term, suggestCommandsEnabled]);
+
+  return useMemo(
+    () =>
+      [...commandSuggestions, ...duckDuckAc]
+        .filter((e) => !term.includes(e.phrase))
+        .slice(0, 8),
+    [duckDuckAc, commandSuggestions]
+  );
 };
 
 export default AutocompleteLogic;

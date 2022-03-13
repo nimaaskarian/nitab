@@ -15,7 +15,7 @@ export const TerminalDiv = styled.div`
   padding: 0 5vw;
 
   ${({ color }) => {
-    return `& *{
+    return `&>*{
       color:${color} !important;
     }
   & *::selection{
@@ -25,6 +25,7 @@ export const TerminalDiv = styled.div`
   }}
 `;
 export const TerminalInput = styled.input`
+  color: inherit !important;
   font-family: inherit !important;
   margin: 0;
   width: 100%;

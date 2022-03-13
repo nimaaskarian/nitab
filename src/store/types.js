@@ -14,7 +14,7 @@ const types = {
 
   ADD_TODO: "add-todo",
   REMOVE_TODO: "remove-todo",
-  COMPLETE_TODO: "complete-todo",
+  TOGGLE_TODO_COMPLETED: "toggle-todo-completed",
 
   ADD_TASKBAR_ICON: "add-taskbar-icon",
   EDIT_TASKBAR_ICON: "edit-taskbar-icon",
@@ -41,11 +41,11 @@ const types = {
 
   IMPORT_DATA: "import-data",
   RESET_STORAGE: "reset-storage",
-  
+
   SET_CURRENT_BACKGROUND: "set-current-background",
 
   ADD_BACKGROUND: "add-background",
-  DELETE_BACKGROUND:"delete-background"
+  DELETE_BACKGROUND: "delete-background",
 };
 
 export default types;

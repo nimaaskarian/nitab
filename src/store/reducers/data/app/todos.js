@@ -7,9 +7,12 @@ function todosReducer(state = [], action) {
     case types.REMOVE_TODO: {
       return state.delete(action.payload);
     }
-    case types.COMPLETE_TODO: {
+    case types.TOGGLE_TODO_COMPLETED: {
       const thisTodo = state[action.payload];
-      return state.replace(action.payload, { ...thisTodo, completed: true });
+      return state.replace(action.payload, {
+        ...thisTodo,
+        completed: !thisTodo.completed,
+      });
     }
     default:
       return state;

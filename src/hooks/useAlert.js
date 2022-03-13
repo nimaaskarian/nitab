@@ -2,15 +2,14 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useEffect, useState } from "react";
 import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
-import { completeTodo, removeTodo } from "store/actions";
+import { useSelector } from "react-redux";
 import useDidMountEffect from "./useDidMountEffect";
 import AlertComponent from "components/Alert";
+import Todo from "components/Todo";
 const Alert = (props) => {
   const alert = useAlert();
   const [prevCommands, setPrevCommands] = useState(null);
   const todos = useSelector(({ data }) => data.todos);
-  const dipatch = useDispatch();
   const currentCommands = useSelector(({ data }) => data.commands);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
   const acCommands = useSelector(({ data }) => data.acCommands);
@@ -54,43 +53,22 @@ const Alert = (props) => {
   useEffect(() => {
     alert.removeAll();
     if (!props.isTerminal)
-      todos.forEach((todo, index) => {
-        alert.show(
-          <AlertComponent
-            style={{
-              direction: `${
-                /^[\u0600-\u06FF\s]+/.test(todo.message) ? "rtl" : "ltr"
-              }`,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>{todo.message}</div>
-            <a
-              style={{ marginLeft: "5px", cursor: "pointer" }}
-              className="far fa-circle"
-              onClick={(e) => {
-                e.target.className = "far fa-check-circle";
-                setTimeout(() => {
-                  dipatch(completeTodo(index));
-                }, 350);
-              }}
-            />
-            <a
-              style={{ marginLeft: "5px", cursor: "pointer", color: "red" }}
-              className="far fa-trash"
-              onClick={(e) => {
-                setTimeout(() => {
-                  dipatch(removeTodo(index));
-                }, 350);
-              }}
-            />
-          </AlertComponent>,
-          { timeout: 0 }
-        );
-      });
+      todos
+        .sort(function (a, b) {
+          if (a.completed) {
+            if (b.completed) return 0;
+            return 1;
+          }
+          return -1;
+        })
+        .forEach((todo, index) => {
+          alert.show(
+            <AlertComponent>
+              <Todo todo={todo} index={index} />
+            </AlertComponent>,
+            { timeout: 0 }
+          );
+        });
   }, [todos, props.isTerminal]);
 
   useEffect(() => {

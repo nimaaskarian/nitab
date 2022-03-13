@@ -55,15 +55,15 @@ const INITIAL_STATE = {
   },
   lh: {
     args: ["localhost:3000%?%localhost:%input%"],
-    icon: "far fa-ethernet",
+    icon: "fa fa-ethernet",
   },
   des: {
     args: ["desmos.com/calculator"],
-    icon: "far fa-function",
+    icon: "fa fa-function",
   },
   math: {
     args: ["math.microsoft.com/en%?%symbolab.com/"],
-    icon: "far fa-calculator",
+    icon: "fa fa-calculator",
   },
 };
 const deleteFromObject = (object, key) => {
@@ -75,10 +75,10 @@ const deleteFromObject = (object, key) => {
 export default function commandsReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.ADD_COMMAND: {
-      const { icon, color } = action.payload;
+      const commandCopy = state.commands[action.payload.name] || {};
       return {
         ...state.commands,
-        [action.payload.name]: { args: action.payload.args, icon, color },
+        [action.payload.name]: { ...commandCopy, ...action.payload },
       };
     }
     case types.DELETE_COMMAND: {

@@ -178,9 +178,9 @@ export function deleteBackground(index) {
     });
   };
 }
-export function completeTodo(index) {
+export function toggleTodoCompleted(index) {
   return {
-    type: types.COMPLETE_TODO,
+    type: types.TOGGLE_TODO_COMPLETED,
     payload: index,
   };
 }

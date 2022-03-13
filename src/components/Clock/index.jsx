@@ -20,11 +20,10 @@ const Clock = () => {
   const weatherEnabled = useSelector(({ data }) => data.weather.enabled);
 
   const position = useSelector(({ data }) => data.clock.position);
-  const align = useSelector(({ data }) => data.clockAlign);
+  const align = useSelector(({ data }) => data.clock.align);
   const format = useSelector(({ data }) => data.clock.format);
 
   const isDatePersian = useSelector(({ data }) => data.date.isPersian);
-
 
   const dispatch = useDispatch();
 
@@ -34,8 +33,8 @@ const Clock = () => {
         e.preventDefault();
         dispatch(toggleIsClock());
       }}
-      clockPos={position}
-      clockAlign={align}
+      position={position}
+      align={align}
     >
       <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
         {format === "12" ? format12h(time) : format24h(time)}

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useContext } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import history from "js/history";
-import Autocomplete from "../Autocomplete";
+import Autocomplete from "../AutocompleteList";
 import { termToCommand } from "services/Commands/index.js";
 import { setTerm } from "store/actions";
 import CurrentCommandContext from "context/CurrentCommandContext";
@@ -13,12 +13,15 @@ import {
   TerminalDiv,
   TerminalAutoCompleteWrapper,
 } from "./style";
+import CurrentColorContext from "context/CurrentColorContext";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const { commands } = useContext(CommandsContext);
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
-  const altNewtab = useSelector(({ data }) => data.terminal.enterOpensNewtab);
+  const enterOpensNewtab = useSelector(
+    ({ data }) => data.terminal.enterOpensNewtab
+  );
   const { color, isOvr } = useSelector(({ data }) => data.theme.foreground);
 
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
@@ -30,35 +33,36 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const tempIcon = useSelector(({ ui }) => ui.tempIcon);
 
   const currentColor = useMemo(() => {
-    return isOvr ? color : currentCommand.color || color;
-  }, [isOvr, color, currentCommand.color]);
+    return tempColor || (isOvr ? color : currentCommand.color || color);
+  }, [isOvr, color, currentCommand.color, tempColor]);
 
   const handleSubmit = useCallback(
     (e) => {
+      if (e.code !== "Enter") return;
+     
       let onSubmit;
       try {
         onSubmit = currentCommand.function(currentCommand.args);
       } catch (error) {}
-      // const { args } = currentCommand;
-      if (e.code === "Enter" && onSubmit) {
+      if (onSubmit) {
         let _output = onSubmit();
         if (typeof _output === "string") {
           window.document.title = `${term} - ${
             identifier === "NONE" ? "" : identifier
           }Niotab`;
           history.push({ search: "?t=" + term });
-          if (e.altKey !== altNewtab) document.location = _output;
+          if (e.altKey !== enterOpensNewtab) document.location = _output;
           else {
             window.open(_output);
           }
         } else {
           _output({
-            altKey: e.altKey !== altNewtab,
+            altKey: e.altKey !== enterOpensNewtab,
           });
         }
       }
     },
-    [altNewtab, currentCommand, identifier, term]
+    [currentCommand, term, identifier, enterOpensNewtab]
   );
   useEffect(() => {
     const isSelfSubmit =
@@ -74,10 +78,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     };
   }, [handleSubmit]);
   return (
-    <TerminalDiv
-      isRtl={/^[\u0600-\u06FF\s]+/.test(term)}
-      color={tempColor || currentColor}
-    >
+    <TerminalDiv isRtl={/^[\u0600-\u06FF\s]+/.test(term)} color={currentColor}>
       <TerminalAutoCompleteWrapper>
         <TerminalInput
           value={term}
@@ -87,9 +88,11 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
             dispatch(setTerm(e.target.value.trimStart()));
           }}
         />
-        <CurrentCommandContext.Provider value={currentCommand}>
-          <Autocomplete />
-        </CurrentCommandContext.Provider>
+        <CurrentColorContext.Provider value={currentColor}>
+          <CurrentCommandContext.Provider value={currentCommand}>
+            <Autocomplete />
+          </CurrentCommandContext.Provider>
+        </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>
       <TerminalOutput
         className={tempIcon || currentCommand.icon || "fa fa-terminal"}

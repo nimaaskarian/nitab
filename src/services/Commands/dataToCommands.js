@@ -15,10 +15,10 @@ const dataToCommands = (data) => {
             .replace("%input%", input)
             .split("%?%");
           if (hasInput) {
-            if (input) return defaultCommands.url(hasInput)();
-            return defaultCommands.url(hasntInput)();
+            if (input) return defaultCommands.url.function(hasInput)();
+            return defaultCommands.url.function(hasntInput)();
           }
-          return defaultCommands.url(hasntInput)();
+          return defaultCommands.url.function(hasntInput)();
         };
       else
         return () =>
@@ -29,9 +29,9 @@ const dataToCommands = (data) => {
                 .split("%?%");
 
               if (hasInput) {
-                if (input) window.open(defaultCommands.url(hasInput)());
-                else window.open(defaultCommands.url(hasntInput)());
-              } else window.open(defaultCommands.url(hasntInput)());
+                if (input) window.open(defaultCommands.url.function(hasInput)());
+                else window.open(defaultCommands.url.function(hasntInput)());
+              } else window.open(defaultCommands.url.function(hasntInput)());
             });
           };
     };
