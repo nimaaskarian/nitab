@@ -26,7 +26,7 @@ export default termToCommand;
 
 function _regex(identifier) {
   switch (identifier) {
-    case "NONE":
+    case "":
       return { main: new RegExp(".*"), replace: "" };
     case ".":
       identifier = `\.`;

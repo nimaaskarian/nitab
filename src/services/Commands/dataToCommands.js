@@ -29,14 +29,35 @@ const dataToCommands = (data) => {
                 .split("%?%");
 
               if (hasInput) {
-                if (input) window.open(defaultCommands.url.function(hasInput)());
+                if (input)
+                  window.open(defaultCommands.url.function(hasInput)());
                 else window.open(defaultCommands.url.function(hasntInput)());
               } else window.open(defaultCommands.url.function(hasntInput)());
             });
           };
     };
   });
-  return { commands: { ...defaultCommands, ...commands } };
+  const defaultCommandsCustomized = Object.fromEntries(
+    Object.entries(defaultCommands).map(([key, value]) => {
+      if (commands[key]) {
+        const commandsCopy = Object.fromEntries(
+          Object.entries(commands[key]).filter(
+            ([key, value]) => !!value && key !== "function"
+          )
+        );
+        console.log(commandsCopy);
+        return [key, { ...value, ...commandsCopy }];
+      }
+      return [key, value];
+    })
+  );
+  const commandsWithoutDefaults = Object.fromEntries(
+    Object.entries(commands).filter(([key]) => !defaultCommands[key])
+  );
+  console.log(commandsWithoutDefaults);
+  return {
+    commands: { ...defaultCommandsCustomized, ...commandsWithoutDefaults },
+  };
 };
 
 export default dataToCommands;

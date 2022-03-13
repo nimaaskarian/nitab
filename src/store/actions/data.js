@@ -17,26 +17,8 @@ export function clearCommands() {
   };
 }
 
-export function setTimerFlags(timerFlags) {
-  return { type: "SET_TIMER_FLAGS", payload: timerFlags };
-}
-export function addTimerFlags() {
-  return { type: "ADD_TIMER_FLAGS" };
-}
-export function toggleTimerIsPaused() {
-  return { type: "TOGGLE_TIMER_ISPAUSED" };
-}
-export function setTimerIsPaused(isPaused) {
-  return { type: "SET_TIMER_ISPAUSED", payload: isPaused };
-}
-export function toggleTimerLoop(loop) {
-  return { type: "TOGGLE_TIMER_LOOP", payload: loop };
-}
-export function setParallaxFactor(factor) {
-  return { type: "SET_PARALLAX_FACTOR", payload: factor };
-}
-export function toggleIsClock(isClock) {
-  return { type: "TOGGLE_IS_CLOCK", payload: isClock };
+export function toggleClockEnabled(isClock) {
+  return { type: types.TOGGLE_CLOCK_ENABLED, payload: isClock };
 }
 export function toggleIsParallax() {
   return (dispatch, getStore) => {
@@ -46,40 +28,31 @@ export function toggleIsParallax() {
 }
 export function deleteCommand(name) {
   return {
-    type: "DELETE_COMMAND",
+    type: types.DELETE_COMMAND,
     payload: name,
   };
 }
 export function addToCommand(name, args) {
   return {
-    type: "ADD_TO_COMMAND",
+    type: types.ADD_TO_COMMAND,
     payload: { name, args },
   };
 }
 export function removeFromCommand(name, indexs) {
   return {
-    type: "REMOVE_FROM_COMMAND",
+    type: types.REMOVE_FROM_COMMAND,
     payload: { name, indexs },
   };
 }
-export function setCurrentTimer(currentTimer) {
-  return { type: "SET_CURRENT_TIMER", payload: currentTimer };
-}
-export function setCountingTo(countingTo) {
-  return { type: "SET_COUNTING_TO", payload: countingTo };
-}
-export function setTimerData(data) {
-  return { type: "SET_TIMER_DATA", payload: data };
-}
 export function setClockPosition(position) {
   return {
-    type: "SET_CLOCKPOS",
+    type: types.SET_CLOCK_POSITION,
     payload: position,
   };
 }
 export function setClockAlign(align) {
   return {
-    type: "SET_CLOCKALIGN",
+    type: types.SET_CLOCK_POSITION,
     payload: align,
   };
 }

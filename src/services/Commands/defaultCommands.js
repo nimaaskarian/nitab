@@ -7,8 +7,6 @@ import {
   addBackground,
   deleteBackground,
   setCurrentBackground,
-  setTempColor,
-  setTempIcon,
 } from "store/actions";
 
 const defaultCommands = {
@@ -48,12 +46,12 @@ const defaultCommands = {
       return () => () => store.dispatch(actions.addTodo({ message: input }));
     },
   },
-  par(input) {
-    if (!parseFloat(input))
-      return () => () => store.dispatch(actions.toggleIsParallax());
-    return () => () =>
-      store.dispatch(actions.setParallaxFactor(parseFloat(input)));
-  },
+  // par(input) {
+  //   if (!parseFloat(input))
+  //     return () => () => store.dispatch(actions.toggleIsParallax());
+  //   return () => () =>
+  //     store.dispatch(actions.setParallaxFactor(parseFloat(input)));
+  // },
   c(input) {
     const sums = {
       his: "history",
@@ -75,9 +73,10 @@ const defaultCommands = {
         } else chrome.tabs.create({ url });
       };
   },
-  iden(input) {
-    if (input.trim())
+  iden: {
+    function(input) {
       return () => () => store.dispatch(actions.setIndentifier(input.trim()));
+    },
   },
   exp: {
     function() {
@@ -163,9 +162,11 @@ const defaultCommands = {
       };
     return () => "https://unsplash.com/collections";
   },
-  commandCl(input) {
-    if (input === "CONFIRM")
-      return () => () => store.dispatch(actions.clearCommands());
+  commandCl: {
+    function(input) {
+      if (input === "CONFIRM")
+        return () => () => store.dispatch(actions.clearCommands());
+    },
   },
   command: {
     function(input) {
@@ -176,19 +177,13 @@ const defaultCommands = {
         .filter((e) => !!e);
       const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
       const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
-      console.log(color);
-      store.dispatch(setTempColor(color));
+      // store.dispatch(setTempColor(color));
 
-      store.dispatch(setTempIcon(icon));
+      // store.dispatch(setTempIcon(icon));
 
-      if (
-        ["command", "commandCl"].includes(commandName) ||
-        !commandFunctions.length
-      )
-        return;
-
+      if (["command", "commandCl"].includes(commandName)) return;
       return () => {
-        switch (commandFunctions[0].toLowerCase()) {
+        switch ((commandFunctions[0] || "").toLowerCase()) {
           case "delete":
             return () => store.dispatch(actions.deleteCommand(commandName));
           case "add":
@@ -281,11 +276,7 @@ const defaultCommands = {
         return "https://open.spotify.com/search/" + input;
       };
   },
-  dis() {
-    return () => {
-      return "https://discord.com/channels/@me";
-    };
-  },
+
   search: {
     function(input) {
       try {

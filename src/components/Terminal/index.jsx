@@ -39,27 +39,19 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const handleSubmit = useCallback(
     (e) => {
       if (e.code !== "Enter") return;
-     
-      let onSubmit;
-      try {
-        onSubmit = currentCommand.function(currentCommand.args);
-      } catch (error) {}
-      if (onSubmit) {
-        let _output = onSubmit();
-        if (typeof _output === "string") {
-          window.document.title = `${term} - ${
-            identifier === "NONE" ? "" : identifier
-          }Niotab`;
-          history.push({ search: "?t=" + term });
-          if (e.altKey !== enterOpensNewtab) document.location = _output;
-          else {
-            window.open(_output);
-          }
-        } else {
-          _output({
-            altKey: e.altKey !== enterOpensNewtab,
-          });
+
+      let onSubmit = currentCommand.function(currentCommand.args)();
+      if (typeof onSubmit === "string") {
+        window.document.title = `${term} - ${identifier}Niotab`;
+        history.push({ search: "?t=" + term });
+        if (e.altKey !== enterOpensNewtab) document.location = onSubmit;
+        else {
+          window.open(onSubmit);
         }
+      } else {
+        onSubmit({
+          altKey: e.altKey !== enterOpensNewtab,
+        });
       }
     },
     [currentCommand, term, identifier, enterOpensNewtab]

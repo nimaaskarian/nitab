@@ -32,6 +32,11 @@ const INITIAL_STATE = {
     args: [
       "stackoverflow.com%?%google.com/search?q=%input%%20site:stackoverflow.com",
     ],
+    icon: "fab fa-stack-overflow",
+    color: "#ee812a",
+  },
+  dis: {
+    args: ["https://discord.com/channels/@me"],
     icon: "fab fa-discord",
     color: "#7772bd",
   },
@@ -75,39 +80,33 @@ const deleteFromObject = (object, key) => {
 export default function commandsReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.ADD_COMMAND: {
-      const commandCopy = state.commands[action.payload.name] || {};
+      const commandCopy = state[action.payload.name] || {};
       return {
-        ...state.commands,
+        ...state,
         [action.payload.name]: { ...commandCopy, ...action.payload },
       };
     }
     case types.DELETE_COMMAND: {
-      return {
-        ...state,
-        commands: deleteFromObject(state.commands, action.payload),
-      };
+      return deleteFromObject(state, action.payload);
     }
 
     case types.REMOVE_FROM_COMMAND:
       return {
         ...state,
-        commands: state.commands[action.payload.name].filter(
+        ...state[action.payload.name].filter(
           (e, i) => !action.payload.indexs.includes(i)
         ),
       };
     case types.ADD_TO_COMMAND:
       return {
         ...state,
-        commands: {
-          ...state.commands,
-          [action.payload.name]: [
-            ...state.commands[action.payload.name],
-            ...action.payload.args,
-          ],
-        },
+        [action.payload.name]: [
+          ...state[action.payload.name],
+          ...action.payload.args,
+        ],
       };
     case types.CLEAR_COMMANDS:
-      return { ...state, commands: INITIAL_STATE.commands };
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

@@ -12,7 +12,6 @@ import {
 import AddTaskbar from "../AddTaskbar";
 import Terminal from "../Terminal";
 import Clock from "../Clock";
-import Timer from "../Timer";
 import Taskbar from "../Taskbar";
 import Background from "../Background";
 import ImageDropzone from "../ImageDropzone";
@@ -127,10 +126,8 @@ const App = () => {
             <AddTaskbar />
           ) : isDragAccept ? (
             <h1>Drop the picture...</h1>
-          ) : clockEnabled ? (
-            <Clock />
           ) : (
-            <Timer />
+            <Clock />
           )}
           <Taskbar />
         </React.Fragment>
@@ -154,7 +151,7 @@ const App = () => {
         getInputProps={getInputProps}
       />
       <Helmet>
-        <title>{identifier === "NONE" ? "" : identifier}Niotab</title>
+        <title>{identifier}Niotab</title>
       </Helmet>
       <Background isTerminal={isTerminal} />
 

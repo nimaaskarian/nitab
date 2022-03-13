@@ -6,7 +6,6 @@ import Weather from "components/Weather";
 import {
   toggleDateIsPersian,
   toggleClockFormat,
-  toggleIsClock,
 } from "store/actions";
 import useTime from "hooks/useTime";
 
@@ -28,14 +27,7 @@ const Clock = () => {
   const dispatch = useDispatch();
 
   return (
-    <ClockDiv
-      onContextMenu={(e) => {
-        e.preventDefault();
-        dispatch(toggleIsClock());
-      }}
-      position={position}
-      align={align}
-    >
+    <ClockDiv position={position} align={align}>
       <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
         {format === "12" ? format12h(time) : format24h(time)}
       </ClockTimeDiv>
