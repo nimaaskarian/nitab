@@ -10,7 +10,7 @@ const INITIAL_STATE = {
     color: "#04aa6d",
   },
   git: {
-    args: ["regexr.com%?%google.com/search?q=sss%20site:regexr.com"],
+    args: ["github.com/%input%"],
     icon: "fab fa-github",
   },
   sp: {
