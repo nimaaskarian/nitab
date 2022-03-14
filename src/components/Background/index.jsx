@@ -7,24 +7,34 @@ import { setForeground } from "store/actions";
 import unsplash from "apis/unsplash";
 import useParallax from "hooks/useParallax";
 import { BackgroundDiv, BackgroundWrapper } from "./style";
-import { getImageLightness, setBackground } from "services/Images";
+import { getImageLightness } from "services/Images";
 import isDark from "services/Styles/isdark-min";
 const Background = ({ isTerminal }) => {
   const dispatch = useDispatch();
-  // const parallax = useParallax();
-
-  // const isParallax = useSelector(({ data }) => data.isParallax);
-  // const parallaxFactor = useSelector(({ data }) => data.parallaxFactor);
-
-  const backgrounds = useSelector(({ data }) => data.backgrounds);
+  const parallax = useParallax();
   const currentBackground = useSelector(
     ({ data }) => data.theme.currentBackground
   );
 
-  // const blur = useSelector(({ data }) => data.blur);
-  // const brightness = useSelector(({ data }) => data.brightness);
-  // const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const isForegroundAuto = useSelector(({ data }) => data.isForegroundAuto);
+  const parallaxEnabled = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.parallaxEnabled
+  );
+  const parallaxFactor = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.parallaxFactor
+  );
+
+  const backgrounds = useSelector(({ data }) => data.backgrounds);
+
+  const blur = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.blur
+  );
+  const brightness = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.brightness
+  );
+  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const isForegroundAuto = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.isForegroundAuto
+  );
   // const unsplashCollections = useSelector(
   //   ({ data }) => data.unsplashCollections
   // );
@@ -85,23 +95,23 @@ const Background = ({ isTerminal }) => {
   return (
     <BackgroundWrapper>
       <BackgroundDiv
-        parallax={{}}
-        // scale={isParallax ? 1 + parallaxFactor / 100 : 1}
+        parallax={parallax}
+        scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
         background={background}
-        // blur={
-        //   isTaskbarEdit
-        //     ? blur.setting
-        //     : isTerminal
-        //     ? blur.terminal
-        //     : blur.notTerminal
-        // }
-        // brightness={
-        //   isTaskbarEdit
-        //     ? brightness.setting
-        //     : isTerminal
-        //     ? brightness.terminal
-        //     : brightness.notTerminal
-        // }
+        blur={
+          isTaskbarEdit
+            ? blur?.setting
+            : isTerminal
+            ? blur?.terminal
+            : blur?.notTerminal
+        }
+        brightness={
+          isTaskbarEdit
+            ? brightness?.setting
+            : isTerminal
+            ? brightness?.terminal
+            : brightness?.notTerminal
+        }
       />
     </BackgroundWrapper>
   );

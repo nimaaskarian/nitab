@@ -23,7 +23,6 @@ import useImageDrop from "hooks/useImageDrop";
 import useAlert from "hooks/useAlert";
 
 import mutedKeys from "services/Lists/mutedKeys";
-import setBackground from "services/Images/setBackground";
 
 import CommandsContext from "context/CommandsContext";
 
@@ -40,7 +39,6 @@ const App = () => {
   const foreground = useSelector(({ data }) => data.theme.foreground);
   const font = useSelector(({ data }) => data.theme.font);
 
-  const clockEnabled = useSelector(({ data }) => data.clock.enabled);
   const identifier = useSelector(({ data }) => data.terminal.identifier);
   const searchMode = useSelector(({ data }) => data.terminal.searchMode);
 
@@ -51,10 +49,8 @@ const App = () => {
   }, [isTermEmpty]);
 
   useEffect(() => {
-    setBackground();
-    dispatch(
-      setTerm(new URLSearchParams(window.location.search).get("t") || "")
-    );
+    const termFromQuery = new URLSearchParams(window.location.search).get("t");
+    if (termFromQuery) dispatch(setTerm(termFromQuery));
   }, []);
   useEffect(() => {
     const onKeydown = (e) => {

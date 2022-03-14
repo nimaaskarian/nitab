@@ -50,12 +50,16 @@ const defaultCommands = {
       return () => () => store.dispatch(actions.addTodo({ message: input }));
     },
   },
-  // par(input) {
-  //   if (!parseFloat(input))
-  //     return () => () => store.dispatch(actions.toggleIsParallax());
-  //   return () => () =>
-  //     store.dispatch(actions.setParallaxFactor(parseFloat(input)));
-  // },
+  par: {
+    function(input) {
+      const index = store.getState().data.theme.currentBackground;
+      console.log(index);
+      if (!parseFloat(input))
+        return () => () => store.dispatch(actions.toggleParallaxEnabled(index));
+      return () => () =>
+        store.dispatch(actions.setParallaxFactor(index, parseFloat(input)));
+    },
+  },
   c: {
     function(input) {
       const sums = {
@@ -109,28 +113,36 @@ const defaultCommands = {
       else store.dispatch(actions.setSuggestCommandsCount(+input));
     };
   },
-  // bl(input) {
-  //   const [notTerminal, terminal, setting] = input.split(/\s/g);
-  //   return () => () =>
-  //     store.dispatch(
-  //       actions.setBlur({
-  //         terminal: terminal || 0,
-  //         notTerminal: notTerminal || 0,
-  //         setting: setting || "10",
-  //       })
-  //     );
-  // },
-  // br(input) {
-  //   const [notTerminal, terminal, setting] = input.split(/\s/g);
-  //   return () => () =>
-  //     store.dispatch(
-  //       actions.setBrightness({
-  //         terminal: terminal || 1,
-  //         notTerminal: notTerminal || 1,
-  //         setting: setting || ".8",
-  //       })
-  //     );
-  // },
+  bl: {
+    function(input) {
+      const [notTerminal, terminal, setting] = input.split(/\s/g);
+      const index = store.getState().data.theme.currentBackground;
+      return () => () =>
+        store.dispatch(
+          actions.setBlur(index, {
+            terminal: terminal || 0,
+            notTerminal: notTerminal || 0,
+            setting: setting || "10",
+          })
+        );
+    },
+  },
+  br: {
+    function(input) {
+      const [notTerminal, terminal, setting] = input.split(/\s/g);
+
+      const index = store.getState().data.theme.currentBackground;
+
+      return () => () =>
+        store.dispatch(
+          actions.setBrightness(index, {
+            terminal: terminal || 1,
+            notTerminal: notTerminal || 1,
+            setting: setting || ".8",
+          })
+        );
+    },
+  },
   bg: {
     function(input) {
       const [first, second] = input.split(" ");

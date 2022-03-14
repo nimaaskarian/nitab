@@ -2,8 +2,16 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const useParallax = () => {
-  const isParallax = useSelector(({ data }) => data.isParallax);
-  const parallaxFactor = useSelector(({ data }) => data.parallaxFactor);
+  const currentBackground = useSelector(
+    ({ data }) => data.theme.currentBackground
+  );
+
+  const parallaxEnabled = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.parallaxEnabled
+  );
+  const parallaxFactor = useSelector(
+    ({ data }) => data.backgrounds[currentBackground]?.parallaxFactor
+  );
 
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
 
@@ -24,13 +32,13 @@ const useParallax = () => {
         y: formatParallax(e.clientY, window.innerHeight),
       });
     };
-    if (isParallax) window.addEventListener("mousemove", mouseOver);
+    if (parallaxEnabled) window.addEventListener("mousemove", mouseOver);
     return () => {
       window.removeEventListener("mousemove", mouseOver);
     };
-  }, [isParallax, formatParallax]);
+  }, [parallaxEnabled, formatParallax]);
 
-  if (!isParallax) return { x: 0, y: 0 };
+  if (!parallaxEnabled) return { x: 0, y: 0 };
   return parallax;
 };
 

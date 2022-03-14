@@ -4,8 +4,8 @@ import history from "js/history";
 import Autocomplete from "../AutocompleteList";
 import { termToCommand } from "services/Commands/index.js";
 import { setTerm } from "store/actions";
+
 import CurrentCommandContext from "context/CurrentCommandContext";
-import "./style.css";
 import CommandsContext from "context/CommandsContext";
 import {
   TerminalInput,
@@ -29,12 +29,9 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     const { name, args } = termToCommand(term, identifier, commands);
     return { ...commands[name], args };
   }, [term, identifier, commands]);
-  const tempColor = useSelector(({ ui }) => ui.tempColor);
-  const tempIcon = useSelector(({ ui }) => ui.tempIcon);
-
   const currentColor = useMemo(() => {
-    return tempColor || (isOvr ? color : currentCommand.color || color);
-  }, [isOvr, color, currentCommand.color, tempColor]);
+    return isOvr ? color : currentCommand.color || color;
+  }, [isOvr, color, currentCommand.color]);
 
   const handleSubmit = useCallback(
     (e) => {
@@ -86,9 +83,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           </CurrentCommandContext.Provider>
         </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>
-      <TerminalOutput
-        className={tempIcon || currentCommand.icon || "fa fa-terminal"}
-      />
+      <TerminalOutput className={currentCommand.icon || "fa fa-terminal"} />
     </TerminalDiv>
   );
 });

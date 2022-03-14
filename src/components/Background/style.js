@@ -6,7 +6,7 @@ export const BackgroundDiv = styled.div`
   transform: scale(${({ scale }) => scale});
   background: ${({ background }) => background || "#333"};
   filter: ${({ blur, brightness }) =>
-    `blur(${blur}) brightness(${brightness})`};
+    `blur(${blur}px) brightness(${brightness || 1})`};
   overflow: hidden;
   display: flex;
   justify-content: center;

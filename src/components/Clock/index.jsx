@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import persianDate from "persian-date";
 import { format12h, format24h } from "services/Format/time";
 import Weather from "components/Weather";
-import {
-  toggleDateIsPersian,
-  toggleClockFormat,
-} from "store/actions";
+import { toggleDateIsPersian, toggleClockFormat } from "store/actions";
 import useTime from "hooks/useTime";
 
 import "./style.css";
@@ -26,11 +23,16 @@ const Clock = () => {
 
   const dispatch = useDispatch();
 
+  const clockEnabled = useSelector(({ data }) => data.clock.enabled);
+
   return (
     <ClockDiv position={position} align={align}>
-      <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
-        {format === "12" ? format12h(time) : format24h(time)}
-      </ClockTimeDiv>
+      {clockEnabled ? (
+        <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
+          {format === "12" ? format12h(time) : format24h(time)}
+        </ClockTimeDiv>
+      ) : null}
+
       {dateEnabled ? (
         <ClockDateDiv onClick={() => dispatch(toggleDateIsPersian())}>
           {new persianDate()

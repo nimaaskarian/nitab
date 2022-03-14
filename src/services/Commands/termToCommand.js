@@ -1,6 +1,7 @@
 import isUrl from "./isUrl";
 
 const termToCommand = (string, identifier, commands) => {
+  let startTime = performance.now();
   let name, args;
   const { main, replace } = _regex(identifier);
 
@@ -20,6 +21,8 @@ const termToCommand = (string, identifier, commands) => {
     [name, args] = _noCommand(string);
   }
 
+  let endTime = performance.now();
+  console.log("did something!", endTime - startTime);
   return { name, args };
 };
 export default termToCommand;

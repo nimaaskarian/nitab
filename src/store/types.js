@@ -44,6 +44,12 @@ const types = {
 
   SET_CURRENT_BACKGROUND: "set-current-background",
 
+  SET_BLUR: "set-blur",
+  SET_BRIGHTNESS: "set-brightness",
+
+  TOGGLE_PARALLAX_ENABLED: "toggle-parallax-enabled",
+  SET_PARALLAX_FACTOR: "set-parallax-factor",
+
   ADD_BACKGROUND: "add-background",
   DELETE_BACKGROUND: "delete-background",
 };

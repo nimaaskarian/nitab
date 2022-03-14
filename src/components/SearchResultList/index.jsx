@@ -1,19 +1,19 @@
-/*global browser*/
 /*global chrome*/
 
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import SearchResult from "./SearchResult";
+import SearchResult from "../SearchResult";
 
 import termToCommand from "services/Commands/termToCommand";
+import { nanoid } from "nanoid";
 
 const SearchResultList = ({ commands }) => {
   const term = useSelector(({ ui }) => ui.term);
-  const identifier = useSelector(({ data }) => data.identifier);
-  const isHistory = useSelector(({ data }) => data.isHistory);
-  const altNewtab = useSelector(({ data }) => data.altNewtab);
+  const identifier = useSelector(({ data }) => data.terminal.identifier);
+  const searchMode = useSelector(({ data }) => data.terminal.searchMode);
   const [results, setResults] = useState([]);
+  
   useEffect(() => {
     const isNameSearch =
       termToCommand(term, identifier, commands).name === "search";
@@ -25,17 +25,23 @@ const SearchResultList = ({ commands }) => {
             className: commands["search"].icon,
           },
           title: term,
+          key: nanoid(10),
         };
     }
-    function onSearchComplete(e) {
-      setResults([searchSuggest(term), ...e]);
+    function onSearchComplete(searchResults) {
+      setResults([
+        searchSuggest(term),
+        ...searchResults.map((searchResult) => {
+          return { ...searchResult, key: nanoid(10) };
+        }),
+      ]);
     }
     try {
-      if (chrome || browser) getAsyncResults();
+      if (chrome) getAsyncResults();
     } catch (error) {}
 
     async function getAsyncResults() {
-      switch (isHistory) {
+      switch (searchMode) {
         case 3: {
           chrome.tabs.query({}, (allTabs) => {
             onSearchComplete(
@@ -75,38 +81,13 @@ const SearchResultList = ({ commands }) => {
           onSearchComplete([]);
       }
     }
-  }, [identifier, isHistory, term]);
+  }, [identifier, searchMode, term]);
   return (
     <div style={{ marginTop: "50px" }} className="search-results">
       {results
         .filter((e) => !!e)
-        .map((e, i) => {
-          return (
-            <SearchResult
-              onClick={() => {
-                if (e.windowId === undefined) {
-                  if (typeof e.url === "string") {
-                    if (altNewtab) document.location = e.url;
-                    else window.open(e.url);
-                  } else {
-                    e.url(altNewtab);
-                  }
-                } else {
-                  const { tabs, windowId } = e;
-                  browser.windows.update(windowId, { focused: true });
-                  browser.tabs.highlight({ tabs, windowId });
-                  if (altNewtab) window.close();
-                }
-              }}
-              key={i}
-              header={{
-                text: e.title,
-                className: e.header ? e.header.className : "",
-              }}
-            >
-              {e.url}
-            </SearchResult>
-          );
+        .map((result, i) => {
+          return <SearchResult key={result.key} result={result} />;
         })}
     </div>
   );

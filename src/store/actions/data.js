@@ -20,10 +20,13 @@ export function clearCommands() {
 export function toggleClockEnabled(isClock) {
   return { type: types.TOGGLE_CLOCK_ENABLED, payload: isClock };
 }
-export function toggleIsParallax() {
-  return (dispatch, getStore) => {
-    const prevIsParallax = getStore().data.isParallax;
-    dispatch({ type: "TOGGLE_PARALLAX", payload: !prevIsParallax });
+export function toggleParallaxEnabled(payload) {
+  return { type: types.TOGGLE_PARALLAX_ENABLED, payload };
+}
+export function setParallaxFactor(index, parallaxFactor) {
+  return {
+    type: types.SET_PARALLAX_FACTOR,
+    payload: { index, parallaxFactor },
   };
 }
 export function deleteCommand(name) {
@@ -149,6 +152,18 @@ export function deleteBackground(index) {
       type: types.DELETE_BACKGROUND,
       payload: index,
     });
+  };
+}
+export function setBlur(index, blur) {
+  return {
+    type: types.SET_BLUR,
+    payload: { index, blur },
+  };
+}
+export function setBrightness(index, brightness) {
+  return {
+    type: types.SET_BRIGHTNESS,
+    payload: { index, brightness },
   };
 }
 export function toggleTodoCompleted(index) {
