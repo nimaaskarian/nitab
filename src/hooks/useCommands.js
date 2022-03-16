@@ -5,7 +5,7 @@ import { dataToCommands } from "services/Commands";
 const useCommands = () => {
   const commands = useSelector(({ data }) => data.commands);
   const output = useMemo(() => {
-    return { ...dataToCommands(commands) };
+    return dataToCommands(commands);
   }, [commands]);
   return output;
 };

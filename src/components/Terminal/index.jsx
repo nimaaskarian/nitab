@@ -18,7 +18,7 @@ import SearchResultList from "components/SearchResultList";
 import SearchMode from "components/SearchMode";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
-  const { commands } = useContext(CommandsContext);
+  const commands = useContext(CommandsContext);
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 

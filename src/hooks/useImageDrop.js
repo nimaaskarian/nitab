@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useAlert } from "react-alert";
 import Alert from "components/Alert";
-import { useDispatch } from "react-redux";
 import { addBlobAsBackground } from "services/Images";
 const useImageDrop = () => {
   const alert = useAlert();

@@ -7,7 +7,7 @@ import { toggleDateIsPersian, toggleClockFormat } from "store/actions";
 import useTime from "hooks/useTime";
 
 import "./style.css";
-import { ClockDiv, ClockDateDiv, ClockTimeDiv } from "./style";
+import { StyledClock, ClockDate, ClockTime } from "./style";
 
 const Clock = () => {
   const time = useTime();
@@ -26,23 +26,23 @@ const Clock = () => {
   const clockEnabled = useSelector(({ data }) => data.clock.enabled);
 
   return (
-    <ClockDiv position={position} align={align}>
+    <StyledClock position={position} align={align}>
       {clockEnabled ? (
-        <ClockTimeDiv onClick={() => dispatch(toggleClockFormat())}>
+        <ClockTime onClick={() => dispatch(toggleClockFormat())}>
           {format === "12" ? format12h(time) : format24h(time)}
-        </ClockTimeDiv>
+        </ClockTime>
       ) : null}
 
       {dateEnabled ? (
-        <ClockDateDiv onClick={() => dispatch(toggleDateIsPersian())}>
+        <ClockDate onClick={() => dispatch(toggleDateIsPersian())}>
           {new persianDate()
             .toLocale(isDatePersian ? "fa" : "en")
             .toCalendar(isDatePersian ? "persian" : "gregorian")
             .format(isDatePersian ? "dddd D MMMM" : "dddd, MMMM D")}
-        </ClockDateDiv>
+        </ClockDate>
       ) : null}
       {weatherEnabled ? <Weather /> : null}
-    </ClockDiv>
+    </StyledClock>
   );
 };
 

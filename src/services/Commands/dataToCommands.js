@@ -53,9 +53,7 @@ const dataToCommands = (data) => {
   const commandsWithoutDefaults = Object.fromEntries(
     Object.entries(commands).filter(([key]) => !defaultCommands[key])
   );
-  return {
-    commands: { ...defaultCommandsCustomized, ...commandsWithoutDefaults },
-  };
+  return { ...defaultCommandsCustomized, ...commandsWithoutDefaults };
 };
 
 export default dataToCommands;

@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
-export const ClockDiv = styled.div`
+export const StyledClock = styled.div`
   display: flex;
   flex-direction: column;
   ${({ position }) => {
+    console.log(position);
     return `
     position: ${position === "center" ? "" : "absolute"};
     top: ${position === "center" ? "" : "20px"};
@@ -14,11 +15,11 @@ export const ClockDiv = styled.div`
   z-index: 4;
   user-select: none;
 `;
-export const ClockDateDiv = styled.div`
+export const ClockDate = styled.div`
   font-size: 28px;
   cursor: pointer;
 `;
-export const ClockTimeDiv = styled.div`
+export const ClockTime = styled.div`
   cursor: pointer;
   font-weight: 600;
   margin-bottom: 8px;

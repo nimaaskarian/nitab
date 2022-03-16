@@ -38,6 +38,7 @@ const Background = ({ isTerminal }) => {
     if (backgrounds[currentBackground]) {
       const { id, cssValue } = backgrounds[currentBackground];
       if (id) {
+        
         (async () => {
           let blob;
           while (!blob) {

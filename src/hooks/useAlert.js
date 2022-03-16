@@ -6,9 +6,13 @@ import { useSelector } from "react-redux";
 import useDidMountEffect from "./useDidMountEffect";
 import AlertComponent from "components/Alert";
 import Todo from "components/Todo";
+import UnsplashLoading from "components/UnsplashLoading";
 const Alert = (props) => {
   const alert = useAlert();
   const [prevCommands, setPrevCommands] = useState(null);
+
+  const isFetchingImage = useSelector(({ ui }) => ui.isFetchingImage);
+
   const todos = useSelector(({ data }) => data.todos);
   const currentCommands = useSelector(({ data }) => data.commands);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
@@ -31,6 +35,22 @@ const Alert = (props) => {
       </AlertComponent>
     );
   }, [backgroundsLength]);
+
+  useDidMountEffect(() => {
+    let alertInstance = alert.show(
+      <AlertComponent>
+        <UnsplashLoading
+          onLoaded={() => {
+            alert.remove(alertInstance);
+          }}
+        />
+      </AlertComponent>,
+      {
+        timeout: 0,
+      }
+    );
+  }, [isFetchingImage]);
+
   useDidMountEffect(() => {
     alert.show(
       <AlertComponent>

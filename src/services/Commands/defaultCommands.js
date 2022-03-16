@@ -5,7 +5,9 @@ import {
   addBackground,
   deleteBackground,
   setCurrentBackground,
+  setImageLoaded,
   toggleIsBackgroundRandom,
+  toggleIsFetchingImage,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
@@ -114,13 +116,12 @@ const defaultCommands = {
           fileReader.onload = ({ target: { result } }) => {
             const dataKeys = Object.keys(store.getState().data);
             const data = JSON.parse(result);
-            const filteredEnteries = Object.entries(data).map(
-              ([key, value]) => {
+            const filteredEnteries = Object.entries(data)
+              .map(([key, value]) => {
                 if (dataKeys.includes(key)) return [key, value];
                 return [key, null];
-              }
-            );
-            // .filter(([key, value]) => !!value);
+              })
+              .filter(([key, value]) => !!value);
 
             store.dispatch(
               actions.importData(Object.fromEntries(filteredEnteries))
@@ -178,20 +179,26 @@ const defaultCommands = {
   bg: {
     function(input) {
       if (input === "random") {
-        store.dispatch(toggleIsBackgroundRandom());
+        return () => () => store.dispatch(toggleIsBackgroundRandom());
       }
       if (input === "un") {
         const collections = store.getState().data.theme.unsplashCollections;
         return () => async () => {
-          const { data } = await unsplash.get("/random", {
+          const {
+            data: { urls },
+          } = await unsplash.get("/random", {
             params: {
               collections,
             },
           });
-
-          const blobResult = await axios.get(data.urls.regular, {
+          store.dispatch(toggleIsFetchingImage());
+          let blobResult = await axios.get(urls.full, {
             responseType: "blob",
+            onDownloadProgress: ({ loaded, total }) => {
+              store.dispatch(setImageLoaded(loaded / total));
+            },
           });
+          store.dispatch(toggleIsFetchingImage());
 
           addBlobAsBackground(blobResult.data);
         };
@@ -300,10 +307,10 @@ const defaultCommands = {
   search: {
     function(text) {
       text = encodeURIComponent(text);
-      if (chrome?.search.query)
+      if (chrome?.search?.query)
         return () =>
           ({ altKey }) => {
-            chrome?.search.query({
+            chrome?.search?.query({
               disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
               text,
             });

@@ -5,21 +5,20 @@ const INITIAL_STATE = {
   results: [],
   isTerminal: false,
   addtaskbarIndex: null,
-  tempColor: null,
-  tempIcon: null,
+  isFetchingImage: false,
+  imageLoaded: 0,
 };
 
 const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
   switch (type) {
-    case "SET_TEMP_COLOR":
-      return { ...state, tempColor: payload };
-
-    case "SET_TEMP_ICON":
-      return { ...state, tempIcon: payload };
     case "TOGGLE_TASKBAR_EDIT":
       return { ...state, isTaskbarEdit: payload };
     case "SET_TERM":
       return { ...state, term: payload };
+    case "TOGGLE_IS_FETCHING_IMAGE":
+      return { ...state, isFetchingImage: !state.isFetchingImage };
+    case "SET_IMAGE_LOADED":
+      return { ...state, imageLoaded: payload };
     case "SET_BACKGROUND":
       return { ...state, background: payload };
     case "SET_TIMER_EDIT_FOCUS":

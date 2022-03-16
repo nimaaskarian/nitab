@@ -28,7 +28,17 @@ export function setTempColor(color) {
     payload: color,
   };
 }
-
+export function toggleIsFetchingImage() {
+  return {
+    type: "TOGGLE_IS_FETCHING_IMAGE",
+  };
+}
+export function setImageLoaded(loaded) {
+  return {
+    type: "SET_IMAGE_LOADED",
+    payload: loaded,
+  };
+}
 export function setTempIcon(icon) {
   return {
     type: "SET_TEMP_ICON",

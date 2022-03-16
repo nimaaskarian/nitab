@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
-  const { commands } = useContext(CommandsContext);
+  const commands = useContext(CommandsContext);
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
 
   const suggestCommandsCount = useSelector(
@@ -86,7 +86,7 @@ const AutocompleteLogic = () => {
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
         appended = true;
-      }, 120);
+      }, 200);
     }
     return () => {
       if (term) {

@@ -55,7 +55,7 @@ export function setClockPosition(position) {
 }
 export function setClockAlign(align) {
   return {
-    type: types.SET_CLOCK_POSITION,
+    type: types.SET_CLOCK_ALIGN,
     payload: align,
   };
 }

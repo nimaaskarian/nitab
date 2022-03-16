@@ -26,7 +26,7 @@ import { AppContainer } from "./style";
 import Main from "components/Main";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
-  const { commands } = useCommands();
+  const commands = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const isRandom = useSelector(({ data }) => data.theme.isBackgroundRandom);
@@ -116,7 +116,7 @@ const App = () => {
   const RenderedContent = () => {
     if (!isTerminal) return <Main />;
     return (
-      <CommandsContext.Provider value={{ commands }}>
+      <CommandsContext.Provider value={commands}>
         <Terminal ref={terminal} />
       </CommandsContext.Provider>
     );
