@@ -7,7 +7,7 @@ import ui from "./ui";
 export const storage = localForage.createInstance({
   name: "nitab",
   driver: localForage.LOCALSTORAGE,
-  storeName: "data",
+  storeName: "nitab",
 });
 const config = {
   key: "nitab",

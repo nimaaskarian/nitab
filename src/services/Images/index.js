@@ -1,4 +1,3 @@
-import setBackground from "./setBackground";
 import getImageLightness from "./getImageLightness";
-
-export { setBackground, getImageLightness };
+import addBlobAsBackground from "./addBlobAsBackground";
+export { getImageLightness, addBlobAsBackground };

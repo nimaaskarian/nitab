@@ -88,27 +88,10 @@ export function removeTodo(index) {
     payload: index,
   };
 }
-export function importData() {
-  return async (dispatch) => {
-    const fileReader = new window.FileReader();
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.style.opacity = "0";
-    input.style.position = "absolute";
-    input.style.bottom = "0";
-    document.body.appendChild(input);
-    input.click();
-    input.addEventListener("change", () => {
-      if (!input.files.length || input.files.length > 1) return;
-      fileReader.readAsText(input.files[0]);
-      fileReader.onload = ({ target }) => {
-        dispatch({
-          type: types.IMPORT_DATA,
-          payload: JSON.parse(target.result),
-        });
-      };
-    });
+export function importData(data) {
+  return {
+    type: types.IMPORT_DATA,
+    payload: data,
   };
 }
 
@@ -128,16 +111,42 @@ export function toggleClockFormat() {
     type: types.TOGGLE_CLOCK_FORMAT,
   };
 }
-export function setCurrentBackground(index) {
+export function setCurrentBackground(input) {
+  if (input === "random") {
+    return (dispatch, getState) => {
+      const max = getState().data.backgrounds.length - 1;
+      const last = getState().data.theme.currentBackground;
+      console.log("last", last);
+      let random;
+      do {
+        random = Math.round(Math.random() * max);
+      } while (last === random);
+      console.log("random", random);
+      dispatch({
+        type: types.SET_CURRENT_BACKGROUND,
+        payload: random,
+      });
+    };
+  }
   return {
     type: types.SET_CURRENT_BACKGROUND,
-    payload: index,
+    payload: input,
+  };
+}
+export function toggleIsBackgroundRandom() {
+  return {
+    type: types.TOGGLE_IS_BACKGROUND_RANDOM,
   };
 }
 export function addBackground(background) {
-  return {
-    type: types.ADD_BACKGROUND,
-    payload: background,
+  return (dispatch, getState) => {
+    const backgroundsLength = getState().data.backgrounds.length;
+
+    dispatch({
+      type: types.ADD_BACKGROUND,
+      payload: background,
+    });
+    dispatch(setCurrentBackground(backgroundsLength));
   };
 }
 export function deleteBackground(index) {

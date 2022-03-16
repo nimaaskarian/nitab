@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   foreground: { color: "white", isOvr: false },
   currentBackground: 0,
   font: "FiraCode",
+  isBackgroundRandom: false,
   isForegroundAuto: false,
 };
 function themeReducer(state = INITIAL_STATE, action) {
@@ -13,7 +14,8 @@ function themeReducer(state = INITIAL_STATE, action) {
       return { ...state, foreground: action.payload };
     case types.SET_UNSPLASH_COLLECTIONS:
       return { ...state, unsplashCollections: action.payload };
-
+    case types.TOGGLE_IS_BACKGROUND_RANDOM:
+      return { ...state, isBackgroundRandom: !state.isBackgroundRandom };
     case types.SET_FONT:
       return { ...state, font: action.payload };
     case types.SET_CURRENT_BACKGROUND:

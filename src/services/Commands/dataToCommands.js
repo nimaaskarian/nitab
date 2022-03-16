@@ -45,7 +45,6 @@ const dataToCommands = (data) => {
             ([key, value]) => !!value && key !== "function"
           )
         );
-        console.log(commandsCopy);
         return [key, { ...value, ...commandsCopy }];
       }
       return [key, value];
@@ -54,7 +53,6 @@ const dataToCommands = (data) => {
   const commandsWithoutDefaults = Object.fromEntries(
     Object.entries(commands).filter(([key]) => !defaultCommands[key])
   );
-  console.log(commandsWithoutDefaults);
   return {
     commands: { ...defaultCommandsCustomized, ...commandsWithoutDefaults },
   };

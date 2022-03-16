@@ -8,4 +8,5 @@ export const StyledSearchResultList = styled.div`
   width: 100%;
   justify-content: space-around;
   position: absolute;
+  margin-top: 50px;
 `;

@@ -7,19 +7,15 @@ import {
   setTerm,
   toggleEnterOpensNewtab,
   circleSearchMode,
+  setCurrentBackground,
 } from "store/actions";
 
-import AddTaskbar from "../AddTaskbar";
 import Terminal from "../Terminal";
-import Clock from "../Clock";
-import Taskbar from "../Taskbar";
+
 import Background from "../Background";
 import ImageDropzone from "../ImageDropzone";
-import SearchResultList from "../SearchResultList";
-import SearchMode from "components/SearchMode";
 import useCommands from "hooks/useCommands";
 import useIsTermEmpty from "hooks/useIsTermEmpty";
-import useImageDrop from "hooks/useImageDrop";
 import useAlert from "hooks/useAlert";
 
 import mutedKeys from "services/Lists/mutedKeys";
@@ -27,12 +23,14 @@ import mutedKeys from "services/Lists/mutedKeys";
 import CommandsContext from "context/CommandsContext";
 
 import { AppContainer } from "./style";
+import Main from "components/Main";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
   const { commands } = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
-  const { isDragAccept, getRootProps, getInputProps } = useImageDrop();
+  const isRandom = useSelector(({ data }) => data.theme.isBackgroundRandom);
+  console.log(isRandom);
   const terminal = useRef();
 
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
@@ -40,7 +38,6 @@ const App = () => {
   const font = useSelector(({ data }) => data.theme.font);
 
   const identifier = useSelector(({ data }) => data.terminal.identifier);
-  const searchMode = useSelector(({ data }) => data.terminal.searchMode);
 
   useAlert({ isTerminal });
   const dispatch = useDispatch();
@@ -51,6 +48,10 @@ const App = () => {
   useEffect(() => {
     const termFromQuery = new URLSearchParams(window.location.search).get("t");
     if (termFromQuery) dispatch(setTerm(termFromQuery));
+    console.log(isRandom);
+    if (isRandom) {
+      dispatch(setCurrentBackground("random"));
+    }
   }, []);
   useEffect(() => {
     const onKeydown = (e) => {
@@ -108,44 +109,24 @@ const App = () => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, searchMode, isTaskbarEdit]);
+  }, [isTerminal, isTaskbarEdit]);
 
   useEffect(() => {
     if (isTaskbarEdit) dispatch(setTerm(""));
   }, [isTaskbarEdit]);
 
   const RenderedContent = () => {
-    if (!isTerminal)
-      return (
-        <React.Fragment>
-          {isTaskbarEdit ? (
-            <AddTaskbar />
-          ) : isDragAccept ? (
-            <h1>Drop the picture...</h1>
-          ) : (
-            <Clock />
-          )}
-          <Taskbar />
-        </React.Fragment>
-      );
+    if (!isTerminal) return <Main />;
     return (
-      <React.Fragment>
-        <SearchMode isHistory={searchMode} />
-        <CommandsContext.Provider value={{ commands }}>
-          <Terminal ref={terminal} />
-        </CommandsContext.Provider>
-
-        <SearchResultList commands={commands} />
-      </React.Fragment>
+      <CommandsContext.Provider value={{ commands }}>
+        <Terminal ref={terminal} />
+      </CommandsContext.Provider>
     );
   };
 
   return (
     <React.Fragment>
-      <ImageDropzone
-        getRootProps={getRootProps}
-        getInputProps={getInputProps}
-      />
+      <ImageDropzone />
       <Helmet>
         <title>{identifier}Niotab</title>
       </Helmet>

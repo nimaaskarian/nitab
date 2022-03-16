@@ -1,10 +1,13 @@
 import React from "react";
-import { SearchModeDiv } from "./style";
+import { useSelector } from "react-redux";
+import { StyledSearchMode } from "./style";
 
-const _isHistoryItems = ["History", "Bookmark", "Tabs"];
+const searchModeItems = ["History", "Bookmark", "Tabs"];
 const SearchMode = ({ isHistory }) => {
-  if (!isHistory) return null;
-  return <SearchModeDiv>{_isHistoryItems[isHistory - 1]}</SearchModeDiv>;
+  const searchMode = useSelector(({ data }) => data.terminal.searchMode);
+
+  if (!searchMode) return null;
+  return <StyledSearchMode>{searchModeItems[searchMode - 1]}</StyledSearchMode>;
 };
 
 export default SearchMode;

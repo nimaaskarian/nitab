@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import localforage from "localforage";
 import { setForeground } from "store/actions";
 
-import unsplash from "apis/unsplash";
 import useParallax from "hooks/useParallax";
-import { BackgroundDiv, BackgroundWrapper } from "./style";
+import { StyledBackground } from "./style";
 import { getImageLightness } from "services/Images";
 import isDark from "services/Styles/isdark-min";
 const Background = ({ isTerminal }) => {
@@ -15,7 +14,6 @@ const Background = ({ isTerminal }) => {
   const currentBackground = useSelector(
     ({ data }) => data.theme.currentBackground
   );
-
   const parallaxEnabled = useSelector(
     ({ data }) => data.backgrounds[currentBackground]?.parallaxEnabled
   );
@@ -35,17 +33,22 @@ const Background = ({ isTerminal }) => {
   const isForegroundAuto = useSelector(
     ({ data }) => data.backgrounds[currentBackground]?.isForegroundAuto
   );
-  // const unsplashCollections = useSelector(
-  //   ({ data }) => data.unsplashCollections
-  // );
   const [background, setBackground] = useState(null);
   useEffect(() => {
+    console.log(currentBackground);
     if (backgrounds[currentBackground]) {
       const { id, cssValue } = backgrounds[currentBackground];
       if (id) {
         (async () => {
-          const blob = await localforage.getItem(id);
-          setBackground(`url('${window.URL.createObjectURL(blob)}')`);
+          let blob;
+          while (!blob) {
+            blob = await localforage.getItem(id);
+            console.log("object");
+
+            try {
+              setBackground(`url('${window.URL.createObjectURL(blob)}')`);
+            } catch (error) {}
+          }
         })();
       }
       if (cssValue) setBackground(cssValue);
@@ -77,43 +80,27 @@ const Background = ({ isTerminal }) => {
       );
     }
   }, [background, isForegroundAuto]);
-  useEffect(() => {
-    // if (background === "unsplash") {
-    //   unsplash
-    //     .get("/random", {
-    //       params: {
-    //         collections: unsplashCollections,
-    //       },
-    //     })
-    //     .then(async ({ data }) => {
-    //       const blob = await fetch(data.urls.full).then((r) => r.blob());
-    //       setBackground(blob);
-    //     });
-    // }
-  }, [background]);
 
   return (
-    <BackgroundWrapper>
-      <BackgroundDiv
-        parallax={parallax}
-        scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
-        background={background}
-        blur={
-          isTaskbarEdit
-            ? blur?.setting
-            : isTerminal
-            ? blur?.terminal
-            : blur?.notTerminal
-        }
-        brightness={
-          isTaskbarEdit
-            ? brightness?.setting
-            : isTerminal
-            ? brightness?.terminal
-            : brightness?.notTerminal
-        }
-      />
-    </BackgroundWrapper>
+    <StyledBackground
+      parallax={parallax}
+      scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
+      background={background}
+      blur={
+        isTaskbarEdit
+          ? blur?.setting
+          : isTerminal
+          ? blur?.terminal
+          : blur?.notTerminal
+      }
+      brightness={
+        isTaskbarEdit
+          ? brightness?.setting
+          : isTerminal
+          ? brightness?.terminal
+          : brightness?.notTerminal
+      }
+    />
   );
 };
 

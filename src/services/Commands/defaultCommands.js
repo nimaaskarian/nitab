@@ -5,7 +5,11 @@ import {
   addBackground,
   deleteBackground,
   setCurrentBackground,
+  toggleIsBackgroundRandom,
 } from "store/actions";
+import { unsplash } from "apis";
+import axios from "axios";
+import { addBlobAsBackground } from "services/Images";
 
 const defaultCommands = {
   date: {
@@ -53,7 +57,6 @@ const defaultCommands = {
   par: {
     function(input) {
       const index = store.getState().data.theme.currentBackground;
-      console.log(index);
       if (!parseFloat(input))
         return () => () => store.dispatch(actions.toggleParallaxEnabled(index));
       return () => () =>
@@ -72,14 +75,14 @@ const defaultCommands = {
         async ({ altKey }) => {
           const url = "chrome://" + (sums[input] || input);
           if (altKey) {
-            chrome.tabs.getCurrent(({ id, index }) => {
-              chrome.tabs.create({
+            chrome?.tabs.getCurrent(({ id, index }) => {
+              chrome?.tabs.create({
                 url,
                 index,
               });
-              chrome.tabs.remove(id);
+              chrome?.tabs.remove(id);
             });
-          } else chrome.tabs.create({ url });
+          } else chrome?.tabs.create({ url });
         };
     },
   },
@@ -95,7 +98,36 @@ const defaultCommands = {
   },
   imp: {
     function() {
-      return () => () => store.dispatch(actions.importData());
+      return () => () => {
+        const fileReader = new window.FileReader();
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.style.opacity = "0";
+        input.style.position = "absolute";
+        input.style.bottom = "0";
+        document.body.appendChild(input);
+        input.click();
+        input.addEventListener("change", () => {
+          if (!input.files.length || input.files.length > 1) return;
+          fileReader.readAsText(input.files[0]);
+          fileReader.onload = ({ target: { result } }) => {
+            const dataKeys = Object.keys(store.getState().data);
+            const data = JSON.parse(result);
+            const filteredEnteries = Object.entries(data).map(
+              ([key, value]) => {
+                if (dataKeys.includes(key)) return [key, value];
+                return [key, null];
+              }
+            );
+            // .filter(([key, value]) => !!value);
+
+            store.dispatch(
+              actions.importData(Object.fromEntries(filteredEnteries))
+            );
+          };
+        });
+      };
     },
   },
   mag: {
@@ -145,6 +177,25 @@ const defaultCommands = {
   },
   bg: {
     function(input) {
+      if (input === "random") {
+        store.dispatch(toggleIsBackgroundRandom());
+      }
+      if (input === "un") {
+        const collections = store.getState().data.theme.unsplashCollections;
+        return () => async () => {
+          const { data } = await unsplash.get("/random", {
+            params: {
+              collections,
+            },
+          });
+
+          const blobResult = await axios.get(data.urls.regular, {
+            responseType: "blob",
+          });
+
+          addBlobAsBackground(blobResult.data);
+        };
+      }
       const [first, second] = input.split(" ");
       if (+first || first === "0") {
         if (second === "delete")
@@ -199,10 +250,6 @@ const defaultCommands = {
         .filter((e) => !!e);
       const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
       const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
-      // store.dispatch(setTempColor(color));
-
-      // store.dispatch(setTempIcon(icon));
-
       if (["command", "commandCl"].includes(commandName)) return;
       return () => {
         switch ((commandFunctions[0] || "").toLowerCase()) {
@@ -233,6 +280,7 @@ const defaultCommands = {
         return () => () => store.dispatch(actions.resetStorage());
       }
     },
+    icon: "fa fa-trash",
   },
   url: {
     function(input) {
@@ -250,18 +298,18 @@ const defaultCommands = {
     icon: "fa fa-globe",
   },
   search: {
-    function(input) {
-      try {
-        if (chrome.search.query)
-          return () =>
-            ({ altKey }) => {
-              chrome.search.query({
-                disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-                text: input,
-              });
-            };
-      } catch (error) {}
-      return defaultCommands.g.function(input);
+    function(text) {
+      text = encodeURIComponent(text);
+      if (chrome?.search.query)
+        return () =>
+          ({ altKey }) => {
+            chrome?.search.query({
+              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+              text,
+            });
+          };
+
+      return defaultCommands.g.function(text);
     },
     icon: "fa fa-search",
   },
@@ -271,6 +319,7 @@ const defaultCommands = {
         return "https://www.google.com/search?q=" + input;
       };
     },
+    icon: "fab fa-google",
   },
   b: {
     function(input) {
@@ -284,9 +333,10 @@ const defaultCommands = {
         };
       }
       return () => () => {
-        chrome.bookmarks.create(tempObj);
+        chrome?.bookmarks.create(tempObj);
       };
     },
+    icon: "fa fa-bookmark",
   },
   tr: {
     function(input) {
@@ -319,6 +369,7 @@ const defaultCommands = {
         };
       }
     },
+    icon: "fa fa-language",
   },
   taskbar: {
     function() {

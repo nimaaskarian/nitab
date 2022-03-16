@@ -10,15 +10,18 @@ import CommandsContext from "context/CommandsContext";
 import {
   TerminalInput,
   TerminalOutput,
-  TerminalDiv,
+  StyledTerminal,
   TerminalAutoCompleteWrapper,
 } from "./style";
 import CurrentColorContext from "context/CurrentColorContext";
+import SearchResultList from "components/SearchResultList";
+import SearchMode from "components/SearchMode";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const { commands } = useContext(CommandsContext);
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
+
   const enterOpensNewtab = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
@@ -27,7 +30,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const currentCommand = useMemo(() => {
     const { name, args } = termToCommand(term, identifier, commands);
-    return { ...commands[name], args };
+    return { ...commands[name], args, name };
   }, [term, identifier, commands]);
   const currentColor = useMemo(() => {
     return isOvr ? color : currentCommand.color || color;
@@ -67,7 +70,11 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     };
   }, [handleSubmit]);
   return (
-    <TerminalDiv isRtl={/^[\u0600-\u06FF\s]+/.test(term)} color={currentColor}>
+    <StyledTerminal
+      isRtl={/^[\u0600-\u06FF\s]+/.test(term)}
+      color={currentColor}
+    >
+      <SearchMode />
       <TerminalAutoCompleteWrapper>
         <TerminalInput
           value={term}
@@ -84,7 +91,12 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>
       <TerminalOutput className={currentCommand.icon || "fa fa-terminal"} />
-    </TerminalDiv>
+      <SearchResultList
+        term={term}
+        currentCommand={currentCommand}
+        searchCommand={commands.search}
+      />
+    </StyledTerminal>
   );
 });
 

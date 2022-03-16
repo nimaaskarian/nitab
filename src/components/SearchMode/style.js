@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
-export const SearchModeDiv = styled.div`
-  animation: moveFromLeft 0.75s ease-out;
+export const StyledSearchMode = styled.div`
   position: absolute;
   left: 0px;
   top: 0px;

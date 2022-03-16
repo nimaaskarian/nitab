@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const BackgroundDiv = styled.div`
+export const StyledBackground = styled.div`
   margin-left: ${({ parallax }) => parallax.x}vw;
   margin-top: ${({ parallax }) => parallax.y}vh;
   transform: scale(${({ scale }) => scale});
@@ -22,8 +22,6 @@ export const BackgroundDiv = styled.div`
   background-position-y: center !important;
   background-size: cover !important;
   transition: 450ms cubic-bezier(0.65, 0.05, 0.36, 1), margin 300ms ease-out;
-`;
-export const BackgroundWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: hidden;

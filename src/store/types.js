@@ -43,6 +43,7 @@ const types = {
   RESET_STORAGE: "reset-storage",
 
   SET_CURRENT_BACKGROUND: "set-current-background",
+  TOGGLE_IS_BACKGROUND_RANDOM: "toggle-is-background-random",
 
   SET_BLUR: "set-blur",
   SET_BRIGHTNESS: "set-brightness",

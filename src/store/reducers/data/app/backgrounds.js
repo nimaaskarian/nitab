@@ -44,7 +44,6 @@ export default function backgroundsReducer(
       return changeIndexProperty(state, index, { brightness });
     }
     case types.TOGGLE_PARALLAX_ENABLED: {
-      console.log(action.payload, state);
       return changeIndexProperty(state, action.payload, {
         parallaxEnabled: !state[action.payload].parallaxEnabled,
       });

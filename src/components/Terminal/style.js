@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { isDark } from "services/Styles";
-export const TerminalDiv = styled.div`
+export const StyledTerminal = styled.div`
   direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
   & > span {
     ${({ isRtl }) => (isRtl ? "padding-right" : "padding-left")}:15px;
@@ -8,7 +8,6 @@ export const TerminalDiv = styled.div`
   z-index: 4;
   align-items: center;
   display: flex;
-  margin-top: -10px;
   width: 90vw;
   flex-direction: row;
   justify-content: space-between;

@@ -56,9 +56,8 @@ const Weather = (props) => {
   const tempHide = () => setTempVisible(false);
 
   const spanStyle = { margin: "0 5px" };
-  useEffect(() => {
-    setWeatherData(city);
-  }, [city]);
+ 
+  
 
   const renderedWeather = (props) => {
     if (data && data.main) {

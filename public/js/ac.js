@@ -4,3 +4,5 @@ function autocompleteCallback(e) {
   evt.ac = e;
   document.dispatchEvent(evt);
 }
+
+var chrome = chrome || null;

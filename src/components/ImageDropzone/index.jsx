@@ -1,6 +1,14 @@
-import React from "react";
+import useDidMountEffect from "hooks/useDidMountEffect";
+import useImageDrop from "hooks/useImageDrop";
+import React, { useEffect } from "react";
 import { ImageDropzoneContainer } from "./style";
-const ImageDropzone = ({ getRootProps, getInputProps }) => {
+const ImageDropzone = (props) => {
+  const { isDragAccept, getRootProps, getInputProps } = useImageDrop();
+
+  useDidMountEffect(() => {
+    props.onIsDragAcceptChange(isDragAccept);
+  }, [isDragAccept]);
+
   return (
     <ImageDropzoneContainer
       {...getRootProps()}
