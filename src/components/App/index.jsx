@@ -30,7 +30,6 @@ const App = () => {
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const isRandom = useSelector(({ data }) => data.theme.isBackgroundRandom);
-  console.log(isRandom);
   const terminal = useRef();
 
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
@@ -48,7 +47,6 @@ const App = () => {
   useEffect(() => {
     const termFromQuery = new URLSearchParams(window.location.search).get("t");
     if (termFromQuery) dispatch(setTerm(termFromQuery));
-    console.log(isRandom);
     if (isRandom) {
       dispatch(setCurrentBackground("random"));
     }

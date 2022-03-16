@@ -35,7 +35,6 @@ const Background = ({ isTerminal }) => {
   );
   const [background, setBackground] = useState(null);
   useEffect(() => {
-    console.log(currentBackground);
     if (backgrounds[currentBackground]) {
       const { id, cssValue } = backgrounds[currentBackground];
       if (id) {
@@ -43,8 +42,6 @@ const Background = ({ isTerminal }) => {
           let blob;
           while (!blob) {
             blob = await localforage.getItem(id);
-            console.log("object");
-
             try {
               setBackground(`url('${window.URL.createObjectURL(blob)}')`);
             } catch (error) {}
