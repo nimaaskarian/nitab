@@ -54,7 +54,6 @@ const App = () => {
     }
   }, []);
   useEffect(() => {
-    console.log("app rerender");
     const onKeydown = (e) => {
       if (
         mutedKeys.includes(e.key) ||

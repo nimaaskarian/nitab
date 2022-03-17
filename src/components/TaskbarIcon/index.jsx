@@ -1,6 +1,6 @@
 // eslint-disable-next-line jsx-a11y/anchor-has-content
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { deleteTaskbarIcon, setCurrentDragging } from "store/actions";
@@ -18,15 +18,15 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
       isDragging: !!monitor.isDragging(),
     }),
   }));
-  console.log("s", isDragging);
   useEffect(() => {
-    console.log("isDragging change", isDragging);
     if (isDragging) {
       if (props.index === -1) {
         const propsCopy = { ...props };
         delete propsCopy.index;
         dispatch(setCurrentDragging(propsCopy));
       } else dispatch(setCurrentDragging(props.index));
+    } else {
+      dispatch(setCurrentDragging(-1));
     }
   }, [isDragging]);
 

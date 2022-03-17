@@ -16,10 +16,17 @@ const TaskbarDrop = ({ index }) => {
       accept: "taskbar-icon",
       drop: () => {
         if (currentDragging === -1) return;
-        if (typeof currentDragging === "object")
+        if (typeof currentDragging === "object") {
           dispatch(addTaskbarIcon(currentDragging, index));
-        else dispatch(changeTaskbarIconIndex(currentDragging, index));
-        dispatch(setCurrentDragging(-1));
+        } else {
+          if (![0, 1].includes(index - currentDragging)) {
+            let newIndex = 0;
+            if (index > currentDragging) newIndex = index - 1;
+            else newIndex = index;
+
+            dispatch(changeTaskbarIconIndex(currentDragging, newIndex));
+          }
+        }
       },
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),

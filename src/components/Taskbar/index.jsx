@@ -8,25 +8,22 @@ import TaskbarDrop from "../TaskbarDrop";
 import { StyledTaskbar } from "./style";
 const Taskbar = () => {
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const icons = useSelector(({ data }) =>
-    data.taskbar.icons.map((e) => {
-      return { ...e, key: nanoid(10) };
-    })
-  );
+  const icons = useSelector(({ data }) => data.taskbar.icons);
 
   const renderedIcons = useMemo(() => {
     const reduced = icons.reduce((acc, cur, index) => {
       return acc.concat([
-        <TaskbarDrop index={index} />,
+        <TaskbarDrop key={nanoid(10)} index={index} />,
         <TaskbarIcon
           {...cur}
-          key={cur.key}
+          key={nanoid(10)}
           index={index}
           ref={(el) => (iconsRefs.current[index] = el)}
         />,
       ]);
     }, []);
-    return [...reduced, <TaskbarDrop index={icons.length} />];
+
+    return [...reduced, <TaskbarDrop key={nanoid(10)} index={icons.length} />];
   }, [icons]);
   const iconsRefs = useRef([]);
 
