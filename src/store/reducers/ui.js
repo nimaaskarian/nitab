@@ -7,10 +7,13 @@ const INITIAL_STATE = {
   addtaskbarIndex: null,
   isFetchingImage: false,
   imageLoaded: 0,
+  currentDragging: -1,
 };
 
 const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
   switch (type) {
+    case "SET_CURRENT_DRAGGING":
+      return { ...state, currentDragging: payload };
     case "TOGGLE_TASKBAR_EDIT":
       return { ...state, isTaskbarEdit: payload };
     case "SET_TERM":

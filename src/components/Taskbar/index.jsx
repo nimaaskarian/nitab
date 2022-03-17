@@ -1,8 +1,11 @@
 import { nanoid } from "nanoid";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { useSelector } from "react-redux";
 
 import TaskbarIcon from "../TaskbarIcon";
+import TaskbarDrop from "../TaskbarDrop";
 
 import { StyledTaskbar } from "./style";
 const Taskbar = () => {
@@ -12,6 +15,21 @@ const Taskbar = () => {
       return { ...e, key: nanoid(10) };
     })
   );
+
+  const renderedIcons = useMemo(() => {
+    const reduced = icons.reduce((acc, cur, index) => {
+      return acc.concat([
+        <TaskbarDrop index={index} />,
+        <TaskbarIcon
+          {...cur}
+          key={cur.key}
+          index={index}
+          ref={(el) => (iconsRefs.current[index] = el)}
+        />,
+      ]);
+    }, []);
+    return [...reduced, <TaskbarDrop index={icons.length} />];
+  }, [icons]);
   const iconsRefs = useRef([]);
 
   const magnify = useSelector(({ data }) => data.taskbar.magnify);
@@ -55,17 +73,7 @@ const Taskbar = () => {
         });
       }}
     >
-      {icons.map((icon, index) => {
-        console.log(icon);
-        return (
-          <TaskbarIcon
-            {...icon}
-            key={icon.key}
-            index={index}
-            ref={(el) => (iconsRefs.current[index] = el)}
-          />
-        );
-      })}
+      <DndProvider backend={HTML5Backend}>{renderedIcons}</DndProvider>
     </StyledTaskbar>
   );
 };

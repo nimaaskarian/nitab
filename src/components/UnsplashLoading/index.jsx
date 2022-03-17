@@ -13,7 +13,6 @@ const UnsplashLoading = ({ onLoaded }) => {
     }
   }, [imageLoaded]);
 
-  console.log(imageLoaded);
   return (
     <LoadingWrapper>
       <i className="fa fa-spinner"></i>

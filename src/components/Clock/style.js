@@ -4,7 +4,6 @@ export const StyledClock = styled.div`
   display: flex;
   flex-direction: column;
   ${({ position }) => {
-    console.log(position);
     return `
     position: ${position === "center" ? "" : "absolute"};
     top: ${position === "center" ? "" : "20px"};

@@ -33,6 +33,12 @@ export function toggleIsFetchingImage() {
     type: "TOGGLE_IS_FETCHING_IMAGE",
   };
 }
+export function setCurrentDragging(index) {
+  return {
+    type: "SET_CURRENT_DRAGGING",
+    payload: index,
+  };
+}
 export function setImageLoaded(loaded) {
   return {
     type: "SET_IMAGE_LOADED",

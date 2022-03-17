@@ -8,7 +8,14 @@ export default function taskbarReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.ADD_TASKBAR_ICON:
       return { ...state, icons: [...state.icons, action.payload] };
-
+    case types.CHANGE_TASKBAR_ICON_INDEX: {
+      const [prevIndex, newIndex] = action.payload;
+      const icon = state.icons[prevIndex];
+      const iconsCopy = [...state.icons];
+      iconsCopy.splice(prevIndex, 1);
+      iconsCopy.splice(newIndex, 0, icon);
+      return { ...state, icons: iconsCopy };
+    }
     case types.EDIT_TASKBAR_ICON:
       return {
         ...state,
