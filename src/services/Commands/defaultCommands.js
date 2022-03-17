@@ -139,12 +139,14 @@ const defaultCommands = {
   // gr() {
   //   return () => () => store.dispatch(actions.toggleGradient());
   // },
-  ac(input) {
-    return () => () => {
-      if (!+input && input !== "0")
-        store.dispatch(actions.toggleSuggestCommandsEnabled());
-      else store.dispatch(actions.setSuggestCommandsCount(+input));
-    };
+  ac: {
+    function(input) {
+      return () => () => {
+        if (!+input && input !== "0")
+          store.dispatch(actions.toggleSuggestCommandsEnabled());
+        else store.dispatch(actions.setSuggestCommandsCount(+input));
+      };
+    },
   },
   bl: {
     function(input) {

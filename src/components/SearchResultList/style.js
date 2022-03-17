@@ -9,4 +9,7 @@ export const StyledSearchResultList = styled.div`
   justify-content: space-around;
   position: absolute;
   margin-top: 50px;
+  & * {
+    color: inherit !important;
+  }
 `;

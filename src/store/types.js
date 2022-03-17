@@ -18,7 +18,6 @@ const types = {
 
   ADD_TASKBAR_ICON: "add-taskbar-icon",
   EDIT_TASKBAR_ICON: "edit-taskbar-icon",
-  EDIT_EMPTY_ICON_TASKBAR: "edit-empty-taskbar-icon",
   DELETE_TASKBAR_ICON: "delete-taskbar-icon",
   TOGGLE_TASKBAR_MAGNIFY: "toggle-taskbar-magnify",
 

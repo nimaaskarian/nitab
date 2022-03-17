@@ -202,16 +202,10 @@ export function deleteTaskbarIcon(index) {
     payload: index,
   };
 }
-export function editTaskbarIcon(icon) {
+export function editTaskbarIcon(index, icon) {
   return {
     type: types.EDIT_TASKBAR_ICON,
-    payload: icon,
-  };
-}
-export function editEmptyIconTaskbar(icon) {
-  return {
-    type: types.EDIT_EMPTY_ICON_TASKBAR,
-    payload: icon,
+    payload: { index, icon },
   };
 }
 export function resetStorage() {

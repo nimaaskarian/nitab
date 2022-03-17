@@ -11,7 +11,7 @@ import {
 } from "store/actions";
 
 import Terminal from "../Terminal";
-
+import Taskbar from "../Taskbar";
 import Background from "../Background";
 import ImageDropzone from "../ImageDropzone";
 import useCommands from "hooks/useCommands";
@@ -22,7 +22,7 @@ import mutedKeys from "services/Lists/mutedKeys";
 
 import CommandsContext from "context/CommandsContext";
 
-import { AppContainer } from "./style";
+import { AppContainer, MainAndTaskbarWrapper } from "./style";
 import Main from "components/Main";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
@@ -114,7 +114,13 @@ const App = () => {
   }, [isTaskbarEdit]);
 
   const RenderedContent = () => {
-    if (!isTerminal) return <Main />;
+    if (!isTerminal)
+      return (
+        <>
+          <Main />
+          <Taskbar />
+        </>
+      );
     return (
       <CommandsContext.Provider value={commands}>
         <Terminal ref={terminal} />

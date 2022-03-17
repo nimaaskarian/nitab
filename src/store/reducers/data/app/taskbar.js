@@ -6,20 +6,20 @@ const INITIAL_STATE = {
 };
 export default function taskbarReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case types.ADD_TASKBAR_ICON: {
-      const iconsCopy = [...state.icons];
-      iconsCopy.splice(action.payload.index, 0, action.payload);
-      return { ...state, icons: iconsCopy };
-    }
+    case types.ADD_TASKBAR_ICON:
+      return { ...state, icons: [...state.icons, action.payload] };
 
     case types.EDIT_TASKBAR_ICON:
-      return state.replace(action.payload.index, action.payload);
-
-    case types.EDIT_EMPTY_ICON_TASKBAR:
-      return state.before(action.payload.index, action.payload);
+      return {
+        ...state,
+        icons: state.icons.replace(action.payload.index, action.payload.icon),
+      };
 
     case types.DELETE_TASKBAR_ICON:
-      return state.delete(action.payload);
+      return {
+        ...state,
+        icons: state.delete(action.payload),
+      };
 
     case types.TOGGLE_TASKBAR_MAGNIFY:
       return { ...state, magnify: action.payload };

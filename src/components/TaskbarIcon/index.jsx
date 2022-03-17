@@ -1,45 +1,40 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { setAddTaskbarIndex, deleteTaskbarIcon } from "store/actions";
+import { deleteTaskbarIcon } from "store/actions";
 
 import defaultCommands from "services/Commands/defaultCommands";
 
 import { TaskbarIconElement } from "./style";
 
-const TaskbarIcon = (props) => {
+const TaskbarIcon = React.forwardRef((props, ref) => {
   const dispatch = useDispatch();
 
-  const isEmpty = props.icon === "empty";
-  if (isEmpty)
-    return (
-      <div
-        style={{
-          backgroundColor: props.bgColor,
-          cursor: "default",
-          width: "7px",
-          height: "35px",
-          display: "inline-block",
-        }}
-        onClick={() => dispatch(deleteTaskbarIcon(props.id))}
-      />
-    );
+  const enterOpensNewtab = useSelector(
+    ({ data }) => data.terminal.enterOpensNewtab
+  );
+  const { r, g, b, a } = props.color;
+  console.log(props.icon);
+  console.log(props.marginLeft);
   return (
     // eslint-disable-next-line jsx-a11y/anchor-has-content
     <TaskbarIconElement
-      onDoubleClick={() => dispatch(deleteTaskbarIcon(props.id))}
-      color={props.color}
-      target={props.isBlank ? "_blank" : "_self"}
-      className={"taskbar-icon " + props.icon}
-      href={props.url ? defaultCommands.url(props.url)() : "#"}
-      onClick={(e) => {
-        if (!props.url) {
-          e.preventDefault();
-          dispatch(setAddTaskbarIndex(props.index));
-        }
-      }}
+      ref={ref}
+      onDoubleClick={() => dispatch(deleteTaskbarIcon(props.index))}
+      color={`rgba(${r},${g},${b},${a})`}
+      marginLeft={props.marginLeft}
+      marginRight={props.marginRight}
+      target={enterOpensNewtab ? "_self" : "_blank"}
+      className={props.icon}
+      href={props.url ? defaultCommands.url.function(props.url)() : "#"}
+      // onClick={(e) => {
+      //   if (!url) {
+      //     e.preventDefault();
+      //     dispatch(setAddTaskbarIndex(index));
+      //   }
+      // }}
       rel="noreferrer"
     ></TaskbarIconElement>
   );
-};
+});
 export default TaskbarIcon;
