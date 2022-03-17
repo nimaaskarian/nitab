@@ -24,6 +24,8 @@ import CommandsContext from "context/CommandsContext";
 
 import { AppContainer, MainAndTaskbarWrapper } from "./style";
 import Main from "components/Main";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
   const commands = useCommands();
@@ -52,6 +54,7 @@ const App = () => {
     }
   }, []);
   useEffect(() => {
+    console.log("app rerender");
     const onKeydown = (e) => {
       if (
         mutedKeys.includes(e.key) ||
@@ -116,10 +119,10 @@ const App = () => {
   const RenderedContent = () => {
     if (!isTerminal)
       return (
-        <>
+        <DndProvider backend={HTML5Backend}>
           <Main />
           <Taskbar />
-        </>
+        </DndProvider>
       );
     return (
       <CommandsContext.Provider value={commands}>

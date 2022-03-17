@@ -1,7 +1,12 @@
 import React from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTaskbarIconIndex } from "store/actions";
+import {
+  addTaskbarIcon,
+  changeTaskbarIconIndex,
+  setCurrentDragging,
+} from "store/actions";
+import { StyledTaskbarDrop } from "./style";
 
 const TaskbarDrop = ({ index }) => {
   const currentDragging = useSelector(({ ui }) => ui.currentDragging);
@@ -10,7 +15,11 @@ const TaskbarDrop = ({ index }) => {
     () => ({
       accept: "taskbar-icon",
       drop: () => {
-        dispatch(changeTaskbarIconIndex(currentDragging, index));
+        if (currentDragging === -1) return;
+        if (typeof currentDragging === "object")
+          dispatch(addTaskbarIcon(currentDragging, index));
+        else dispatch(changeTaskbarIconIndex(currentDragging, index));
+        dispatch(setCurrentDragging(-1));
       },
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),
@@ -18,7 +27,13 @@ const TaskbarDrop = ({ index }) => {
     }),
     [index, currentDragging]
   );
-  return <div style={{ width: "8px" }} ref={drop}></div>;
+  return (
+    <StyledTaskbarDrop
+      isOver={isOver}
+      visible={currentDragging !== -1}
+      ref={drop}
+    />
+  );
 };
 
 export default TaskbarDrop;

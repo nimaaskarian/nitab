@@ -190,10 +190,10 @@ export function circleSearchMode() {
     type: types.CIRCLE_SEARCHMODE,
   };
 }
-export function addTaskbarIcon(icon) {
+export function addTaskbarIcon(icon, index) {
   return {
     type: types.ADD_TASKBAR_ICON,
-    payload: icon,
+    payload: { icon, index },
   };
 }
 export function changeTaskbarIconIndex(prevIndex, newIndex) {

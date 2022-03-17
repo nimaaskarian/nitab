@@ -1,7 +1,5 @@
 import { nanoid } from "nanoid";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { useSelector } from "react-redux";
 
 import TaskbarIcon from "../TaskbarIcon";
@@ -34,8 +32,8 @@ const Taskbar = () => {
 
   const magnify = useSelector(({ data }) => data.taskbar.magnify);
   const handleKeydown = (e) => {
-    e.preventDefault();
     if ((e.altKey || e.ctrlKey) && +e.key) {
+      e.preventDefault();
       iconsRefs.current[+e.key].click();
     }
   };
@@ -73,7 +71,7 @@ const Taskbar = () => {
         });
       }}
     >
-      <DndProvider backend={HTML5Backend}>{renderedIcons}</DndProvider>
+      {renderedIcons}
     </StyledTaskbar>
   );
 };
