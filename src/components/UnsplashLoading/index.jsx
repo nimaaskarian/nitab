@@ -3,20 +3,20 @@ import { useSelector } from "react-redux";
 import { LoadingWrapper } from "./style";
 
 const UnsplashLoading = ({ onLoaded }) => {
-  const imageLoaded = useSelector(
-    ({ ui }) => Math.round(ui.imageLoaded * 100) / 100
+  const loadedPercentage = useSelector(({ ui }) =>
+    Math.round(ui.imageLoaded * 100)
   );
 
   useEffect(() => {
-    if (imageLoaded === 1) {
+    if (loadedPercentage === 100) {
       onLoaded();
     }
-  }, [imageLoaded]);
+  }, [loadedPercentage]);
 
   return (
     <LoadingWrapper>
       <i className="fa fa-spinner"></i>
-      <span>{imageLoaded * 100}%</span>
+      <span>{loadedPercentage}%</span>
     </LoadingWrapper>
   );
 };

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledSearchResult = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   padding: 10px;
   width: 40%;
   cursor: pointer;
@@ -10,6 +10,7 @@ export const StyledSearchResult = styled.div`
   text-overflow: ellipsis;
   z-index: 4;
   user-select: none;
+  
   & h3 {
     margin: 0;
   }

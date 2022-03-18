@@ -28,10 +28,10 @@ const SearchResult = ({ result }) => {
         }
       }}
     >
-      <h3>
+      <h5>
         <SearchResultIcon className={icon} />
         {result.title}
-      </h3>
+      </h5>
       <p>{result.url}</p>
     </StyledSearchResult>
   );

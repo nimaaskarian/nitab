@@ -42,7 +42,7 @@ export default function taskbarReducer(state = INITIAL_STATE, action) {
         icons: INITIAL_STATE.icons,
       };
     case types.TOGGLE_TASKBAR_MAGNIFY:
-      return { ...state, magnify: action.payload };
+      return { ...state, magnify: !state.magnify };
     default:
       return state;
   }
