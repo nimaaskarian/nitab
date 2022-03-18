@@ -46,6 +46,7 @@ const Taskbar = () => {
     (e) => {
       if (!isTaskbarEdit && magnify)
         iconsRefs.current.forEach((iconRef) => {
+          if (!iconRef) return;
           const { left } = iconRef.getBoundingClientRect();
           let distance =
             Math.abs(e.clientX - left - iconRef.offsetWidth / 2) / 30;
@@ -64,6 +65,7 @@ const Taskbar = () => {
       onMouseMove={onTaskbarMouseMove}
       onMouseOut={() => {
         iconsRefs.current.forEach((iconRef) => {
+          if (!iconRef) return;
           iconRef.style.fontSize = "35px";
         });
       }}

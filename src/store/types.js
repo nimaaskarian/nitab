@@ -21,6 +21,7 @@ const types = {
   DELETE_TASKBAR_ICON: "delete-taskbar-icon",
   CHANGE_TASKBAR_ICON_INDEX: "change-taskbar-icon-index",
   TOGGLE_TASKBAR_MAGNIFY: "toggle-taskbar-magnify",
+  RESET_TASKBAR_ICONS: "reset-taskbar-icons",
 
   SET_CLOCK_POSITION: "set-clock-position",
   SET_CLOCK_ALIGN: "set-clock-align",

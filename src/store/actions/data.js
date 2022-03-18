@@ -196,6 +196,11 @@ export function addTaskbarIcon(icon, index) {
     payload: { icon, index },
   };
 }
+export function resetTaskbarIcons() {
+  return {
+    type: types.RESET_TASKBAR_ICONS,
+  };
+}
 export function changeTaskbarIconIndex(prevIndex, newIndex) {
   return {
     type: types.CHANGE_TASKBAR_ICON_INDEX,
@@ -208,7 +213,7 @@ export function deleteTaskbarIcon(index) {
     payload: index,
   };
 }
-export function editTaskbarIcon(index, icon) {
+export function editTaskbarIcon(icon, index) {
   return {
     type: types.EDIT_TASKBAR_ICON,
     payload: { index, icon },

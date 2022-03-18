@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const InputWrapper = styled.div`
+  padding: 2px;
   font-size: 16px;
   flex-grow: 1;
   display: flex;
@@ -14,7 +15,7 @@ export const InputErrorNotifier = styled.span`
   }
 `;
 export const StyledInput = styled.input`
-  max-width: 150px;
+  width: 100%;
   font-size: 16px;
   background: transparent;
   font-family: inherit;

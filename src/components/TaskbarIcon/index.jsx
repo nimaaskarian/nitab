@@ -3,7 +3,11 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { deleteTaskbarIcon, setCurrentDragging } from "store/actions";
+import {
+  deleteTaskbarIcon,
+  setCurrentDragging,
+  setEditTaskbarIndex,
+} from "store/actions";
 
 import defaultCommands from "services/Commands/defaultCommands";
 
@@ -11,6 +15,13 @@ import { TaskbarIconElement, TaskbarIconWrapper } from "./style";
 import { useDrag } from "react-dnd";
 
 const TaskbarIcon = React.forwardRef((props, ref) => {
+  const isBlured = useSelector(
+    ({ ui }) =>
+      ui.isTaskbarEdit &&
+      ui.editTaskbarIndex !== props.index &&
+      props.index !== -1
+  );
+  console.log(isBlured);
   const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "taskbar-icon",
@@ -20,7 +31,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
   }));
   useEffect(() => {
     if (isDragging) {
-      if (props.index === -1) {
+      if (props.index === -1 && props.icon) {
         const propsCopy = { ...props };
         delete propsCopy.index;
         dispatch(setCurrentDragging(propsCopy));
@@ -42,6 +53,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         onDoubleClick={() => dispatch(deleteTaskbarIcon(props.index))}
         color={`rgba(${r},${g},${b},${a})`}
         marginLeft={props.marginLeft}
+        isBlured={isBlured}
         marginRight={props.marginRight}
         target={enterOpensNewtab ? "_self" : "_blank"}
         className={props.icon}
@@ -49,6 +61,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         onClick={(e) => {
           if (isTaskbarEdit) {
             e.preventDefault();
+            dispatch(setEditTaskbarIndex(props.index));
           }
         }}
         rel="noreferrer"

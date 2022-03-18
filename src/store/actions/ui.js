@@ -1,8 +1,5 @@
 export function toggleTaskbarEdit() {
-  return (dispatch, getStore) => {
-    const prevTaskbarEdit = getStore().ui.isTaskbarEdit;
-    dispatch({ type: "TOGGLE_TASKBAR_EDIT", payload: !prevTaskbarEdit });
-  };
+  return { type: "TOGGLE_TASKBAR_EDIT" };
 }
 export function setTerm(term) {
   return { type: "SET_TERM", payload: term };
@@ -16,9 +13,9 @@ export function setBackground(bg) {
     payload: bg,
   };
 }
-export function setAddTaskbarIndex(index) {
+export function setEditTaskbarIndex(index) {
   return {
-    type: "SET_ADD_TASKBAR_INDEX",
+    type: "SET_EDIT_TASKBAR_INDEX",
     payload: index,
   };
 }

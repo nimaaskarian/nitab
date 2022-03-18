@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   term: "",
   results: [],
   isTerminal: false,
-  addtaskbarIndex: null,
+  editTaskbarIndex: -1,
   isFetchingImage: false,
   imageLoaded: 0,
   currentDragging: -1,
@@ -15,7 +15,7 @@ const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
     case "SET_CURRENT_DRAGGING":
       return { ...state, currentDragging: payload };
     case "TOGGLE_TASKBAR_EDIT":
-      return { ...state, isTaskbarEdit: payload };
+      return { ...state, isTaskbarEdit: !state.isTaskbarEdit };
     case "SET_TERM":
       return { ...state, term: payload };
     case "TOGGLE_IS_FETCHING_IMAGE":
@@ -28,8 +28,8 @@ const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
       return { ...state, timerEditFocus: payload };
     case "SET_RESULTS":
       return { ...state, results: payload };
-    case "SET_ADD_TASKBAR_INDEX":
-      return { ...state, addtaskbarIndex: payload };
+    case "SET_EDIT_TASKBAR_INDEX":
+      return { ...state, editTaskbarIndex: payload };
     default:
       return state;
   }

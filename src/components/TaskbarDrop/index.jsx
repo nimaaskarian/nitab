@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTaskbarIcon,
   changeTaskbarIconIndex,
-  setCurrentDragging,
+  setEditTaskbarIndex,
 } from "store/actions";
-import { StyledTaskbarDrop } from "./style";
+import { StyledButton, StyledTaskbarDrop } from "./style";
 
-const TaskbarDrop = ({ index }) => {
+const TaskbarDrop = ({ index, children }) => {
   const currentDragging = useSelector(({ ui }) => ui.currentDragging);
+
+  const hasPlus = useSelector(
+    ({ data, ui }) => data.taskbar.icons.length === index && ui.isTaskbarEdit
+  );
   const dispatch = useDispatch();
   const [{ isOver }, drop] = useDrop(
     () => ({
@@ -37,9 +41,17 @@ const TaskbarDrop = ({ index }) => {
   return (
     <StyledTaskbarDrop
       isOver={isOver}
+      hasPlus={hasPlus}
       visible={currentDragging !== -1}
       ref={drop}
-    />
+    >
+      {hasPlus ? (
+        <StyledButton
+          onClick={() => dispatch(setEditTaskbarIndex(-1))}
+          className="fa fa-plus"
+        />
+      ) : null}
+    </StyledTaskbarDrop>
   );
 };
 
