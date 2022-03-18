@@ -1,4 +1,4 @@
-import types from "store/types";
+import types from "store/types/types";
 
 const CLOCK_INITIAL_STATE = {
   position: "center",

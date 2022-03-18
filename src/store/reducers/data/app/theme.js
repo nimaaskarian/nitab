@@ -1,4 +1,4 @@
-import types from "store/types";
+import types from "store/types/types";
 
 const INITIAL_STATE = {
   unsplashCollections: "9389477,908506,219941",

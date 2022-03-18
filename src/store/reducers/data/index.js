@@ -10,7 +10,7 @@ import terminalReducer from "./app/terminal";
 import themeReducer from "./app/theme";
 import clockReducer from "./app/clock";
 
-import types from "store/types";
+import types from "store/types/types";
 
 import { storage } from "..";
 import localforage from "localforage";
