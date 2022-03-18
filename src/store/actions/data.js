@@ -1,6 +1,6 @@
 import { openWeather } from "apis";
 import localforage from "localforage";
-import types from "store/types";
+import types from "store/types/data";
 
 export function addCommand(name, args, icon, color) {
   return {
@@ -136,13 +136,13 @@ export function toggleIsBackgroundRandom() {
     type: types.TOGGLE_IS_BACKGROUND_RANDOM,
   };
 }
-export function addBackground(background) {
+export function addBackground(background, meta) {
   return (dispatch, getState) => {
     const backgroundsLength = getState().data.backgrounds.length;
 
     dispatch({
       type: types.ADD_BACKGROUND,
-      payload: background,
+      payload: { background, meta },
     });
     dispatch(setCurrentBackground(backgroundsLength));
   };

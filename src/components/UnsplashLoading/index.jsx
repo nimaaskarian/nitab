@@ -6,7 +6,6 @@ const UnsplashLoading = ({ onLoaded }) => {
   const loadedPercentage = useSelector(({ ui }) =>
     Math.round(ui.imageLoaded * 100)
   );
-
   useEffect(() => {
     if (loadedPercentage === 100) {
       onLoaded();

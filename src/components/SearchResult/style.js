@@ -11,7 +11,7 @@ export const StyledSearchResult = styled.div`
   z-index: 4;
   user-select: none;
   
-  & h3 {
+  & h4 {
     margin: 0;
   }
   & p {

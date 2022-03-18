@@ -1,4 +1,4 @@
-import types from "store/types";
+import types from "store/types/data";
 
 function todosReducer(state = [], action) {
   switch (action.type) {

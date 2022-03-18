@@ -1,4 +1,4 @@
-import types from "store/types";
+import types from "store/types/data";
 const INITIAL_STATE = {
   searchMode: 1,
   enterOpensNewtab: false,

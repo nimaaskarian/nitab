@@ -37,7 +37,7 @@ const AutocompleteLogic = () => {
   }, [term, identifier]);
 
   const commandSuggestions = useMemo(() => {
-    if (!suggestCommandsEnabled) return [];
+    if (!suggestCommandsEnabled || !term) return [];
     return Object.keys(commands)
       .filter((e) => (identifier + e).includes(term.trim()))
       .sort()
@@ -52,7 +52,7 @@ const AutocompleteLogic = () => {
       .map((phrase) => {
         return {
           key: nanoid(10),
-          phrase: identifier + phrase,
+          phrase: identifier + phrase + " ",
           icon: commands[phrase].icon || "fa fa-terminal",
         };
       });

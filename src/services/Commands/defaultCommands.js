@@ -7,7 +7,7 @@ import {
   setCurrentBackground,
   setImageLoaded,
   toggleIsBackgroundRandom,
-  toggleIsFetchingImage,
+  setIsFetchingImage,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
@@ -185,25 +185,30 @@ const defaultCommands = {
       }
       if (input === "un") {
         const collections = store.getState().data.theme.unsplashCollections;
-        return () => async () => {
-          const {
+        const getAndFetchBackground = async () => {
+          let {
             data: { urls },
           } = await unsplash.get("/random", {
             params: {
               collections,
             },
           });
-          store.dispatch(toggleIsFetchingImage());
+          const metas = store.getState().data.backgrounds?.map((e) => e.meta);
+          if (metas?.includes(urls.full)) return getAndFetchBackground();
+          store.dispatch(setIsFetchingImage(true));
           let blobResult = await axios.get(urls.full, {
             responseType: "blob",
             onDownloadProgress: ({ loaded, total }) => {
               store.dispatch(setImageLoaded(loaded / total));
             },
           });
-          store.dispatch(toggleIsFetchingImage());
+          store.dispatch(setIsFetchingImage(false));
+          store.dispatch(setImageLoaded(0));
 
-          addBlobAsBackground(blobResult.data);
+          addBlobAsBackground(blobResult.data, urls.full);
         };
+
+        return () => getAndFetchBackground;
       }
       const [first, second] = input.split(" ");
       if (+first || first === "0") {
@@ -239,10 +244,11 @@ const defaultCommands = {
       if (input)
         return () => () => {
           store.dispatch(actions.setUnsplashCollections(input));
-          store.dispatch(actions.setBackground("unsplash"));
+          defaultCommands.bg.function("un")()();
         };
       return () => "https://unsplash.com/collections";
     },
+    icon: "fab fa-unsplash",
   },
   commandCl: {
     function(input) {

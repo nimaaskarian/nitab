@@ -1,10 +1,12 @@
-import types from "store/types";
+import types from "store/types/data";
 
 class Background {
-  constructor({ id, cssValue }) {
+  constructor({ id, cssValue }, meta) {
     if (id) this.id = id;
     if (cssValue) this.cssValue = cssValue;
-
+    if (meta) {
+      this.meta = meta;
+    }
     this.parallaxFactor = 5;
     this.parallaxEnabled = false;
     this.blur = {
@@ -30,7 +32,10 @@ export default function backgroundsReducer(
 ) {
   switch (action.type) {
     case types.ADD_BACKGROUND:
-      return [...state, new Background(action.payload)];
+      return [
+        ...state,
+        new Background(action.payload.background, action.payload.meta),
+      ];
     case types.DELETE_BACKGROUND:
       return state.delete(action.payload);
 
