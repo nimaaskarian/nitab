@@ -27,7 +27,7 @@ const changeIndexProperty = (state, index, props) => {
   return stateCopy;
 };
 export default function backgroundsReducer(
-  state = [new Background("#333")],
+  state = [new Background({ cssValue: "#333" })],
   action
 ) {
   switch (action.type) {

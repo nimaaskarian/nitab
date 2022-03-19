@@ -117,7 +117,7 @@ export function setCurrentBackground(input) {
       const max = getState().data.backgrounds.length - 1;
       const { current, list } = getState().data.themes;
       const currentTheme = list[current];
-      
+
       const last = currentTheme.currentBackground;
       let random;
       do {
@@ -132,6 +132,35 @@ export function setCurrentBackground(input) {
   return {
     type: types.SET_CURRENT_BACKGROUND,
     payload: input,
+  };
+}
+export function addTheme() {
+  return {
+    type: types.ADD_THEME,
+  };
+}
+export function deleteTheme(index) {
+  return {
+    type: types.DELETE_THEME,
+    payload: index,
+  };
+}
+export function setCurrentTheme(index) {
+  return {
+    type: types.SET_CURRENT_THEME,
+    payload: index,
+  };
+}
+export function setDarkTheme(index) {
+  return {
+    type: types.SET_DARK_THEME,
+    payload: index,
+  };
+}
+export function setLightTheme(index) {
+  return {
+    type: types.SET_LIGHT_THEME,
+    payload: index,
   };
 }
 export function toggleIsBackgroundRandom() {

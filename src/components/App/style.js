@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { isDark } from "services/Styles";
 export const AppContainer = styled.div`
-  font-family: ${({ font }) => `${font}, FiraCode, IranSans`};
+  font-family: ${({ font }) => `${font}`};
   ${({ color }) => {
     return `& *{
       color:${color};

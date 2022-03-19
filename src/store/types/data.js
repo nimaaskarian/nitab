@@ -55,7 +55,8 @@ const types = {
   ADD_THEME: "add-theme",
   DELETE_THEME: "delete-theme",
   SET_CURRENT_THEME: "set-current-theme",
-
+  SET_DARK_THEME: "set-light-theme",
+  SET_LIGHT_THEME: "set-dark-theme",
   ADD_BACKGROUND: "add-background",
   DELETE_BACKGROUND: "delete-background",
 };

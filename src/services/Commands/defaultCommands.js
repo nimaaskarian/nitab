@@ -8,6 +8,11 @@ import {
   setImageLoaded,
   toggleIsBackgroundRandom,
   setIsFetchingImage,
+  addTheme,
+  setCurrentTheme,
+  deleteTheme,
+  setDarkTheme,
+  setLightTheme,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
@@ -232,6 +237,27 @@ const defaultCommands = {
 
       if (input)
         return () => () => store.dispatch(addBackground({ cssValue: input }));
+    },
+  },
+  themes: {
+    function(input) {
+      const [type, arg] = input.split(/\s/);
+
+      if (type === "add") {
+        return () => () => store.dispatch(addTheme());
+      }
+      if (+type || type === "0") {
+        switch (arg) {
+          case "delete":
+            return () => () => store.dispatch(deleteTheme(+type));
+          case "dark":
+            return () => () => store.dispatch(setDarkTheme(+type));
+          case "light":
+            return () => () => store.dispatch(setLightTheme(+type));
+          default:
+            return () => () => store.dispatch(setCurrentTheme(+type));
+        }
+      }
     },
   },
   fg: {

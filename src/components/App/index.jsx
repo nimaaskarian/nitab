@@ -8,6 +8,7 @@ import {
   toggleEnterOpensNewtab,
   circleSearchMode,
   setCurrentBackground,
+  setCurrentTheme,
 } from "store/actions";
 
 import Terminal from "../Terminal";
@@ -26,8 +27,10 @@ import { AppContainer, MainAndTaskbarWrapper } from "./style";
 import Main from "components/Main";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import useIsThemeDark from "hooks/useIsThemeDark";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
+  console.log("rerender");
   const commands = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
@@ -55,11 +58,22 @@ const App = () => {
       },
     }) => list[current].font
   );
+  const darkIndex = useSelector(({ data: { themes } }) => themes.dark);
+  const lightIndex = useSelector(({ data: { themes } }) => themes.light);
 
+  const isDarkTheme = useIsThemeDark();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 
   useAlert({ isTerminal });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(darkIndex, lightIndex, isDarkTheme);
+    if (darkIndex !== -1 && isDarkTheme) dispatch(setCurrentTheme(darkIndex));
+
+    if (lightIndex !== -1 && !isDarkTheme) dispatch(setCurrentTheme(lightIndex));
+  }, [isDarkTheme, darkIndex, lightIndex]);
+
   useEffect(() => {
     setIsTerminal(!isTermEmpty);
   }, [isTermEmpty]);
@@ -118,7 +132,7 @@ const App = () => {
       if (e.key === "Backspace" && isTermEmpty) return;
       if (!e.altKey) {
         setIsTerminal(true);
-        terminal.current.focus();
+        // terminal.current.focus();
       } else {
         e.preventDefault();
       }
