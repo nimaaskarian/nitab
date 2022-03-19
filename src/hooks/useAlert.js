@@ -7,7 +7,6 @@ import useDidMountEffect from "./useDidMountEffect";
 import AlertComponent from "components/Alert";
 import Todo from "components/Todo";
 import UnsplashLoading from "components/UnsplashLoading";
-import { setImageLoaded } from "store/actions";
 const Alert = (props) => {
   const alert = useAlert();
   const [prevCommands, setPrevCommands] = useState(null);

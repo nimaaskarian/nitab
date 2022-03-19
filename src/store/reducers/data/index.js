@@ -7,10 +7,10 @@ import commandsReducer from "./app/commands";
 import taskbarReducer from "./app/taskbar";
 import todosReducer from "./app/todos";
 import terminalReducer from "./app/terminal";
-import themeReducer from "./app/theme";
+import themesReducer from "./app/themes";
 import clockReducer from "./app/clock";
 
-import types from "store/types/types";
+import types from "store/types/data";
 
 import { storage } from "..";
 import localforage from "localforage";
@@ -80,7 +80,7 @@ function dateReducer(state = DATE_INITIAL_STATE, action) {
 const appReducer = combineReducers({
   terminal: terminalReducer,
   clock: clockReducer,
-  theme: themeReducer,
+  themes: themesReducer,
   date: dateReducer,
   weather: weatherReducer,
   todos: todosReducer,

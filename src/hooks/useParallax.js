@@ -3,7 +3,11 @@ import { useSelector } from "react-redux";
 
 const useParallax = () => {
   const currentBackground = useSelector(
-    ({ data }) => data.theme.currentBackground
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].currentBackground
   );
 
   const parallaxEnabled = useSelector(

@@ -25,7 +25,13 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const enterOpensNewtab = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
-  const { color, isOvr } = useSelector(({ data }) => data.theme.foreground);
+  const { color, isOvr } = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].foreground
+  );
 
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const currentCommand = useMemo(() => {

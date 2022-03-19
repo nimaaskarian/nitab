@@ -115,7 +115,10 @@ export function setCurrentBackground(input) {
   if (input === "random") {
     return (dispatch, getState) => {
       const max = getState().data.backgrounds.length - 1;
-      const last = getState().data.theme.currentBackground;
+      const { current, list } = getState().data.themes;
+      const currentTheme = list[current];
+      
+      const last = currentTheme.currentBackground;
       let random;
       do {
         random = Math.round(Math.random() * max);

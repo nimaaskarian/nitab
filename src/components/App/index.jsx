@@ -31,12 +31,30 @@ const App = () => {
   const commands = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
-  const isRandom = useSelector(({ data }) => data.theme.isBackgroundRandom);
+  const isRandom = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].isBackgroundRandom
+  );
   const terminal = useRef();
 
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const foreground = useSelector(({ data }) => data.theme.foreground);
-  const font = useSelector(({ data }) => data.theme.font);
+  const foreground = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].foreground
+  );
+  const font = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].font
+  );
 
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 

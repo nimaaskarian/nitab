@@ -52,6 +52,10 @@ const types = {
   TOGGLE_PARALLAX_ENABLED: "toggle-parallax-enabled",
   SET_PARALLAX_FACTOR: "set-parallax-factor",
 
+  ADD_THEME: "add-theme",
+  DELETE_THEME: "delete-theme",
+  SET_CURRENT_THEME: "set-current-theme",
+
   ADD_BACKGROUND: "add-background",
   DELETE_BACKGROUND: "delete-background",
 };

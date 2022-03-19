@@ -45,7 +45,13 @@ const icons = {
 const Weather = (props) => {
   const data = useSelector(({ data }) => data.weather.data);
   const city = useSelector(({ data }) => data.weather.city);
-  const fontFamily = useSelector(({ data }) => data.theme.font);
+  const fontFamily = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].font
+  );
 
   const [conditionVisible, setConditionVisible] = useState(false);
   const conditionShow = () => setConditionVisible(true);
@@ -56,8 +62,6 @@ const Weather = (props) => {
   const tempHide = () => setTempVisible(false);
 
   const spanStyle = { margin: "0 5px" };
- 
-  
 
   const renderedWeather = (props) => {
     if (data && data.main) {

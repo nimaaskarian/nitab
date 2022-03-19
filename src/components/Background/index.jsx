@@ -12,7 +12,11 @@ const Background = ({ isTerminal }) => {
   const dispatch = useDispatch();
   const parallax = useParallax();
   const currentBackground = useSelector(
-    ({ data }) => data.theme.currentBackground
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].currentBackground
   );
   const parallaxEnabled = useSelector(
     ({ data }) => data.backgrounds[currentBackground]?.parallaxEnabled
@@ -38,7 +42,6 @@ const Background = ({ isTerminal }) => {
     if (backgrounds[currentBackground]) {
       const { id, cssValue } = backgrounds[currentBackground];
       if (id) {
-        
         (async () => {
           let blob;
           while (!blob) {

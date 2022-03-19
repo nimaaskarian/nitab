@@ -58,11 +58,15 @@ const defaultCommands = {
   },
   par: {
     function(input) {
-      const index = store.getState().data.theme.currentBackground;
+      const { current, list } = store.getState().data.themes;
+      const currentTheme = list[current];
+
+      const bgIndex = currentTheme.currentBackground;
       if (!parseFloat(input))
-        return () => () => store.dispatch(actions.toggleParallaxEnabled(index));
+        return () => () =>
+          store.dispatch(actions.toggleParallaxEnabled(bgIndex));
       return () => () =>
-        store.dispatch(actions.setParallaxFactor(index, parseFloat(input)));
+        store.dispatch(actions.setParallaxFactor(bgIndex, parseFloat(input)));
     },
   },
   c: {
@@ -151,10 +155,13 @@ const defaultCommands = {
   bl: {
     function(input) {
       const [notTerminal, terminal, setting] = input.split(/\s/g);
-      const index = store.getState().data.theme.currentBackground;
+      const { current, list } = store.getState().data.themes;
+      const currentTheme = list[current];
+
+      const bgIndex = currentTheme.currentBackground;
       return () => () =>
         store.dispatch(
-          actions.setBlur(index, {
+          actions.setBlur(bgIndex, {
             terminal: terminal || 0,
             notTerminal: notTerminal || 0,
             setting: setting || "10",
@@ -166,11 +173,14 @@ const defaultCommands = {
     function(input) {
       const [notTerminal, terminal, setting] = input.split(/\s/g);
 
-      const index = store.getState().data.theme.currentBackground;
+      const { current, list } = store.getState().data.themes;
+      const currentTheme = list[current];
+
+      const bgIndex = currentTheme.currentBackground;
 
       return () => () =>
         store.dispatch(
-          actions.setBrightness(index, {
+          actions.setBrightness(bgIndex, {
             terminal: terminal || 1,
             notTerminal: notTerminal || 1,
             setting: setting || ".8",
@@ -184,7 +194,10 @@ const defaultCommands = {
         return () => () => store.dispatch(toggleIsBackgroundRandom());
       }
       if (input === "un") {
-        const collections = store.getState().data.theme.unsplashCollections;
+        const { current, list } = store.getState().data.themes;
+        const currentTheme = list[current];
+
+        const collections = currentTheme.unsplashCollections;
         const getAndFetchBackground = async () => {
           let {
             data: { urls },
