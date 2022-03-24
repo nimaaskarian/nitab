@@ -5,8 +5,8 @@ export const StyledClock = styled.div`
   flex-direction: column;
   ${({ position }) => {
     return `
-    position: ${position === "center" ? "" : "absolute"};
-    top: ${position === "center" ? "" : "20px"};
+    position: ${position !== "center" && "absolute"};
+    top: ${position !== "center" && "20px"};
     ${position}: 5vw;
     `;
   }}

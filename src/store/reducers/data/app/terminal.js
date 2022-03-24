@@ -3,11 +3,14 @@ const INITIAL_STATE = {
   searchMode: 1,
   enterOpensNewtab: false,
   identifier: "/",
+  defaultIcon: "fa fa-terminal",
   suggestCommandsCount: 4,
   suggestCommandsEnabled: true,
 };
 function terminalReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case types.SET_DEFAULT_ICON:
+      return { ...state, defaultIcon: action.payload };
     case types.CIRCLE_SEARCHMODE:
       return {
         ...state,

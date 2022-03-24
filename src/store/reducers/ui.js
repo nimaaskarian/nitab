@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   isTaskbarEdit: false,
   timerEditFocus: false,
   term: "",
+  tempIcon: "",
   isTerminal: false,
   editTaskbarIndex: -1,
   isFetchingImage: false,
@@ -13,6 +14,8 @@ const INITIAL_STATE = {
 
 const uiReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case types.SET_TEMP_ICON:
+      return { ...state, tempIcon: action.payload };
     case types.SET_CURRENT_DRAGGING:
       return { ...state, currentDragging: action.payload };
     case types.TOGGLE_TASKBAR_EDIT:

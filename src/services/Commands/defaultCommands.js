@@ -13,11 +13,18 @@ import {
   deleteTheme,
   setDarkTheme,
   setLightTheme,
+  setTempIcon,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
 import { addBlobAsBackground } from "services/Images";
 
+function checkIcon(timeout = 1500) {
+  store.dispatch(setTempIcon("fa fa-check"));
+  setTimeout(() => {
+    store.dispatch(setTempIcon(""));
+  }, timeout);
+}
 const defaultCommands = {
   date: {
     function() {
@@ -55,11 +62,16 @@ const defaultCommands = {
     function(input) {
       return () => () => store.dispatch(actions.setFont(input));
     },
+    icon: "fa fa-font",
   },
   todo: {
     function(input) {
-      return () => () => store.dispatch(actions.addTodo({ message: input }));
+      return () => () => {
+        checkIcon();
+        store.dispatch(actions.addTodo({ message: input }));
+      };
     },
+    icon: "clipboard-list-check",
   },
   par: {
     function(input) {
@@ -68,10 +80,14 @@ const defaultCommands = {
 
       const bgIndex = currentTheme.currentBackground;
       if (!parseFloat(input))
-        return () => () =>
+        return () => () => {
           store.dispatch(actions.toggleParallaxEnabled(bgIndex));
-      return () => () =>
+          checkIcon();
+        };
+      return () => () => {
         store.dispatch(actions.setParallaxFactor(bgIndex, parseFloat(input)));
+        checkIcon();
+      };
     },
   },
   c: {
@@ -96,16 +112,22 @@ const defaultCommands = {
           } else chrome?.tabs.create({ url });
         };
     },
+    icon: "fab fa-chrome",
   },
   iden: {
     function(input) {
-      return () => () => store.dispatch(actions.setIndentifier(input.trim()));
+      return () => () => {
+        store.dispatch(actions.setIndentifier(input.trim()));
+        checkIcon();
+      };
     },
+    icon: "fa fa-tilde",
   },
   exp: {
     function() {
       return () => () => store.dispatch(actions.exportData());
     },
+    icon: "fa fa-file-export",
   },
   imp: {
     function() {
@@ -139,11 +161,13 @@ const defaultCommands = {
         });
       };
     },
+    icon: "fa fa-file-import",
   },
   mag: {
     function() {
       return () => () => store.dispatch(actions.toggleTaskbarMagnify());
     },
+    icon: "fa fa-magnifying-glass-plus",
   },
   // gr() {
   //   return () => () => store.dispatch(actions.toggleGradient());
@@ -238,6 +262,7 @@ const defaultCommands = {
       if (input)
         return () => () => store.dispatch(addBackground({ cssValue: input }));
     },
+    icon: "fa fa-image-landscape",
   },
   themes: {
     function(input) {
@@ -249,16 +274,40 @@ const defaultCommands = {
       if (+type || type === "0") {
         switch (arg) {
           case "delete":
-            return () => () => store.dispatch(deleteTheme(+type));
+            return () => () => {
+              store.dispatch(deleteTheme(+type));
+              checkIcon();
+            };
+
           case "dark":
-            return () => () => store.dispatch(setDarkTheme(+type));
+            return () => () => {
+              store.dispatch(setDarkTheme(+type));
+              checkIcon();
+            };
+
           case "light":
-            return () => () => store.dispatch(setLightTheme(+type));
+            return () => () => {
+              store.dispatch(setLightTheme(+type));
+              checkIcon();
+            };
+
           default:
-            return () => () => store.dispatch(setCurrentTheme(+type));
+            return () => () => {
+              store.dispatch(setCurrentTheme(+type));
+              checkIcon();
+            };
         }
       }
     },
+    recommended: [
+      {
+        phrase: "add",
+        icon: "fa fa-plus",
+      },
+      {
+        phrase: "0 delete",
+      },
+    ],
   },
   fg: {
     function(input) {
@@ -277,6 +326,12 @@ const defaultCommands = {
         };
       }
     },
+    icon: "fa fa-brush",
+    recommended: [
+      {
+        phrase: "ovr",
+      },
+    ],
   },
   un: {
     function(input) {
@@ -294,6 +349,12 @@ const defaultCommands = {
       if (input === "CONFIRM")
         return () => () => store.dispatch(actions.clearCommands());
     },
+    icon: "fa fa-trash",
+    recommended: [
+      {
+        phrase: "CONFIRM",
+      },
+    ],
   },
   command: {
     function(input) {
@@ -327,6 +388,7 @@ const defaultCommands = {
         }
       };
     },
+    icon: "fa fa-command",
   },
   rr: {
     function(input) {
@@ -353,7 +415,7 @@ const defaultCommands = {
   },
   search: {
     function(text) {
-      text = encodeURIComponent(text);
+      text = encodeURI(text);
       if (chrome?.search?.query)
         return () =>
           ({ altKey }) => {
@@ -391,39 +453,6 @@ const defaultCommands = {
       };
     },
     icon: "fa fa-bookmark",
-  },
-  tr: {
-    function(input) {
-      if (input) {
-        let inputLang;
-        let text;
-        let outputLang;
-        if (input.split(",").length === 2) {
-          inputLang = input.split(",")[0];
-          text = input.split(",")[1];
-          outputLang = "en";
-        } else if (input.split(",").length === 3) {
-          inputLang = input.split(",")[0];
-          outputLang = input.split(",")[1];
-          text = input.split(",")[2];
-        } else {
-          inputLang = "en";
-          outputLang = "fa";
-          text = input;
-        }
-
-        return () => {
-          return `https://translate.google.com/?sl=${inputLang}&tl=${outputLang}&text=${encodeURI(
-            text
-          )}&op=translate`;
-        };
-      } else {
-        return () => {
-          return "https://translate.google.com/";
-        };
-      }
-    },
-    icon: "fa fa-language",
   },
   taskbar: {
     function() {

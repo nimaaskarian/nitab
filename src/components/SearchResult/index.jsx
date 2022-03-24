@@ -15,16 +15,16 @@ const SearchResult = ({ result }) => {
       onClick={() => {
         if (result.windowId === undefined) {
           if (typeof result.url === "string") {
-            if (enterOpensNewtab) document.location = result.url;
+            if (!enterOpensNewtab) document.location = result.url;
             else window.open(result.url);
           } else {
-            result.url(enterOpensNewtab);
+            result.url(!enterOpensNewtab);
           }
         } else {
           const { tabs, windowId } = result;
           chrome?.windows.update(windowId, { focused: true });
           chrome?.tabs.highlight({ tabs, windowId });
-          if (enterOpensNewtab) window.close();
+          if (!enterOpensNewtab) window.close();
         }
       }}
     >

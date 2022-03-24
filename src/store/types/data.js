@@ -31,6 +31,7 @@ const types = {
   CIRCLE_SEARCHMODE: "circle-searchmode",
   SET_IDENTIFIER: "set-identifier",
   TOGGLE_ENTER_OPENS_NEWTAB: "toggle-enter-opens-newtab",
+  SET_DEFAULT_ICON: "set-default-icon",
 
   TOGGLE_SUGGEST_COMMANDS_ENABLED: "toggle-suggest-commands-enabled",
   SET_SUGGEST_COMMANDS_COUNT: "set-suggest-commands-count",

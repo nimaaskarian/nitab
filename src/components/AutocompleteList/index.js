@@ -39,7 +39,6 @@ const Autocomplete = () => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selectedIndex, ac]);
-
   return (
     <div className="autocomplete">
       {ac.map((e, i) => {

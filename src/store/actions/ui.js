@@ -12,6 +12,12 @@ export function setEditTaskbarIndex(index) {
     payload: index,
   };
 }
+export function setTempIcon(icon) {
+  return {
+    type: types.SET_TEMP_ICON,
+    payload: icon,
+  };
+}
 export function setIsFetchingImage() {
   return {
     type: types.SET_IS_FETCHING_IMAGE,

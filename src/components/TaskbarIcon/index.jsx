@@ -55,7 +55,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         marginLeft={props.marginLeft}
         isBlured={isBlured}
         marginRight={props.marginRight}
-        target={enterOpensNewtab ? "_self" : "_blank"}
+        target={enterOpensNewtab ? "_blank" : "_self"}
         className={props.icon}
         href={props.url ? defaultCommands.url.function(props.url)() : "#"}
         onClick={(e) => {

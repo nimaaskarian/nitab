@@ -18,6 +18,11 @@ const INITIAL_STATE = {
     icon: "fab fa-spotify",
     color: "#1db954",
   },
+  ig: {
+    args: ["instagram.com/%input%"],
+    icon: "fab fa-instagram",
+    color: "#e52877",
+  },
   wa: {
     args: ["web.whatsapp.com"],
     icon: "fab fa-whatsapp",
@@ -57,6 +62,7 @@ const INITIAL_STATE = {
   },
   gate: {
     args: ["192.168.1.1"],
+    icon:"fa fa-ethernet"
   },
   lh: {
     args: ["localhost:3000%?%localhost:%input%"],

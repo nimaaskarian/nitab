@@ -19,6 +19,7 @@ const Alert = (props) => {
   const acCommands = useSelector(({ data }) => data.acCommands);
   const isAcCommands = useSelector(({ data }) => data.isAcCommands);
   const backgroundsLength = useSelector(({ data }) => data.backgrounds.length);
+  const themesLength = useSelector(({ data }) => data.themes.length);
   useDidMountEffect(() => {
     alert.show(
       <AlertComponent>
@@ -35,6 +36,12 @@ const Alert = (props) => {
       </AlertComponent>
     );
   }, [backgroundsLength]);
+
+  useDidMountEffect(() => {
+    alert.show(
+      <AlertComponent>You have {themesLength} themes now</AlertComponent>
+    );
+  }, [themesLength]);
 
   useEffect(() => {
     console.log("isfetchingimagechange", isFetchingImage);

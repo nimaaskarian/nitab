@@ -19,8 +19,10 @@ import SearchMode from "components/SearchMode";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const commands = useContext(CommandsContext);
+  const defaultIcon = useSelector(({ ui }) => ui.defaultIcon);
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
+  const tempIcon = useSelector(({ ui }) => ui.tempIcon);
 
   const enterOpensNewtab = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
@@ -50,13 +52,13 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       if (typeof onSubmit === "string") {
         window.document.title = `${term} - ${identifier}Niotab`;
         history.push({ search: "?t=" + term });
-        if (e.altKey !== enterOpensNewtab) document.location = onSubmit;
+        if (e.altKey === enterOpensNewtab) document.location = onSubmit;
         else {
           window.open(onSubmit);
         }
       } else {
         onSubmit({
-          altKey: e.altKey !== enterOpensNewtab,
+          altKey: e.altKey === enterOpensNewtab,
         });
       }
     },
@@ -96,7 +98,9 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           </CurrentCommandContext.Provider>
         </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>
-      <TerminalOutput className={currentCommand.icon || "fa fa-terminal"} />
+      <TerminalOutput
+        className={tempIcon || currentCommand.icon || defaultIcon}
+      />
       <SearchResultList
         term={term}
         currentCommand={currentCommand}

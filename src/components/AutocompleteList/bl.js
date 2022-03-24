@@ -7,7 +7,9 @@ import { nanoid } from "nanoid";
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
   const commands = useContext(CommandsContext);
+  const defaultIcon = useSelector(({ ui }) => ui.defaultIcon);
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
+  const [duckduckDisabled, setDuckDuckDisabled] = useState(false);
 
   const suggestCommandsCount = useSelector(
     ({ data }) => data.terminal.suggestCommandsCount,
@@ -25,16 +27,28 @@ const AutocompleteLogic = () => {
   useEffect(() => {
     const acHandler = ({ ac }) => {
       setDuckDuckAc(
-        ac.map((e) => {
-          return { ...e, key: nanoid(10) };
-        })
+        ac
+          .map((e) => {
+            return { ...e, key: nanoid(10) };
+          })
+          .map((e) => {
+            if (currentCommand.args && currentCommand.name !== "search")
+              return {
+                ...e,
+                phrase: `${identifier}${currentCommand.name} ${e.phrase}`,
+                icon: currentCommand.icon,
+              };
+            return e;
+          })
       );
     };
-    document.addEventListener("autocomplete", acHandler, false);
-    return () => {
-      document.removeEventListener("autocomplete", acHandler);
-    };
-  }, [term, identifier]);
+    if (!duckduckDisabled) {
+      document.addEventListener("autocomplete", acHandler, false);
+      return () => {
+        document.removeEventListener("autocomplete", acHandler);
+      };
+    }
+  }, [term, identifier, duckduckDisabled]);
 
   const commandSuggestions = useMemo(() => {
     if (!suggestCommandsEnabled || !term) return [];
@@ -53,7 +67,7 @@ const AutocompleteLogic = () => {
         return {
           key: nanoid(10),
           phrase: identifier + phrase + " ",
-          icon: commands[phrase].icon || "fa fa-terminal",
+          icon: commands[phrase].icon || defaultIcon,
         };
       });
   }, [
@@ -62,17 +76,21 @@ const AutocompleteLogic = () => {
     identifier,
     suggestCommandsEnabled,
     term,
+    defaultIcon,
   ]);
-
   useEffect(() => {
-    const command = currentCommand;
-    let input;
-    if (command.name && command.name !== "search") {
-      if (commands[command.name].function(command.args))
-        if (typeof commands[command.name].function(command.args)() === "string")
-          input = commands[command.name].function(command.args)();
+    if (
+      (currentCommand.name !== "search" && !currentCommand.args) ||
+      currentCommand.recommended
+    ) {
+      setDuckDuckDisabled(true);
+    } else {
+      setDuckDuckDisabled(false);
     }
-    if (!input) input = term;
+    if (duckduckDisabled) return;
+
+    let input = term;
+    if (currentCommand.args) input = currentCommand.args;
     const url =
       "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
     const script = document.createElement("script");
@@ -82,23 +100,34 @@ const AutocompleteLogic = () => {
     let timeoutId, appended;
 
     setDuckDuckAc([]);
-    if (term) {
+    if (input) {
       timeoutId = setTimeout(() => {
         document.body.appendChild(script);
         appended = true;
       }, 200);
     }
     return () => {
-      if (term) {
+      if (input) {
         clearTimeout(timeoutId);
         if (appended) document.body.removeChild(script);
       }
     };
-  }, [term, suggestCommandsEnabled]);
+  }, [term, suggestCommandsEnabled, duckduckDisabled]);
 
+  const mapedRecommended = useMemo(
+    () =>
+      (currentCommand.recommended || []).map((e) => {
+        return {
+          ...e,
+          phrase: identifier + currentCommand.name + " " + e?.phrase,
+          icon: e?.icon || currentCommand.icon,
+        };
+      }),
+    [currentCommand.name, currentCommand.recommended, identifier]
+  );
   return useMemo(
     () =>
-      [...commandSuggestions, ...duckDuckAc]
+      [...commandSuggestions, ...mapedRecommended, ...duckDuckAc]
         .filter((e) => !term.includes(e.phrase))
         .slice(0, 8),
     [duckDuckAc, commandSuggestions]
