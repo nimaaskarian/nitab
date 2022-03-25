@@ -36,7 +36,7 @@ Array.prototype.delete = function (index) {
 
 const WEATHER_INITIAL_STATE = {
   data: {},
-  city: "Automatic",
+  // city: "Automatic",
   enabled: true,
 };
 function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
@@ -47,12 +47,12 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
         data: action.payload,
       };
     }
-    case types.SET_WEATHER_CITY: {
-      return {
-        ...state,
-        city: action.payload,
-      };
-    }
+    // case types.SET_WEATHER_CITY: {
+    //   return {
+    //     ...state,
+    //     city: action.payload,
+    //   };
+    // }
     case types.TOGGLE_WEATHER_ENABLED:
       return {
         ...state,

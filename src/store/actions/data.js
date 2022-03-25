@@ -282,39 +282,10 @@ export function toggleDateEnabled() {
 export function toggleWeatherEnabled() {
   return { type: types.TOGGLE_WEATHER_ENABLED };
 }
-export function setWeatherData(q) {
-  const type = types.SET_WEATHER_DATA;
-  return async (dispatch, getState) => {
-    const result = getState().data.weatherData;
-    if (!result) {
-      dispatch({ type, payload: { ...result } });
-      return;
-    }
-    if (result.time && result.data)
-      if (result.data.name === q || q !== "Automatic")
-        if (Date.now() - result.time <= 3600 * 1000) {
-          dispatch({ type, payload: { ...result } });
-          return;
-        }
-    dispatch({ type, payload: {} });
-    //api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-    if (q === "Automatic") {
-      navigator.geolocation.getCurrentPosition(
-        ({ coords: { latitude: lat, longitude: lon } }) => {
-          dispatchData({ lat, lon });
-        }
-      );
-    } else {
-      dispatchData({ q });
-    }
-
-    async function dispatchData(params) {
-      const { data } = await openWeather.get("/weather", {
-        params,
-      });
-
-      dispatch({ type, payload: { data, time: new Date().getTime() } });
-    }
+export function setWeatherData(data) {
+  return {
+    type: types.SET_WEATHER_DATA,
+    payload: data,
   };
 }
 export function setWeatherCity(q) {

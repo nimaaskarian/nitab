@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import Dropdown from "react-dropdown";
 
 import { setWeatherData, setWeatherCity } from "store/actions";
@@ -13,6 +13,8 @@ import {
 import cities from "services/Lists/cities";
 
 import "tippy.js/dist/tippy.css";
+import axios from "axios";
+import { openWeather } from "apis";
 
 const icons = {
   "01d": "fa-sun",
@@ -42,9 +44,36 @@ const icons = {
   "50d": "fa-fog",
   "50n": "fa-fog",
 };
+const minutesToExpire = 30;
 const Weather = (props) => {
   const data = useSelector(({ data }) => data.weather.data);
-  const city = useSelector(({ data }) => data.weather.city);
+  const dispatch = useDispatch();
+  // const city = useSelector(({ data }) => data.weather.city);
+  useEffect(() => {
+    (() => {
+      if (data && data.time) {
+        if (data.time <= new Date().getTime() + minutesToExpire * 60000) {
+          return;
+        }
+      }
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude: lat, longitude: lon } }) => {
+          openWeather
+            .get("/weather", {
+              params: {
+                lat,
+                lon,
+              },
+            })
+            .then((r) => r.data)
+            .then((data) =>
+              dispatch(setWeatherData({ ...data, time: new Date().getTime() }))
+            );
+        }
+      );
+    })();
+  }, [data]);
+
   const fontFamily = useSelector(
     ({
       data: {
@@ -118,10 +147,11 @@ const Weather = (props) => {
       );
     }
   };
-
+  console.log(data);
   return (
     <WeatherWrapper>
-      <WeatherSelector>
+      <span style={{ marginRight: "15px" }}>{data.name}</span>
+      {/* <WeatherSelector>
         <Dropdown
           options={["Automatic", ...cities]}
           onChange={(q) => {
@@ -131,7 +161,7 @@ const Weather = (props) => {
           arrowClosed={<span className="fa fa-chevron-down" />}
           arrowOpen={<span className="fa fa-chevron-up" />}
         />
-      </WeatherSelector>
+      </WeatherSelector> */}
 
       {renderedWeather(props)}
     </WeatherWrapper>
