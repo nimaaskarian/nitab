@@ -32,6 +32,7 @@ const defaultCommands = {
         store.dispatch(actions.toggleDateEnabled());
       };
     },
+    icon: "fa fa-calendar",
   },
   w: {
     function() {
@@ -40,6 +41,7 @@ const defaultCommands = {
         store.dispatch(actions.setTerm(""));
       };
     },
+    icon: "fa fa-temperature-half",
   },
   clock: {
     function(input) {
@@ -57,6 +59,12 @@ const defaultCommands = {
           };
       }
     },
+    icon: "fa fa-clock",
+    recommended: [
+      { phrase: "center" },
+      { phrase: "left" },
+      { phrase: "right" },
+    ],
   },
   font: {
     function(input) {
@@ -113,6 +121,7 @@ const defaultCommands = {
         };
     },
     icon: "fab fa-chrome",
+    recommended: [{ phrase: "his" }, { phrase: "ext" }, { phrase: "set" }],
   },
   iden: {
     function(input) {
@@ -122,6 +131,7 @@ const defaultCommands = {
       };
     },
     icon: "fa fa-tilde",
+    recommended: [{ phrase: "/" }, { phrase: "~" }, { phrase: "-" }],
   },
   exp: {
     function() {
@@ -263,6 +273,7 @@ const defaultCommands = {
         return () => () => store.dispatch(addBackground({ cssValue: input }));
     },
     icon: "fa fa-image-landscape",
+    recommended: [{ phrase: "un" }],
   },
   themes: {
     function(input) {
@@ -329,7 +340,7 @@ const defaultCommands = {
     icon: "fa fa-brush",
     recommended: [
       {
-        phrase: "ovr",
+        phrase: "ovr ",
       },
     ],
   },
