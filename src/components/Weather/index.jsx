@@ -48,6 +48,7 @@ const minutesToExpire = 30;
 const Weather = (props) => {
   const data = useSelector(({ data }) => data.weather.data);
   const dispatch = useDispatch();
+  const [error, setError] = useState("");
   // const city = useSelector(({ data }) => data.weather.city);
   useEffect(() => {
     (() => {
@@ -58,6 +59,8 @@ const Weather = (props) => {
       }
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude: lat, longitude: lon } }) => {
+          setError("");
+
           openWeather
             .get("/weather", {
               params: {
@@ -69,7 +72,8 @@ const Weather = (props) => {
             .then((data) =>
               dispatch(setWeatherData({ ...data, time: new Date().getTime() }))
             );
-        }
+        },
+        (e) => setError(e.message)
       );
     })();
   }, [data]);
@@ -147,7 +151,7 @@ const Weather = (props) => {
       );
     }
   };
-  console.log(data);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   return (
     <WeatherWrapper>
       <span style={{ marginRight: "15px" }}>{data.name}</span>
@@ -163,7 +167,24 @@ const Weather = (props) => {
         />
       </WeatherSelector> */}
 
-      {renderedWeather(props)}
+      {error ? (
+        <StyledTippy
+          font={fontFamily}
+          visible={error && errorMessageVisible}
+          content={error}
+          placement="bottom"
+          onClickOutside={() => setErrorMessageVisible(false)}
+          allowHTML
+        >
+          <span
+            style={{ cursor: "pointer" }}
+            onClick={() => setErrorMessageVisible(!errorMessageVisible)}
+            className="fa fa-close"
+          ></span>
+        </StyledTippy>
+      ) : (
+        renderedWeather()
+      )}
     </WeatherWrapper>
   );
 };
