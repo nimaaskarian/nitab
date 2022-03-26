@@ -1,6 +1,6 @@
 {
   "name": "nitab",
-  "version": "4.00.1b",
+  "version": "4.0.1",
   "homepage": "./",
   "private": true,
   "dependencies": {
