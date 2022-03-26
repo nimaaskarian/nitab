@@ -29,9 +29,9 @@ const SearchResultList = ({ currentCommand, searchCommand, term }) => {
     };
   }, [handleKeydown]);
   useEffect(() => {
-    const isNameSearch = currentCommand.name !== "search";
+    const isNameSearch = currentCommand.name === "search";
     function searchSuggest(term) {
-      if (isNameSearch && term)
+      if (!isNameSearch && term)
         return {
           url: searchCommand.function(term)(),
           header: {
