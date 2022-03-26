@@ -19,7 +19,10 @@ import useCommands from "hooks/useCommands";
 import useIsTermEmpty from "hooks/useIsTermEmpty";
 import useAlert from "hooks/useAlert";
 
-import mutedKeys from "services/Lists/mutedKeys";
+import mutedKeys, {
+  ctrlShiftMuted,
+  termEmptyMuted,
+} from "services/Lists/mutedKeys";
 
 import CommandsContext from "context/CommandsContext";
 
@@ -71,7 +74,8 @@ const App = () => {
     console.log(darkIndex, lightIndex, isDarkTheme);
     if (darkIndex !== -1 && isDarkTheme) dispatch(setCurrentTheme(darkIndex));
 
-    if (lightIndex !== -1 && !isDarkTheme) dispatch(setCurrentTheme(lightIndex));
+    if (lightIndex !== -1 && !isDarkTheme)
+      dispatch(setCurrentTheme(lightIndex));
   }, [isDarkTheme, darkIndex, lightIndex]);
 
   useEffect(() => {
@@ -88,51 +92,32 @@ const App = () => {
   useEffect(() => {
     const onKeydown = (e) => {
       if (
-        mutedKeys.includes(e.key) ||
-        (e.code === "Space" && isTermEmpty) ||
-        (e.code === "KeyI" && e.ctrlKey && e.shiftKey) ||
-        (e.code === "KeyC" && e.ctrlKey && e.shiftKey)
+        mutedKeys.includes(e.code) ||
+        (ctrlShiftMuted.includes(e.code) && e.ctrlKey && e.shiftKey) ||
+        (termEmptyMuted.includes(e.code) && isTermEmpty)
       )
         return;
+
       e.stopPropagation();
-      if (e.ctrlKey && e.code === "KeyB") {
-        dispatch(toggleEnterOpensNewtab());
-      }
-      if (e.ctrlKey && e.code === "KeyQ") dispatch(circleSearchMode());
+
+      if (e.altKey || e.ctrlKey)
+        switch (e.code) {
+          case "KeyQ":
+            return dispatch(circleSearchMode());
+          case "KeyB":
+            return dispatch(toggleEnterOpensNewtab());
+          default:
+            break;
+        }
 
       if (e.key === "Escape") {
         setIsTerminal(false);
         return;
       }
-      if (e.altKey && +e.code.replace(/(Digit)|(Numpad)/, "")) {
-        if (isTerminal)
-          try {
-            document
-              .querySelectorAll(".search-result")
-              [+e.code.replace(/(Digit)|(Numpad)/, "") - 1].click();
-            return;
-          } catch (error) {}
-        else
-          try {
-            document
-              .querySelectorAll(".taskbar-icon:not(.empty)")
-              [+e.code.replace(/(Digit)|(Numpad)/, "") - 1].click();
-            return;
-          } catch (error) {}
-      }
 
-      if (["Alt", "Tab"].includes(e.key)) {
-        e.preventDefault();
-        return;
-      }
-      if (e.shiftKey && e.ctrlKey && e.code === "KeyI") return;
-      if (["Meta", "Control", "Shift"].includes(e.key)) {
-        return;
-      }
-      if (e.key === "Backspace" && isTermEmpty) return;
       if (!e.altKey) {
         setIsTerminal(true);
-        // terminal.current.focus();
+        terminal.current.focus();
       } else {
         e.preventDefault();
       }
@@ -141,7 +126,7 @@ const App = () => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTerminal, isTaskbarEdit]);
+  }, [isTaskbarEdit, isTermEmpty]);
 
   useEffect(() => {
     if (isTaskbarEdit) dispatch(setTerm(""));

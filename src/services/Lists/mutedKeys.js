@@ -16,6 +16,7 @@ const mutedKeys = [
   "F10",
   "F11",
   "F12",
+  "Tab",
   "CapsLock",
   "LaunchMediaPlayer",
   "AudioVolumeDown",
@@ -31,4 +32,8 @@ const mutedKeys = [
   "Pause",
   "NumLock",
 ];
+
+export const ctrlShiftMuted = ["KeyI", "KeyC"];
+export const termEmptyMuted = ["Backspace", "Space"];
+
 export default mutedKeys;

@@ -31,7 +31,7 @@ const Taskbar = () => {
   const handleKeydown = (e) => {
     if ((e.altKey || e.ctrlKey) && +e.key) {
       e.preventDefault();
-      iconsRefs.current[+e.key].click();
+      iconsRefs.current[+e.key - 1].click();
     }
   };
   useEffect(() => {

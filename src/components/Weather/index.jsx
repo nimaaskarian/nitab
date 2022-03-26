@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import Dropdown from "react-dropdown";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setWeatherData, setWeatherCity } from "store/actions";
 
@@ -10,7 +9,6 @@ import {
   WeatherSelector,
   StyledTippy,
 } from "./style";
-import cities from "services/Lists/cities";
 
 import "tippy.js/dist/tippy.css";
 import axios from "axios";
