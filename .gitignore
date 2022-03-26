@@ -12,6 +12,8 @@
 /build
 /build.bat
 /build.sh
+/source.zip
+/zipsource.sh
 
 # misc
 .DS_Store
