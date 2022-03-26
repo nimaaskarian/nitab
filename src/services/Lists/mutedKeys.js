@@ -16,7 +16,7 @@ const mutedKeys = [
   "F10",
   "F11",
   "F12",
-  "Tab",
+  // "Tab",
   "CapsLock",
   "LaunchMediaPlayer",
   "AudioVolumeDown",

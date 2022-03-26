@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const StyledSearchResult = styled.div`
   font-size: 16px;
-  padding: 10px;
   width: 40%;
   cursor: pointer;
   white-space: nowrap;

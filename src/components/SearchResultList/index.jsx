@@ -9,14 +9,14 @@ import { nanoid } from "nanoid";
 import { StyledSearchResultList } from "./style";
 
 const SearchResultList = ({ currentCommand, searchCommand, term }) => {
-  const searchResultRefs = Array(4).fill(useRef());
+  const searchResultRefs = useRef([]);
   const searchMode = useSelector(({ data }) => data.terminal.searchMode);
 
   const [results, setResults] = useState([]);
   const handleKeydown = useCallback(
     (event) => {
       if (+event.key && (event.altKey || event.ctrlKey)) {
-        searchResultRefs[+event.key].current?.click();
+        searchResultRefs.current[+event.key - 1].click();
       }
     },
     [searchResultRefs]
@@ -31,7 +31,7 @@ const SearchResultList = ({ currentCommand, searchCommand, term }) => {
   useEffect(() => {
     const isNameSearch = currentCommand.name !== "search";
     function searchSuggest(term) {
-      if (isNameSearch)
+      if (isNameSearch && term)
         return {
           url: searchCommand.function(term)(),
           header: {
@@ -97,7 +97,7 @@ const SearchResultList = ({ currentCommand, searchCommand, term }) => {
         .map((result, i) => {
           return (
             <SearchResult
-              ref={searchResultRefs[i]}
+              ref={(el) => (searchResultRefs.current[i] = el)}
               key={result.key}
               result={result}
             />

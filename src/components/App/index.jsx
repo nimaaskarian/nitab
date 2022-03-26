@@ -109,7 +109,9 @@ const App = () => {
           default:
             break;
         }
-
+      if (e.altKey || e.code === "Tab") {
+        e.preventDefault();
+      }
       if (e.key === "Escape") {
         setIsTerminal(false);
         return;
@@ -118,8 +120,6 @@ const App = () => {
       if (!e.altKey) {
         setIsTerminal(true);
         terminal.current.focus();
-      } else {
-        e.preventDefault();
       }
     };
     if (!isTaskbarEdit) window.addEventListener("keydown", onKeydown);

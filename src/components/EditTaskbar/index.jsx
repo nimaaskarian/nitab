@@ -34,7 +34,6 @@ const EditTaskbar = () => {
   const iconToEdit = useSelector(
     ({ data }) => data.taskbar.icons[editTaskbarIndex]
   );
-  console.log(iconToEdit);
   const [icon, setIcon] = useState(defaultValues.icon);
   const [url, setUrl] = useState(defaultValues.url);
   const [color, setColor] = useState(defaultValues.color);
