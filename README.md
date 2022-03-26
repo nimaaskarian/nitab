@@ -82,12 +82,8 @@ and etc
 if you add icons to your taskbar, they will apear at the bottom of the main(clock) page. they will be also accessible using alt + <num-keys>
 ## Taskbar Icons
 you can add them using a GUI modal after calling `[iden]taskbar` command.  
-set a icon from fontawesome 6 icon pack (make sure that the icons is valid, otherwise you gonna have a hard time deleting it)  
-insert index determines where the edit will take effect. -1 means after the last icon.  
-any other numbers will edit the icon unless the Force Add toggle is turned on. in that case it will add the icon after the selected index.  
-you can select a icon using clicks. or you can delete it using double clicks.
-## Whitespaces
-adding whitespaces will help you in orginizing the taskbar. you can add whitespace at end (insert index = -1) or before a certain icon (selecting it using clicks or typing its index manually).  
-you can delete a whitespace using clicks.
+set a icon from fontawesome 6 free icon pack (required)
+you can select a icon using clicks. or you can delete it using double clicks. you can add for change its place by drag and dropping. 
+you can also set margin for better organizing 
 # Autocomplete
 theres a autocomplete feature that can suggest up to 8 search terms or urls. very useful if you ask me!
