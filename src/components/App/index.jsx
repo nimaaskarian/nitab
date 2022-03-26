@@ -92,8 +92,8 @@ const App = () => {
   useEffect(() => {
     const onKeydown = (e) => {
       if (
-        mutedKeys.includes(e.code) ||
-        (ctrlShiftMuted.includes(e.code) && e.ctrlKey && e.shiftKey) ||
+        mutedKeys.includes(e.key) ||
+        (e.ctrlKey && e.shiftKey) ||
         (termEmptyMuted.includes(e.code) && isTermEmpty)
       )
         return;

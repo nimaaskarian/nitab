@@ -34,6 +34,6 @@ const mutedKeys = [
 ];
 
 export const ctrlShiftMuted = ["KeyI", "KeyC"];
-export const termEmptyMuted = ["Backspace", "Space"];
+export const termEmptyMuted = ["Backspace", "Space", "Ctrl", "Shift"];
 
 export default mutedKeys;
