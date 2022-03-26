@@ -273,7 +273,7 @@ const defaultCommands = {
         return () => () => store.dispatch(addBackground({ cssValue: input }));
     },
     icon: "fa fa-image",
-    recommended: [{ phrase: "un" },{ phrase: "random" }],
+    recommended: [{ phrase: "un" }, { phrase: "random" }],
   },
   themes: {
     function(input) {
@@ -376,7 +376,6 @@ const defaultCommands = {
         .filter((e) => !!e);
       const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
       const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
-      if (["command", "commandCl"].includes(commandName)) return;
       return () => {
         switch ((commandFunctions[0] || "").toLowerCase()) {
           case "delete":
