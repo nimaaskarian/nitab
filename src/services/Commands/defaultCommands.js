@@ -273,7 +273,7 @@ const defaultCommands = {
         return () => () => store.dispatch(addBackground({ cssValue: input }));
     },
     icon: "fa fa-image",
-    recommended: [{ phrase: "un" }],
+    recommended: [{ phrase: "un" },{ phrase: "random" }],
   },
   themes: {
     function(input) {
