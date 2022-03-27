@@ -20,7 +20,7 @@ const Dropzone = ({ setDragMessage }) => {
     const bgBlob = new Blob([file], { type: "image/*" });
     addBlobAsBackground(bgBlob);
   };
-  const dragHandle = (ev) => {
+  const handleDrag = (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
     let imagesLength = 0,
@@ -44,7 +44,7 @@ const Dropzone = ({ setDragMessage }) => {
       return setDragMessage(`Drop to copy text${textsLength !== 1 ? "s" : ""}`);
     }
   };
-  const dropHandle = (ev) => {
+  const handleDrop = (ev) => {
     setDragMessage("");
     ev.preventDefault();
     [...ev.dataTransfer.items].forEach((item, index) => {
@@ -62,8 +62,8 @@ const Dropzone = ({ setDragMessage }) => {
   return (
     <ImageDropzoneContainer
       onDragLeave={() => setDragMessage("")}
-      onDragOver={dragHandle}
-      onDrop={dropHandle}
+      onDragOver={handleDrag}
+      onDrop={handleDrop}
     />
   );
 };
