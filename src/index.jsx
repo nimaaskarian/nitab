@@ -18,12 +18,7 @@ import store, { persistor } from "store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 //App component
-<<<<<<< HEAD:src/index.js
 import App from "components/App";
-=======
-import App from "./components/App";
-//App boundry (error handling)
->>>>>>> styled-components:src/index.jsx
 import AppErrorBoundry from "components/AppErrorBoundry";
 // Alert default options
 const alertOptions = {
