@@ -104,7 +104,7 @@ const defaultCommands = {
         his: "history",
         ext: "extensions",
         set: "settings",
-        [""]: "version",
+        "": "version",
       };
       return () =>
         async ({ altKey }) => {

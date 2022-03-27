@@ -19,14 +19,11 @@ import useCommands from "hooks/useCommands";
 import useIsTermEmpty from "hooks/useIsTermEmpty";
 import useAlert from "hooks/useAlert";
 
-import mutedKeys, {
-  ctrlShiftMuted,
-  termEmptyMuted,
-} from "services/mutedKeys";
+import mutedKeys, { termEmptyMuted } from "services/mutedKeys";
 
 import CommandsContext from "context/CommandsContext";
 
-import { AppContainer, MainAndTaskbarWrapper } from "./style";
+import { AppContainer } from "./style";
 import Main from "components/Main";
 import useIsThemeDark from "hooks/useIsThemeDark";
 

@@ -1,6 +1,6 @@
 // eslint-disable-next-line jsx-a11y/anchor-has-content
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
