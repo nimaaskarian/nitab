@@ -25,7 +25,7 @@ class AppErrorBoundry extends Component {
       });
       return (
         <div className="error-message-wrapper">
-          <h1>Ops! an error occurred...</h1>
+          <h1>Oops! an error occurred...</h1>
           <p>
             fastest way to fix this is to refresh the application and don't do
             what you just did.

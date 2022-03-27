@@ -1,30 +1,35 @@
+import types from "store/types/ui";
+
 const INITIAL_STATE = {
   isTaskbarEdit: false,
   timerEditFocus: false,
   term: "",
-  results: [],
+  tempIcon: "",
   isTerminal: false,
-  addtaskbarIndex: null,
+  editTaskbarIndex: -1,
+  isFetchingImage: false,
+  imageLoaded: 0,
+  currentDragging: -1,
 };
 
-const uiReducer = (state = INITIAL_STATE, { payload, type }) => {
-  switch (type) {
-    case "TOGGLE_TASKBAR_EDIT":
-      return { ...state, isTaskbarEdit: payload };
-    case "SET_TERM":
-      return { ...state, term: payload };
-    case "SET_AC":
-      return { ...state, ac: payload };
-    case "SET_BACKGROUND":
-      return { ...state, background: payload };
-    case "SET_TIMER_EDIT_FOCUS":
-      return { ...state, timerEditFocus: payload };
-    case "SET_RESULTS":
-      return { ...state, results: payload };
-    case "SET_ADD_TASKBAR_INDEX":
-      return { ...state, addtaskbarIndex: payload };
+const uiReducer = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case types.SET_TEMP_ICON:
+      return { ...state, tempIcon: action.payload };
+    case types.SET_CURRENT_DRAGGING:
+      return { ...state, currentDragging: action.payload };
+    case types.TOGGLE_TASKBAR_EDIT:
+      return { ...state, isTaskbarEdit: !state.isTaskbarEdit };
+    case types.SET_TERM:
+      return { ...state, term: action.payload };
+    case types.SET_IS_FETCHING_IMAGE:
+      return { ...state, isFetchingImage: !state.isFetchingImage };
+    case types.SET_IMAGE_LOADED:
+      return { ...state, imageLoaded: action.payload };
+    case types.SET_EDIT_TASKBAR_INDEX:
+      return { ...state, editTaskbarIndex: action.payload };
     default:
-      return { ...state };
+      return state;
   }
 };
 export default uiReducer;

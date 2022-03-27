@@ -1,0 +1,32 @@
+::-webkit-scrollbar {
+  width: 0 !important;
+  height: 10px;
+}
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+body {
+  overflow: overlay;
+  margin: 0;
+  background-color: #333;
+}
+.fontawe.w3::before {
+  content: "\e822";
+  font-family: fa-w3;
+}
+@font-face {
+  font-family: fa-w3;
+  src: url(fonts/fa-w3.woff);
+}
+@font-face {
+  font-family: FiraCode;
+  src: url(fonts/FiraCode.ttf);
+}
+@font-face {
+  font-family: IranSans;
+  src: url(fonts/IRANSansWeb_Light.woff);
+}

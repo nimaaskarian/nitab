@@ -1,27 +1,37 @@
+import types from "store/types/ui";
+
 export function toggleTaskbarEdit() {
-  return (dispatch, getStore) => {
-    const prevTaskbarEdit = getStore().ui.isTaskbarEdit;
-    dispatch({ type: "TOGGLE_TASKBAR_EDIT", payload: !prevTaskbarEdit });
-  };
+  return { type: types.TOGGLE_TASKBAR_EDIT };
 }
 export function setTerm(term) {
-  return { type: "SET_TERM", payload: term };
+  return { type: types.SET_TERM, payload: term };
 }
-export function setTimerEditFocus(focus) {
-  return { type: "SET_TIMER_EDIT_FOCUS", payload: focus };
-}
-export function setAc(term) {
-  return { type: "SET_AC", payload: term };
-}
-export function setBackground(bg) {
+export function setEditTaskbarIndex(index) {
   return {
-    type: "SET_BACKGROUND",
-    payload: bg,
+    type: types.SET_EDIT_TASKBAR_INDEX,
+    payload: index,
   };
 }
-export function setAddTaskbarIndex(index) {
+export function setTempIcon(icon) {
   return {
-    type: "SET_ADD_TASKBAR_INDEX",
+    type: types.SET_TEMP_ICON,
+    payload: icon,
+  };
+}
+export function setIsFetchingImage() {
+  return {
+    type: types.SET_IS_FETCHING_IMAGE,
+  };
+}
+export function setCurrentDragging(index) {
+  return {
+    type: types.SET_CURRENT_DRAGGING,
     payload: index,
+  };
+}
+export function setImageLoaded(loaded) {
+  return {
+    type: types.SET_IMAGE_LOADED,
+    payload: loaded,
   };
 }

@@ -1,19 +1,25 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useEffect, useState } from "react";
 import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
-import { removeTodo } from "store/actions";
+import { useSelector } from "react-redux";
 import useDidMountEffect from "./useDidMountEffect";
 import AlertComponent from "components/Alert";
-const Alert = () => {
+import Todo from "components/Todo";
+import UnsplashLoading from "components/UnsplashLoading";
+const Alert = (props) => {
   const alert = useAlert();
   const [prevCommands, setPrevCommands] = useState(null);
-  const todo = useSelector(({ data }) => data.todo);
-  const dipatch = useDispatch();
+
+  const isFetchingImage = useSelector(({ ui }) => ui.isFetchingImage);
+
+  const todos = useSelector(({ data }) => data.todos);
   const currentCommands = useSelector(({ data }) => data.commands);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
   const acCommands = useSelector(({ data }) => data.acCommands);
   const isAcCommands = useSelector(({ data }) => data.isAcCommands);
-
+  const backgroundsLength = useSelector(({ data }) => data.backgrounds.length);
+  const themesLength = useSelector(({ data }) => data.themes.length);
   useDidMountEffect(() => {
     alert.show(
       <AlertComponent>
@@ -23,6 +29,40 @@ const Alert = () => {
       </AlertComponent>
     );
   }, [altNewtab]);
+  useDidMountEffect(() => {
+    alert.show(
+      <AlertComponent>
+        You have {backgroundsLength} backgrounds now
+      </AlertComponent>
+    );
+  }, [backgroundsLength]);
+
+  useDidMountEffect(() => {
+    alert.show(
+      <AlertComponent>You have {themesLength} themes now</AlertComponent>
+    );
+  }, [themesLength]);
+
+  useEffect(() => {
+    if (isFetchingImage) {
+      let alertInstance = alert.show(
+        <AlertComponent>
+          <UnsplashLoading
+            onLoaded={() => {
+              alert.remove(alertInstance);
+            }}
+          />
+        </AlertComponent>,
+        {
+          timeout: 0,
+        }
+      );
+      return () => {
+        alert.remove(alertInstance);
+      };
+    }
+  }, [isFetchingImage]);
+
   useDidMountEffect(() => {
     alert.show(
       <AlertComponent>
@@ -44,33 +84,24 @@ const Alert = () => {
   }, [isAcCommands]);
   useEffect(() => {
     alert.removeAll();
-    todo.forEach((e, i) => {
-      alert.show(
-        <AlertComponent
-          style={{
-            direction: `${/^[\u0600-\u06FF\s]+/.test(e) ? "rtl" : "ltr"}`,
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>{e}</div>
-          <a
-            style={{ marginLeft: "5px", cursor: "pointer" }}
-            className="fal fa-circle"
-            onClick={async (e) => {
-              e.target.className = "fal fa-check-circle";
-              setTimeout(() => {
-                dipatch(removeTodo(i));
-              }, 350);
-            }}
-          />
-        </AlertComponent>,
-        { timeout: 0 }
-      );
-    });
-  }, [todo]);
+    if (!props.isTerminal)
+      todos
+        .sort(function (a, b) {
+          if (a.completed) {
+            if (b.completed) return 0;
+            return 1;
+          }
+          return -1;
+        })
+        .forEach((todo, index) => {
+          alert.show(
+            <AlertComponent>
+              <Todo todo={todo} index={index} />
+            </AlertComponent>,
+            { timeout: 0 }
+          );
+        });
+  }, [todos, props.isTerminal]);
 
   useEffect(() => {
     if (!prevCommands) setPrevCommands({ ...currentCommands });

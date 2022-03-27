@@ -1,28 +1,13 @@
 import defaultCommands from "./defaultCommands";
-import { isDark } from "services/Styles";
 
 const dataToCommands = (data) => {
-  let commands = {},
-    icons = {};
+  let commands = {};
   Object.keys(data).forEach((command) => {
-    if (data[command].icon) icons[command] = data[command].icon;
-    if (data[command].color) {
-      const _styleIndex = document.styleSheets.length - 1;
-      const stylesheet = document.styleSheets[_styleIndex];
-      stylesheet.insertRule(
-        `.${command}::selection{background-color:${
-          data[command].color
-        } !important;
-        color:${isDark(data[command].color) ? "#CCC" : "#333"} !important;}`,
-        stylesheet.rules.length
-      );
-      document.documentElement.style.setProperty(
-        `--${command}`,
-        data[command].color
-      );
-    }
+    commands[command] = {};
+    const { color, icon } = data[command];
+    commands[command] = { color, icon };
 
-    commands[command] = (input) => {
+    commands[command].function = (input) => {
       if (!data[command].args) return;
       if (data[command].args.length === 1)
         return () => {
@@ -30,10 +15,10 @@ const dataToCommands = (data) => {
             .replace("%input%", input)
             .split("%?%");
           if (hasInput) {
-            if (input) return defaultCommands.url(hasInput)();
-            return defaultCommands.url(hasntInput)();
+            if (input) return defaultCommands.url.function(hasInput)();
+            return defaultCommands.url.function(hasntInput)();
           }
-          return defaultCommands.url(hasntInput)();
+          return defaultCommands.url.function(hasntInput)();
         };
       else
         return () =>
@@ -44,14 +29,31 @@ const dataToCommands = (data) => {
                 .split("%?%");
 
               if (hasInput) {
-                if (input) window.open(defaultCommands.url(hasInput)());
-                else window.open(defaultCommands.url(hasntInput)());
-              } else window.open(defaultCommands.url(hasntInput)());
+                if (input)
+                  window.open(defaultCommands.url.function(hasInput)());
+                else window.open(defaultCommands.url.function(hasntInput)());
+              } else window.open(defaultCommands.url.function(hasntInput)());
             });
           };
     };
   });
-  return { commands: { ...defaultCommands, ...commands }, icons };
+  const defaultCommandsCustomized = Object.fromEntries(
+    Object.entries(defaultCommands).map(([key, value]) => {
+      if (commands[key]) {
+        const commandsCopy = Object.fromEntries(
+          Object.entries(commands[key]).filter(
+            ([key, value]) => !!value && key !== "function"
+          )
+        );
+        return [key, { ...value, ...commandsCopy }];
+      }
+      return [key, value];
+    })
+  );
+  const commandsWithoutDefaults = Object.fromEntries(
+    Object.entries(commands).filter(([key]) => !defaultCommands[key])
+  );
+  return { ...defaultCommandsCustomized, ...commandsWithoutDefaults };
 };
 
 export default dataToCommands;

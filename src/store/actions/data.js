@@ -1,238 +1,267 @@
 import { openWeather } from "apis";
+import localforage from "localforage";
+import types from "store/types/data";
 
 export function addCommand(name, args, icon, color) {
   return {
-    type: "ADD_COMMAND",
+    type: types.ADD_COMMAND,
     payload: { name, args, icon, color },
   };
 }
 export function setIsForegoundAuto(isFgAuto) {
-  return { type: "SET_ISFOREGROUND_AUTO", payload: isFgAuto };
+  return { type: types.SET_ISFOREGROUND_AUTO, payload: isFgAuto };
 }
 export function clearCommands() {
   return {
-    type: "CLEAR_COMMANDS",
+    type: types.CLEAR_COMMANDS,
   };
 }
 
-export function setTimerFlags(timerFlags) {
-  return { type: "SET_TIMER_FLAGS", payload: timerFlags };
+export function toggleClockEnabled(isClock) {
+  return { type: types.TOGGLE_CLOCK_ENABLED, payload: isClock };
 }
-export function addTimerFlags() {
-  return { type: "ADD_TIMER_FLAGS" };
+export function toggleParallaxEnabled(payload) {
+  return { type: types.TOGGLE_PARALLAX_ENABLED, payload };
 }
-export function toggleTimerIsPaused() {
-  return { type: "TOGGLE_TIMER_ISPAUSED" };
-}
-export function setTimerIsPaused(isPaused) {
-  return { type: "SET_TIMER_ISPAUSED", payload: isPaused };
-}
-export function toggleTimerLoop(loop) {
-  return { type: "TOGGLE_TIMER_LOOP", payload: loop };
-}
-export function setParallaxFactor(factor) {
-  return { type: "SET_PARALLAX_FACTOR", payload: factor };
-}
-export function toggleIsClock(isClock) {
-  return { type: "TOGGLE_IS_CLOCK", payload: isClock };
-}
-export function toggleIsParallax() {
-  return (dispatch, getStore) => {
-    const prevIsParallax = getStore().data.isParallax;
-    dispatch({ type: "TOGGLE_PARALLAX", payload: !prevIsParallax });
+export function setParallaxFactor(index, parallaxFactor) {
+  return {
+    type: types.SET_PARALLAX_FACTOR,
+    payload: { index, parallaxFactor },
   };
 }
 export function deleteCommand(name) {
   return {
-    type: "DELETE_COMMAND",
+    type: types.DELETE_COMMAND,
     payload: name,
   };
 }
 export function addToCommand(name, args) {
   return {
-    type: "ADD_TO_COMMAND",
+    type: types.ADD_TO_COMMAND,
     payload: { name, args },
   };
 }
 export function removeFromCommand(name, indexs) {
   return {
-    type: "REMOVE_FROM_COMMAND",
+    type: types.REMOVE_FROM_COMMAND,
     payload: { name, indexs },
   };
 }
-export function setCurrentTimer(currentTimer) {
-  return { type: "SET_CURRENT_TIMER", payload: currentTimer };
-}
-export function setCountingTo(countingTo) {
-  return { type: "SET_COUNTING_TO", payload: countingTo };
-}
-export function setTimerData(data) {
-  return { type: "SET_TIMER_DATA", payload: data };
-}
 export function setClockPosition(position) {
   return {
-    type: "SET_CLOCKPOS",
+    type: types.SET_CLOCK_POSITION,
     payload: position,
   };
 }
 export function setClockAlign(align) {
   return {
-    type: "SET_CLOCKALIGN",
+    type: types.SET_CLOCK_ALIGN,
     payload: align,
   };
 }
-export function toggleAltNewtab() {
-  return (dispatch, getStore) => {
-    const prevAltNewtab = getStore().data.altNewtab;
-    dispatch({ type: "TOGGLE_ALT_NEWTAB", payload: !prevAltNewtab });
+export function toggleEnterOpensNewtab() {
+  return {
+    type: types.TOGGLE_ENTER_OPENS_NEWTAB,
   };
 }
 export function setFont(font) {
   return {
-    type: "SET_FONT",
+    type: types.SET_FONT,
     payload: font,
   };
 }
 export function setIndentifier(iden) {
   return {
-    type: "SET_IDENTIFIER",
+    type: types.SET_IDENTIFIER,
     payload: iden,
   };
 }
 export function addTodo(todo) {
   return {
-    type: "ADD_TODO",
+    type: types.ADD_TODO,
     payload: todo,
   };
 }
 export function removeTodo(index) {
   return {
-    type: "REMOVE_TODO",
+    type: types.REMOVE_TODO,
     payload: index,
   };
 }
-export function importData() {
-  return async (dispatch) => {
-    const fileReader = new window.FileReader();
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.style.opacity = "0";
-    input.style.position = "absolute";
-    input.style.bottom = "0";
-    document.body.appendChild(input);
-    input.click();
-    input.addEventListener("change", () => {
-      if (!input.files.length || input.files.length > 1) return;
-      fileReader.readAsText(input.files[0]);
-      fileReader.onload = ({ target }) => {
-        dispatch({ type: "IMPORT_DATA", payload: JSON.parse(target.result) });
-      };
-    });
+export function importData(data) {
+  return {
+    type: types.IMPORT_DATA,
+    payload: data,
   };
 }
 
-export function toggleMagnify() {
-  return (dispatch, getStore) => {
-    const prevMagnify = getStore().data.magnify;
-    dispatch({
-      type: "TOGGLE_MAGNIFY",
-      payload: !prevMagnify,
-    });
+export function toggleTaskbarMagnify() {
+  return {
+    type: types.TOGGLE_TASKBAR_MAGNIFY,
   };
 }
-export function togglePersianDate() {
-  return (dispatch, getStore) => {
-    const prevPD = getStore().data.persianDate;
-    dispatch({
-      type: "TOGGLE_PERSIAN_DATE",
-      payload: !prevPD,
-    });
+export function toggleDateIsPersian() {
+  return {
+    type: types.TOGGLE_DATE_ISPERSIAN,
   };
 }
 
 export function toggleClockFormat() {
-  return (dispatch, getStore) => {
-    const output = getStore().data.clockFormat === "12" ? "24" : "12";
-    dispatch({
-      type: "TOGGLE_CLOCK_FORMAT",
-      payload: output,
-    });
+  return {
+    type: types.TOGGLE_CLOCK_FORMAT,
   };
 }
+export function setCurrentBackground(input) {
+  if (input === "random") {
+    return (dispatch, getState) => {
+      const max = getState().data.backgrounds.length - 1;
+      const { current, list } = getState().data.themes;
+      const currentTheme = list[current];
 
-export function toggleGradient() {
-  return (dispatch, getStore) => {
-    const prevGradient = getStore().data.gradient;
+      const last = currentTheme.currentBackground;
+      let random;
+      do {
+        random = Math.round(Math.random() * max);
+      } while (last === random);
+      dispatch({
+        type: types.SET_CURRENT_BACKGROUND,
+        payload: random,
+      });
+    };
+  }
+  return {
+    type: types.SET_CURRENT_BACKGROUND,
+    payload: input,
+  };
+}
+export function addTheme() {
+  return {
+    type: types.ADD_THEME,
+  };
+}
+export function deleteTheme(index) {
+  return {
+    type: types.DELETE_THEME,
+    payload: index,
+  };
+}
+export function setCurrentTheme(index) {
+  return {
+    type: types.SET_CURRENT_THEME,
+    payload: index,
+  };
+}
+export function setDarkTheme(index) {
+  return {
+    type: types.SET_DARK_THEME,
+    payload: index,
+  };
+}
+export function setLightTheme(index) {
+  return {
+    type: types.SET_LIGHT_THEME,
+    payload: index,
+  };
+}
+export function toggleIsBackgroundRandom() {
+  return {
+    type: types.TOGGLE_IS_BACKGROUND_RANDOM,
+  };
+}
+export function addBackground(background, meta) {
+  return (dispatch, getState) => {
+    const backgroundsLength = getState().data.backgrounds.length;
+
     dispatch({
-      type: "TOGGLE_GRADIENT",
-      payload: !prevGradient,
+      type: types.ADD_BACKGROUND,
+      payload: { background, meta },
+    });
+    dispatch(setCurrentBackground(backgroundsLength));
+  };
+}
+export function deleteBackground(index) {
+  return (dispatch, getState) => {
+    try {
+      const { backgrounds, currentBackground } = getState().data;
+      const backgroundToDelete = backgrounds[currentBackground];
+      localforage.removeItem(backgroundToDelete.id);
+    } catch (error) {}
+
+    dispatch({
+      type: types.DELETE_BACKGROUND,
+      payload: index,
     });
   };
 }
-export function setGradient(gradient) {
+export function setBlur(index, blur) {
   return {
-    type: "SET_GRADIENT",
-    payload: gradient,
+    type: types.SET_BLUR,
+    payload: { index, blur },
   };
 }
-export function setBlur(blur) {
+export function setBrightness(index, brightness) {
   return {
-    type: "SET_BLUR",
-    payload: blur,
+    type: types.SET_BRIGHTNESS,
+    payload: { index, brightness },
   };
 }
-export function setBrightness(brightness) {
+export function toggleTodoCompleted(index) {
   return {
-    type: "SET_BRIGHTNESS",
-    payload: brightness,
+    type: types.TOGGLE_TODO_COMPLETED,
+    payload: index,
   };
 }
 export function setForeground(color) {
   return {
-    type: "SET_FOREGROUND",
+    type: types.SET_FOREGROUND,
     payload: color,
   };
 }
-export function addIsHistory() {
+export function circleSearchMode() {
   return {
-    type: "ADD_ISHISTORY",
+    type: types.CIRCLE_SEARCHMODE,
   };
 }
-export function addTaskbarIcon(iconConfig) {
+export function addTaskbarIcon(icon, index) {
   return {
-    type: "ADD_TASKBAR",
-    payload: iconConfig,
+    type: types.ADD_TASKBAR_ICON,
+    payload: { icon, index },
+  };
+}
+export function resetTaskbarIcons() {
+  return {
+    type: types.RESET_TASKBAR_ICONS,
+  };
+}
+export function changeTaskbarIconIndex(prevIndex, newIndex) {
+  return {
+    type: types.CHANGE_TASKBAR_ICON_INDEX,
+    payload: [prevIndex, newIndex],
   };
 }
 export function deleteTaskbarIcon(index) {
   return {
-    type: "DELETE_TASKBAR",
+    type: types.DELETE_TASKBAR_ICON,
     payload: index,
   };
 }
-export function editTaskbarIcon(iconConfig) {
+export function editTaskbarIcon(icon, index) {
   return {
-    type: "EDIT_TASKBAR",
-    payload: iconConfig,
-  };
-}
-export function editEmptyTaskbarIcon(iconConfig) {
-  return {
-    type: "EDIT_EMPTY_TASKBAR",
-    payload: iconConfig,
+    type: types.EDIT_TASKBAR_ICON,
+    payload: { index, icon },
   };
 }
 export function resetStorage() {
   return {
-    type: "RESET_STORAGE",
+    type: types.RESET_STORAGE,
   };
 }
 export function exportData() {
   return (dispatch, getState) => {
     const data = getState().data;
     const type = "text/json";
-    const filename = "Exported-data.json";
+    const date = new Date();
+    const filename = `exported-data_${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}.json`;
     var file = new Blob([JSON.stringify(data)], { type });
 
     var a = document.createElement("a"),
@@ -247,56 +276,27 @@ export function exportData() {
     }, 0);
   };
 }
-export function toggleDateActive() {
-  return { type: "TOGGLE_DATE_ACTIVE" };
+export function toggleDateEnabled() {
+  return { type: types.TOGGLE_DATE_ENABLED };
 }
-export function toggleWeatherActive() {
-  return { type: "TOGGLE_WEATHER_ACTIVE" };
+export function toggleWeatherEnabled() {
+  return { type: types.TOGGLE_WEATHER_ENABLED };
 }
-export function setWeatherData(q) {
-  const type = "SET_WEATHER_DATA";
-  return async (dispatch, getState) => {
-    const result = getState().data.weatherData;
-    if (!result) {
-      dispatch({ type, payload: { ...result } });
-      return;
-    }
-    if (result.time && result.data)
-      if (result.data.name === q)
-        if (Date.now() - result.time <= 3600 * 1000) {
-          dispatch({ type, payload: { ...result } });
-          return;
-        }
-    dispatch({ type, payload: {} });
-    //api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-    if (q === "Automatic") {
-      navigator.geolocation.getCurrentPosition(
-        ({ coords: { latitude: lat, longitude: lon } }) => {
-          dispatchData({ lat, lon });
-        }
-      );
-    } else {
-      dispatchData({ q });
-    }
-
-    async function dispatchData(params) {
-      const { data } = await openWeather.get("/weather", {
-        params,
-      });
-
-      dispatch({ type, payload: { data, time: new Date().getTime() } });
-    }
+export function setWeatherData(data) {
+  return {
+    type: types.SET_WEATHER_DATA,
+    payload: data,
   };
 }
 export function setWeatherCity(q) {
-  return { type: "SET_WEATHER_CITY", payload: q };
+  return { type: types.SET_WEATHER_CITY, payload: q };
 }
-export function setUnsplash(un) {
-  return { type: "SET_UNSPLASH", payload: un };
+export function setUnsplashCollections(un) {
+  return { type: types.SET_UNSPLASH_COLLECTIONS, payload: un };
 }
-export function toggleIsAcCommands() {
-  return { type: "TOGGLE_IS_AC_COMMANDS" };
+export function toggleSuggestCommandsEnabled() {
+  return { type: types.TOGGLE_SUGGEST_COMMANDS_ENABLED };
 }
-export function setAcCommands(acCommands) {
-  return { type: "SET_AC_COMMANDS", payload: acCommands };
+export function setSuggestCommandsCount(count) {
+  return { type: types.SET_SUGGEST_COMMANDS_COUNT, payload: count };
 }

@@ -1,324 +1,473 @@
 /*global chrome*/
-
-import setBackground from "services/Images/setBackground";
 import * as actions from "store/actions";
 import store from "store";
+import {
+  addBackground,
+  deleteBackground,
+  setCurrentBackground,
+  setImageLoaded,
+  toggleIsBackgroundRandom,
+  setIsFetchingImage,
+  addTheme,
+  setCurrentTheme,
+  deleteTheme,
+  setDarkTheme,
+  setLightTheme,
+  setTempIcon,
+} from "store/actions";
+import { unsplash } from "apis";
+import axios from "axios";
+import { addBlobAsBackground } from "services/Images";
 
+function checkIcon(timeout = 1500) {
+  store.dispatch(setTempIcon("fa fa-check"));
+  setTimeout(() => {
+    store.dispatch(setTempIcon(""));
+  }, timeout);
+}
 const defaultCommands = {
-  date() {
-    return () => () => {
-      store.dispatch(actions.toggleDateActive());
-    };
+  date: {
+    function() {
+      return () => () => {
+        store.dispatch(actions.toggleDateEnabled());
+      };
+    },
+    icon: "fa fa-calendar",
   },
-  w() {
-    return () => () => {
-      store.dispatch(actions.toggleWeatherActive());
-      store.dispatch(actions.setTerm(""));
-    };
+  w: {
+    function() {
+      return () => () => {
+        store.dispatch(actions.toggleWeatherEnabled());
+        store.dispatch(actions.setTerm(""));
+      };
+    },
+    icon: "fa fa-temperature-half",
   },
-  clock(input) {
-    if (input) {
-      const [position, align] = input.toLowerCase().split(/\s/);
-      if (position && align)
+  clock: {
+    function(input) {
+      if (input) {
+        const [position, align] = input.toLowerCase().split(/\s/);
+        if (position && align)
+          return () => () => {
+            store.dispatch(actions.setClockPosition(position));
+            store.dispatch(
+              actions.setClockAlign(
+                ["end", "start"].includes(align) ? "flex-" + align : align
+              )
+            );
+            store.dispatch(actions.setTerm(""));
+          };
+      }
+    },
+    icon: "fa fa-clock",
+    recommended: [
+      { phrase: "center" },
+      { phrase: "left" },
+      { phrase: "right" },
+    ],
+  },
+  font: {
+    function(input) {
+      return () => () => store.dispatch(actions.setFont(input));
+    },
+    icon: "fa fa-font",
+  },
+  todo: {
+    function(input) {
+      return () => () => {
+        checkIcon();
+        store.dispatch(actions.addTodo({ message: input }));
+      };
+    },
+    icon: "clipboard-list-check",
+  },
+  par: {
+    function(input) {
+      const { current, list } = store.getState().data.themes;
+      const currentTheme = list[current];
+
+      const bgIndex = currentTheme.currentBackground;
+      if (!parseFloat(input))
         return () => () => {
-          store.dispatch(actions.setClockPosition(position));
-          store.dispatch(
-            actions.setClockAlign(
-              ["end", "start"].includes(align) ? "flex-" + align : align
-            )
-          );
-          store.dispatch(actions.setTerm(""));
+          store.dispatch(actions.toggleParallaxEnabled(bgIndex));
+          checkIcon();
         };
-    }
+      return () => () => {
+        store.dispatch(actions.setParallaxFactor(bgIndex, parseFloat(input)));
+        checkIcon();
+      };
+    },
   },
-  font(input) {
-    return () => () => store.dispatch(actions.setFont(input));
-  },
-  todo(input) {
-    return () => () => store.dispatch(actions.addTodo(input));
-  },
-  par(input) {
-    if (!parseFloat(input))
-      return () => () => store.dispatch(actions.toggleIsParallax());
-    return () => () =>
-      store.dispatch(actions.setParallaxFactor(parseFloat(input)));
-  },
-  c(input) {
-    const sums = {
-      his: "history",
-      ext: "extensions",
-      set: "settings",
-      [""]: "version",
-    };
-    return () =>
-      async ({ altKey }) => {
-        const url = "chrome://" + (sums[input] || input);
-        if (altKey) {
-          chrome.tabs.getCurrent(({ id, index }) => {
-            chrome.tabs.create({
-              url,
-              index,
+  c: {
+    function(input) {
+      const sums = {
+        his: "history",
+        ext: "extensions",
+        set: "settings",
+        [""]: "version",
+      };
+      return () =>
+        async ({ altKey }) => {
+          const url = "chrome://" + (sums[input] || input);
+          if (altKey) {
+            chrome?.tabs.getCurrent(({ id, index }) => {
+              chrome?.tabs.create({
+                url,
+                index,
+              });
+              chrome?.tabs.remove(id);
             });
-            chrome.tabs.remove(id);
+          } else chrome?.tabs.create({ url });
+        };
+    },
+    icon: "fab fa-chrome",
+    recommended: [{ phrase: "his" }, { phrase: "ext" }, { phrase: "set" }],
+  },
+  iden: {
+    function(input) {
+      return () => () => {
+        store.dispatch(actions.setIndentifier(input.trim()));
+        checkIcon();
+      };
+    },
+    icon: "fa fa-tilde",
+    recommended: [{ phrase: "/" }, { phrase: "~" }, { phrase: "-" }],
+  },
+  exp: {
+    function() {
+      return () => () => store.dispatch(actions.exportData());
+    },
+    icon: "fa fa-file-export",
+  },
+  imp: {
+    function() {
+      return () => () => {
+        const fileReader = new window.FileReader();
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.style.opacity = "0";
+        input.style.position = "absolute";
+        input.style.bottom = "0";
+        document.body.appendChild(input);
+        input.click();
+        input.addEventListener("change", () => {
+          if (!input.files.length || input.files.length > 1) return;
+          fileReader.readAsText(input.files[0]);
+          fileReader.onload = ({ target: { result } }) => {
+            const dataKeys = Object.keys(store.getState().data);
+            const data = JSON.parse(result);
+            const filteredEnteries = Object.entries(data)
+              .map(([key, value]) => {
+                if (dataKeys.includes(key)) return [key, value];
+                return [key, null];
+              })
+              .filter(([key, value]) => !!value);
+
+            store.dispatch(
+              actions.importData(Object.fromEntries(filteredEnteries))
+            );
+          };
+        });
+      };
+    },
+    icon: "fa fa-file-import",
+  },
+  mag: {
+    function() {
+      return () => () => store.dispatch(actions.toggleTaskbarMagnify());
+    },
+    icon: "fa fa-magnifying-glass-plus",
+  },
+  // gr() {
+  //   return () => () => store.dispatch(actions.toggleGradient());
+  // },
+  ac: {
+    function(input) {
+      return () => () => {
+        if (!+input && input !== "0")
+          store.dispatch(actions.toggleSuggestCommandsEnabled());
+        else store.dispatch(actions.setSuggestCommandsCount(+input));
+      };
+    },
+  },
+  bl: {
+    function(input) {
+      const [notTerminal, terminal, setting] = input.split(/\s/g);
+      const { current, list } = store.getState().data.themes;
+      const currentTheme = list[current];
+
+      const bgIndex = currentTheme.currentBackground;
+      return () => () =>
+        store.dispatch(
+          actions.setBlur(bgIndex, {
+            terminal: terminal || 0,
+            notTerminal: notTerminal || 0,
+            setting: setting || "10",
+          })
+        );
+    },
+  },
+  br: {
+    function(input) {
+      const [notTerminal, terminal, setting] = input.split(/\s/g);
+
+      const { current, list } = store.getState().data.themes;
+      const currentTheme = list[current];
+
+      const bgIndex = currentTheme.currentBackground;
+
+      return () => () =>
+        store.dispatch(
+          actions.setBrightness(bgIndex, {
+            terminal: terminal || 1,
+            notTerminal: notTerminal || 1,
+            setting: setting || ".8",
+          })
+        );
+    },
+  },
+  bg: {
+    function(input) {
+      if (input === "random") {
+        return () => () => store.dispatch(toggleIsBackgroundRandom());
+      }
+      if (input === "un") {
+        const { current, list } = store.getState().data.themes;
+        const currentTheme = list[current];
+
+        const collections = currentTheme.unsplashCollections;
+        const getAndFetchBackground = async () => {
+          let {
+            data: { urls },
+          } = await unsplash.get("/random", {
+            params: {
+              collections,
+            },
           });
-        } else chrome.tabs.create({ url });
-      };
-  },
-  iden(input) {
-    if (input.trim())
-      return () => () => store.dispatch(actions.setIndentifier(input.trim()));
-  },
-  exp() {
-    return () => () => store.dispatch(actions.exportData());
-  },
-  imp() {
-    return () => () => store.dispatch(actions.importData());
-  },
-  mag() {
-    return () => () => store.dispatch(actions.toggleMagnify());
-  },
-  gr() {
-    return () => () => store.dispatch(actions.toggleGradient());
-  },
-  ac(input) {
-    return () => () => {
-      if (!+input && input !== "0")
-        store.dispatch(actions.toggleIsAcCommands());
-      else store.dispatch(actions.setAcCommands(+input));
-    };
-  },
-  bl(input) {
-    const [notTerminal, terminal, setting] = input.split(/\s/g);
-    return () => () =>
-      store.dispatch(
-        actions.setBlur({
-          terminal: terminal || 0,
-          notTerminal: notTerminal || 0,
-          setting: setting || "10",
-        })
-      );
-  },
-  br(input) {
-    const [notTerminal, terminal, setting] = input.split(/\s/g);
-    return () => () =>
-      store.dispatch(
-        actions.setBrightness({
-          terminal: terminal || 1,
-          notTerminal: notTerminal || 1,
-          setting: setting || ".8",
-        })
-      );
-  },
-  bg(input) {
-    if (input) return () => () => setBackground(input);
-  },
-  fg(input) {
-    if (input) {
-      if (input === "default") input = "white";
-      if (input === "auto")
-        return () => () => store.dispatch(actions.setIsForegoundAuto(true));
-      const [first, second] = input.includes("ovr")
-        ? ["ovr", input.replace(/ovr\s/, "")]
-        : [];
-      if (first && second && first === "ovr") input = second + " !important";
+          const metas = store.getState().data.backgrounds?.map((e) => e.meta);
+          if (metas?.includes(urls.full)) return getAndFetchBackground();
+          store.dispatch(setIsFetchingImage(true));
+          let blobResult = await axios.get(urls.full, {
+            responseType: "blob",
+            onDownloadProgress: ({ loaded, total }) => {
+              store.dispatch(setImageLoaded(loaded / total));
+            },
+          });
+          store.dispatch(setIsFetchingImage(false));
+          store.dispatch(setImageLoaded(0));
 
-      return () => () => {
-        store.dispatch(actions.setForeground(input));
-        store.dispatch(actions.setIsForegoundAuto(false));
-      };
-    }
-  },
-  un(input) {
-    if (input)
-      return () => () => {
-        store.dispatch(actions.setUnsplash(input));
-        store.dispatch(actions.setBackground("unsplash"));
-      };
-    return () => "https://unsplash.com/collections";
-  },
-  commandCl(input) {
-    if (input === "CONFIRM")
-      return () => () => store.dispatch(actions.clearCommands());
-  },
-  command(input) {
-    let [commandName, ...commandFunctions] = input
-      .replace(/icon:".*"/g, "")
-      .replace(/color:".*"/g, "")
-      .split(/\s/g)
-      .filter((e) => !!e);
-    const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
-    const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
-    if (icon) {
-      document.querySelector(
-        ".terminal-output"
-      ).className = `terminal-output ${icon}`;
-    } else {
-      document.querySelector(".terminal-output").className =
-        "terminal-output fontawe";
-    }
+          addBlobAsBackground(blobResult.data, urls.full);
+        };
 
-    if (
-      ["command", "commandCl"].includes(commandName) ||
-      !commandFunctions.length
-    )
-      return;
-
-    return () => {
-      switch (commandFunctions[0].toLowerCase()) {
-        case "delete":
-          return () => store.dispatch(actions.deleteCommand(commandName));
-        case "add":
-          return () =>
-            store.dispatch(
-              actions.addToCommand(commandName, commandFunctions.delete(0))
-            );
-        case "remove":
-          return () =>
-            store.dispatch(
-              actions.removeFromCommand(commandName, commandFunctions)
-            );
-        default:
-          return () =>
-            store.dispatch(
-              actions.addCommand(commandName, commandFunctions, icon, color)
-            );
+        return () => getAndFetchBackground;
       }
-    };
-  },
-  rr: () => () => () => store.dispatch(actions.resetStorage()),
-  url(input) {
-    return () => {
-      if (!input.match(/^http[s]?:\/\//i) && !input.match(/^((..?)?\/)+.*/i)) {
-        input = "http://" + input;
+      const [first, second] = input.split(" ");
+      if (+first || first === "0") {
+        if (second === "delete")
+          return () => () => store.dispatch(deleteBackground(+first));
+        return () => () => store.dispatch(setCurrentBackground(+first));
       }
-      return input;
-    };
+
+      if (input)
+        return () => () => store.dispatch(addBackground({ cssValue: input }));
+    },
+    icon: "fa fa-image",
+    recommended: [{ phrase: "un" }, { phrase: "random" }],
   },
-  imdb(input) {
-    if (input)
-      return () => {
-        return "https://www.imdb.com/find?q=" + input;
-      };
-    else
-      return () => {
-        return "https://www.imdb.com/";
-      };
+  themes: {
+    function(input) {
+      const [type, arg] = input.split(/\s/);
+
+      if (type === "add") {
+        return () => () => store.dispatch(addTheme());
+      }
+      if (+type || type === "0") {
+        switch (arg) {
+          case "delete":
+            return () => () => {
+              store.dispatch(deleteTheme(+type));
+              checkIcon();
+            };
+
+          case "dark":
+            return () => () => {
+              store.dispatch(setDarkTheme(+type));
+              checkIcon();
+            };
+
+          case "light":
+            return () => () => {
+              store.dispatch(setLightTheme(+type));
+              checkIcon();
+            };
+
+          default:
+            return () => () => {
+              store.dispatch(setCurrentTheme(+type));
+              checkIcon();
+            };
+        }
+      }
+    },
+    recommended: [
+      {
+        phrase: "add",
+        icon: "fa fa-plus",
+      },
+      {
+        phrase: "0 delete",
+      },
+    ],
   },
-  stack(input) {
-    if (input)
-      return () => {
-        return "https://stackoverflow.com/search?q=" + input;
-      };
-    else
-      return () => {
-        return "https://stackoverflow.com";
-      };
+  fg: {
+    function(input) {
+      if (input) {
+        let color, isOvr;
+        if (input === "default") color = "white";
+        if (input === "auto")
+          return () => () => store.dispatch(actions.setIsForegoundAuto(true));
+
+        color = input.replace(/ovr\s/, "");
+        isOvr = input.includes("ovr");
+
+        return () => () => {
+          store.dispatch(actions.setForeground({ color, isOvr }));
+          store.dispatch(actions.setIsForegoundAuto(false));
+        };
+      }
+    },
+    icon: "fa fa-brush",
+    recommended: [
+      {
+        phrase: "ovr ",
+      },
+    ],
   },
-  mo(input) {
-    if (input)
-      return () => {
-        return "https://www.f2m.site/?s=" + input;
-      };
-    else
-      return () => {
-        return "https://www.f2m.site/";
-      };
+  un: {
+    function(input) {
+      if (input)
+        return () => () => {
+          store.dispatch(actions.setUnsplashCollections(input));
+          defaultCommands.bg.function("un")()();
+        };
+      return () => "https://unsplash.com/collections";
+    },
+    icon: "fab fa-unsplash",
   },
-  t() {
-    return () => {
-      return "https://webz.telegram.org/";
-    };
+  commandCl: {
+    function(input) {
+      if (input === "CONFIRM")
+        return () => () => store.dispatch(actions.clearCommands());
+    },
+    icon: "fa fa-trash",
+    recommended: [
+      {
+        phrase: "CONFIRM",
+      },
+    ],
   },
-  r(input) {
-    if (!input)
+  command: {
+    function(input) {
+      let [commandName, ...commandFunctions] = input
+        .replace(/icon:".*"/g, "")
+        .replace(/color:".*"/g, "")
+        .split(/\s/g)
+        .filter((e) => !!e);
+      const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
+      const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
       return () => {
-        return "https://www.reddit.com/";
+        switch ((commandFunctions[0] || "").toLowerCase()) {
+          case "delete":
+            return () => store.dispatch(actions.deleteCommand(commandName));
+          case "add":
+            return () =>
+              store.dispatch(
+                actions.addToCommand(commandName, commandFunctions.delete(0))
+              );
+          case "remove":
+            return () =>
+              store.dispatch(
+                actions.removeFromCommand(commandName, commandFunctions)
+              );
+          default:
+            return () =>
+              store.dispatch(
+                actions.addCommand(commandName, commandFunctions, icon, color)
+              );
+        }
       };
-    else
-      return () => {
-        return "https://www.reddit.com/r/" + input;
-      };
+    },
+    icon: "fa fa-command",
   },
-  sp(input) {
-    if (!input)
-      return () => {
-        return "https://open.spotify.com/";
-      };
-    else
-      return () => {
-        return "https://open.spotify.com/search/" + input;
-      };
+  rr: {
+    function(input) {
+      if (input === "CONFIRM") {
+        return () => () => store.dispatch(actions.resetStorage());
+      }
+    },
+    icon: "fa fa-trash",
   },
-  dis() {
-    return () => {
-      return "https://discord.com/channels/@me";
-    };
+  url: {
+    function(input) {
+      return () => {
+        if (
+          !input.match(/^http[s]?:\/\//i) &&
+          !input.match(/^((..?)?\/)+.*/i)
+        ) {
+          input = "http://" + input;
+        }
+        return input;
+      };
+    },
+    color: "#037fec",
+    icon: "fa fa-globe",
   },
-  search(input) {
-    try {
-      if (chrome.search.query)
+  search: {
+    function(text) {
+      text = encodeURI(text);
+      if (chrome?.search?.query)
         return () =>
           ({ altKey }) => {
-            chrome.search.query({
+            chrome?.search?.query({
               disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
-              text: input,
+              text,
             });
           };
-    } catch (error) {}
-    return this.g(input);
-  },
-  g(input) {
-    return () => {
-      return "https://www.google.com/search?q=" + input;
-    };
-  },
 
-  b(input) {
-    let [title, url, parentId] = input.split(/\s/g);
-    let tempObj;
-    if (title && url) {
-      tempObj = {
-        url: this.url(url)(),
-        title,
-        parentId: parentId || "1",
-      };
-    }
-    return () => () => {
-      chrome.bookmarks.create(tempObj);
-    };
+      return defaultCommands.g.function(text);
+    },
+    icon: "fa fa-search",
   },
-  tr(input) {
-    if (input) {
-      let inputLang;
-      let text;
-      let outputLang;
-      if (input.split(",").length === 2) {
-        inputLang = input.split(",")[0];
-        text = input.split(",")[1];
-        outputLang = "en";
-      } else if (input.split(",").length === 3) {
-        inputLang = input.split(",")[0];
-        outputLang = input.split(",")[1];
-        text = input.split(",")[2];
-      } else {
-        inputLang = "en";
-        outputLang = "fa";
-        text = input;
+  g: {
+    function(input) {
+      return () => {
+        return "https://www.google.com/search?q=" + input;
+      };
+    },
+    icon: "fab fa-google",
+  },
+  b: {
+    function(input) {
+      let [title, url, parentId] = input.split(/\s/g);
+      let tempObj;
+      if (title && url) {
+        tempObj = {
+          url: defaultCommands.url.function(url)(),
+          title,
+          parentId: parentId || "1",
+        };
       }
-
-      return () => {
-        return `https://translate.google.com/?sl=${inputLang}&tl=${outputLang}&text=${encodeURI(
-          text
-        )}&op=translate`;
+      return () => () => {
+        chrome?.bookmarks.create(tempObj);
       };
-    } else {
-      return () => {
-        return "https://translate.google.com/";
-      };
-    }
+    },
+    icon: "fa fa-bookmark",
   },
-  taskbar() {
-    return () => () => store.dispatch(actions.toggleTaskbarEdit());
+  taskbar: {
+    function() {
+      return () => () => store.dispatch(actions.toggleTaskbarEdit());
+    },
   },
 };
 

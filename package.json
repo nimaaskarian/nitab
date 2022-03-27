@@ -1,6 +1,6 @@
 {
   "name": "nitab",
-  "version": "3.22.5",
+  "version": "4.0.2",
   "homepage": "./",
   "private": true,
   "dependencies": {
@@ -13,15 +13,16 @@
     "html-react-parser": "^1.4.6",
     "localforage": "^1.10.0",
     "localforage-observable": "^2.1.1",
+    "nanoid": "^3.3.1",
     "persian-date": "^1.1.0",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
     "react-alert-template-basic": "^1.0.2",
+    "react-app-rewired": "^2.2.1",
     "react-autocomplete": "^1.8.1",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
     "react-dropdown": "^1.9.2",
-    "react-dropzone": "^11.5.3",
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.6",
     "react-scripts": "5.0.0",
@@ -37,10 +38,11 @@
     "zen-observable": "^0.8.15"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "build": "INLINE_RUNTIME_CHUNK=false react-app-rewired build",
+    "deploy": "gh-pages -b gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -61,6 +63,9 @@
     ]
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^2.0.6",
+    "customize-cra": "^1.0.0",
+    "gh-pages": "^3.2.3",
     "riek": "^1.1.0"
   }
 }
