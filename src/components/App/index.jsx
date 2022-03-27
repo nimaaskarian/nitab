@@ -16,7 +16,6 @@ import Taskbar from "../Taskbar";
 import Background from "../Background";
 import Dropzone from "../Dropzone";
 import useCommands from "hooks/useCommands";
-import useIsTermEmpty from "hooks/useIsTermEmpty";
 import useAlert from "hooks/useAlert";
 
 import mutedKeys, { termEmptyMuted } from "services/mutedKeys";
@@ -30,7 +29,7 @@ import useIsThemeDark from "hooks/useIsThemeDark";
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
   const commands = useCommands();
-  const isTermEmpty = useIsTermEmpty();
+  const isTermEmpty = useSelector(({ ui }) => !ui.term);
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
   const isRandom = useSelector(
     ({
