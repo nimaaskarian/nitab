@@ -43,7 +43,6 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
     <TaskbarIconWrapper
       onDragStart={() => setIsDragging(true)}
       onDragEnd={() => setIsDragging(false)}
-      draggable
     >
       <TaskbarIconElement
         ref={ref}

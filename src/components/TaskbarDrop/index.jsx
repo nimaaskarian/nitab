@@ -15,6 +15,8 @@ const TaskbarDrop = ({ index, children }) => {
   );
   const dispatch = useDispatch();
   const handleDrop = () => {
+    setIsOver(false);
+
     if (currentDragging === -1) return;
     if (typeof currentDragging === "object") {
       dispatch(addTaskbarIcon(currentDragging, index));
@@ -37,6 +39,8 @@ const TaskbarDrop = ({ index, children }) => {
     <StyledTaskbarDrop
       onDrop={handleDrop}
       onDragOver={handleOver}
+      onDragEnd={() => setIsOver(false)}
+      onDragLeave={() => setIsOver(false)}
       isOver={isOver}
       hasPlus={hasPlus}
       visible={currentDragging !== -1}

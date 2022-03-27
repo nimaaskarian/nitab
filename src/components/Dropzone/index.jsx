@@ -11,6 +11,8 @@ const Dropzone = ({ setDragMessage }) => {
   const alert = useAlert();
   const imageRegexp = new RegExp("image/.*");
   const dispatch = useDispatch();
+  const isTaskbarDragging = useSelector(({ ui }) => ui.currentDragging !== -1);
+
   const handleImage = (file) => {
     alert.show(
       <Alert>{file.name} has been set as your background picture</Alert>
@@ -56,15 +58,13 @@ const Dropzone = ({ setDragMessage }) => {
       }
     });
   };
-  if (isTaskbarEdit) return null;
+  if (isTaskbarEdit || isTaskbarDragging) return null;
   return (
-    <>
-      <ImageDropzoneContainer
-        onDragExit={() => setDragMessage("")}
-        onDragOver={dragHandle}
-        onDrop={dropHandle}
-      />
-    </>
+    <ImageDropzoneContainer
+      onDragLeave={() => setDragMessage("")}
+      onDragOver={dragHandle}
+      onDrop={dropHandle}
+    />
   );
 };
 
