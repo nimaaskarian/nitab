@@ -1,6 +1,6 @@
 // eslint-disable-next-line jsx-a11y/anchor-has-content
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -12,7 +12,6 @@ import {
 import defaultCommands from "services/Commands/defaultCommands";
 
 import { TaskbarIconElement, TaskbarIconWrapper } from "./style";
-import { useDrag } from "react-dnd";
 
 const TaskbarIcon = React.forwardRef((props, ref) => {
   const isBlured = useSelector(
@@ -21,14 +20,8 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
       ui.editTaskbarIndex !== props.index &&
       props.index !== -1
   );
-  console.log(isBlured);
   const dispatch = useDispatch();
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "taskbar-icon",
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
+  const [isDragging, setIsDragging] = useState(false);
   useEffect(() => {
     if (isDragging) {
       if (props.index === -1 && props.icon) {
@@ -47,7 +40,11 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
   const { r, g, b, a } = props.color;
   return (
-    <TaskbarIconWrapper ref={drag}>
+    <TaskbarIconWrapper
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => setIsDragging(false)}
+      draggable
+    >
       <TaskbarIconElement
         ref={ref}
         onDoubleClick={() => dispatch(deleteTaskbarIcon(props.index))}

@@ -14,7 +14,7 @@ import {
 import Terminal from "../Terminal";
 import Taskbar from "../Taskbar";
 import Background from "../Background";
-import ImageDropzone from "../ImageDropzone";
+import Dropzone from "../Dropzone";
 import useCommands from "hooks/useCommands";
 import useIsTermEmpty from "hooks/useIsTermEmpty";
 import useAlert from "hooks/useAlert";
@@ -28,12 +28,10 @@ import CommandsContext from "context/CommandsContext";
 
 import { AppContainer, MainAndTaskbarWrapper } from "./style";
 import Main from "components/Main";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import useIsThemeDark from "hooks/useIsThemeDark";
+
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
-  console.log("rerender");
   const commands = useCommands();
   const isTermEmpty = useIsTermEmpty();
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
@@ -71,7 +69,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(darkIndex, lightIndex, isDarkTheme);
     if (darkIndex !== -1 && isDarkTheme) dispatch(setCurrentTheme(darkIndex));
 
     if (lightIndex !== -1 && !isDarkTheme)
@@ -135,10 +132,11 @@ const App = () => {
   const RenderedContent = () => {
     if (!isTerminal)
       return (
-        <DndProvider backend={HTML5Backend}>
+        <>
           <Main />
+
           <Taskbar />
-        </DndProvider>
+        </>
       );
     return (
       <CommandsContext.Provider value={commands}>
@@ -146,17 +144,17 @@ const App = () => {
       </CommandsContext.Provider>
     );
   };
-
+  const [dragMessage, setDragMessage] = useState();
   return (
     <React.Fragment>
-      <ImageDropzone />
+      <Dropzone setDragMessage={setDragMessage} />
       <Helmet>
         <title>{identifier}Niotab</title>
       </Helmet>
       <Background isTerminal={isTerminal} />
 
       <AppContainer color={foreground.color} font={font}>
-        <RenderedContent />
+        {dragMessage ? <h1>{dragMessage}...</h1> : <RenderedContent />}
       </AppContainer>
     </React.Fragment>
   );

@@ -44,7 +44,6 @@ const Alert = (props) => {
   }, [themesLength]);
 
   useEffect(() => {
-    console.log("isfetchingimagechange", isFetchingImage);
     if (isFetchingImage) {
       let alertInstance = alert.show(
         <AlertComponent>

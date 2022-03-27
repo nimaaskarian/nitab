@@ -1,6 +1,6 @@
 {
   "name": "nitab",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "homepage": "./",
   "private": true,
   "dependencies": {
@@ -21,11 +21,8 @@
     "react-app-rewired": "^2.2.1",
     "react-autocomplete": "^1.8.1",
     "react-color": "^2.19.3",
-    "react-dnd": "^15.1.1",
-    "react-dnd-html5-backend": "^15.1.2",
     "react-dom": "^17.0.2",
     "react-dropdown": "^1.9.2",
-    "react-dropzone": "^11.5.3",
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.6",
     "react-scripts": "5.0.0",
