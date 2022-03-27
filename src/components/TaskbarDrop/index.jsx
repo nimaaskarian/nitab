@@ -14,9 +14,9 @@ const TaskbarDrop = ({ index, children }) => {
     ({ data, ui }) => data.taskbar.icons.length === index && ui.isTaskbarEdit
   );
   const dispatch = useDispatch();
-  const handleDrop = () => {
+  const handleDrop = (ev) => {
     setIsOver(false);
-
+    ev.preventDefault();
     if (currentDragging === -1) return;
     if (typeof currentDragging === "object") {
       dispatch(addTaskbarIcon(currentDragging, index));
