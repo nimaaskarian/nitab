@@ -7,7 +7,7 @@ import { setForeground } from "store/actions";
 import useParallax from "hooks/useParallax";
 import { StyledBackground } from "./style";
 import { getImageLightness } from "services/Images";
-import isDark from "services/Styles/isdark-min";
+import isDark from "services/isdark-min";
 const Background = ({ isTerminal }) => {
   const dispatch = useDispatch();
   const parallax = useParallax();

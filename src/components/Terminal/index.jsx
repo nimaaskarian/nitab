@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback, useContext } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import history from "js/history";
+import history from "services/history";
 import Autocomplete from "../AutocompleteList";
 import { termToCommand } from "services/Commands/index.js";
 import { setTerm } from "store/actions";

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { isDark } from "services/Styles";
+import isDark from "services/isdark-min";
 export const AppContainer = styled.div`
   font-family: ${({ font }) => `${font}`};
   ${({ color }) => {

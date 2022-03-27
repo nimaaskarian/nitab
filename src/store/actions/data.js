@@ -1,4 +1,3 @@
-import { openWeather } from "apis";
 import localforage from "localforage";
 import types from "store/types/data";
 

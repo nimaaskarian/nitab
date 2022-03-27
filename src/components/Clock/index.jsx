@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import persianDate from "persian-date";
-import { format12h, format24h } from "services/Format/time";
+import { format12h, format24h } from "services/formatTime";
 import Weather from "components/Weather";
 import { toggleDateIsPersian, toggleClockFormat } from "store/actions";
 import useTime from "hooks/useTime";

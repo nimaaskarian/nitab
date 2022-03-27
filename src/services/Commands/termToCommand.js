@@ -30,6 +30,7 @@ function _regex(identifier) {
       return { main: new RegExp(".*"), replace: "" };
     case ".":
       identifier = `\.`;
+      break;
     default:
       break;
   }

@@ -22,7 +22,7 @@ import useAlert from "hooks/useAlert";
 import mutedKeys, {
   ctrlShiftMuted,
   termEmptyMuted,
-} from "services/Lists/mutedKeys";
+} from "services/mutedKeys";
 
 import CommandsContext from "context/CommandsContext";
 
