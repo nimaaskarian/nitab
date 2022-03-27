@@ -425,7 +425,6 @@ const defaultCommands = {
   },
   search: {
     function(text) {
-      text = encodeURI(text);
       if (chrome?.search?.query)
         return () =>
           ({ altKey }) => {
