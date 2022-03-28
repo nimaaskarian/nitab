@@ -8,6 +8,12 @@ class Theme {
     this.font = "FiraCode, IranSans";
     this.isBackgroundRandom = false;
     this.isForegroundAuto = false;
+    this.clock = {
+      position: "center",
+      align: "center",
+      format: "24",
+      enabled: true,
+    };
   }
 }
 const INITIAL_STATE = {
@@ -61,7 +67,7 @@ function themesReducer(state = INITIAL_STATE, action) {
         ...state,
         list: state.list.replace(index, {
           ...theme,
-          isBackgroundRandom: !theme.isBackgroundRandom,
+          isBackgroundRandom: action.payload,
         }),
       };
     }
@@ -92,6 +98,43 @@ function themesReducer(state = INITIAL_STATE, action) {
         }),
       };
     }
+
+    case types.SET_CLOCK_POSITION:
+      return {
+        ...state,
+        list: state.list.replace(index, {
+          ...theme,
+          clock: { ...theme.clock, position: action.payload },
+        }),
+      };
+    case types.SET_CLOCK_ALIGN:
+      return {
+        ...state,
+        list: state.list.replace(index, {
+          ...theme,
+          clock: { ...theme.clock, align: action.payload },
+        }),
+      };
+    case types.TOGGLE_CLOCK_FORMAT:
+      return {
+        ...state,
+        list: state.list.replace(index, {
+          ...theme,
+          clock: {
+            ...theme.clock,
+            format: state.format === "12" ? "24" : "12",
+          },
+        }),
+      };
+    case types.TOGGLE_CLOCK_ENABLED:
+      return {
+        ...state,
+        list: state.list.replace(index, {
+          ...theme,
+          clock: { ...theme.clock, enabled: theme.clock.enabled },
+        }),
+      };
+
     default:
       return state;
   }

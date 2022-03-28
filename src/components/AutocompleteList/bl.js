@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
   const commands = useContext(CommandsContext);
-  const defaultIcon = useSelector(({ ui }) => ui.defaultIcon);
+  const defaultIcon = useSelector(({ data }) => data.terminal.defaultIcon);
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
   const [duckduckDisabled, setDuckDuckDisabled] = useState(false);
 

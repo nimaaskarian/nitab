@@ -8,7 +8,6 @@ import taskbarReducer from "./app/taskbar";
 import todosReducer from "./app/todos";
 import terminalReducer from "./app/terminal";
 import themesReducer from "./app/themes";
-import clockReducer from "./app/clock";
 
 import types from "store/types/data";
 
@@ -79,7 +78,6 @@ function dateReducer(state = DATE_INITIAL_STATE, action) {
 
 const appReducer = combineReducers({
   terminal: terminalReducer,
-  clock: clockReducer,
   themes: themesReducer,
   date: dateReducer,
   weather: weatherReducer,

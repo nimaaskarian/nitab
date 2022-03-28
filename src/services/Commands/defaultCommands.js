@@ -130,7 +130,6 @@ const defaultCommands = {
         checkIcon();
       };
     },
-    icon: "fa fa-tilde",
     recommended: [{ phrase: "/" }, { phrase: "~" }, { phrase: "-" }],
   },
   exp: {
@@ -302,13 +301,15 @@ const defaultCommands = {
 
           case "dark":
             return () => () => {
-              store.dispatch(setDarkTheme(+type));
+              if (type === "delete") store.dispatch(setDarkTheme(-1));
+              else store.dispatch(setDarkTheme(+type));
               checkIcon();
             };
 
           case "light":
             return () => () => {
-              store.dispatch(setLightTheme(+type));
+              if (type === "delete") store.dispatch(setDarkTheme(-1));
+              else store.dispatch(setLightTheme(+type));
               checkIcon();
             };
 
@@ -408,7 +409,6 @@ const defaultCommands = {
         }
       };
     },
-    icon: "fa fa-command",
   },
   rr: {
     function(input) {

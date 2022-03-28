@@ -14,20 +14,21 @@ const Clock = () => {
 
   const dateEnabled = useSelector(({ data }) => data.date.enabled);
   const weatherEnabled = useSelector(({ data }) => data.weather.enabled);
-
-  const position = useSelector(({ data }) => data.clock.position);
-  const align = useSelector(({ data }) => data.clock.align);
-  const format = useSelector(({ data }) => data.clock.format);
+  const { position, align, format, enabled } = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current].clock
+  );
 
   const isDatePersian = useSelector(({ data }) => data.date.isPersian);
 
   const dispatch = useDispatch();
 
-  const clockEnabled = useSelector(({ data }) => data.clock.enabled);
-
   return (
     <StyledClock position={position} align={align}>
-      {clockEnabled ? (
+      {enabled ? (
         <ClockTime onClick={() => dispatch(toggleClockFormat())}>
           {format === "12" ? format12h(time) : format24h(time)}
         </ClockTime>

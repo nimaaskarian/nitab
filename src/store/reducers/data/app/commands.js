@@ -19,9 +19,9 @@ const INITIAL_STATE = {
     color: "#1db954",
   },
   ig: {
-    args: ["instagram.com/%input%"],
     icon: "fab fa-instagram",
-    color: "#e52877",
+    args: ["instagram.com/%input%"],
+    color: "#cf2872",
   },
   wa: {
     args: ["web.whatsapp.com"],
@@ -62,7 +62,7 @@ const INITIAL_STATE = {
   },
   gate: {
     args: ["192.168.1.1"],
-    icon:"fa fa-ethernet"
+    icon: "fa fa-ethernet",
   },
   lh: {
     args: ["localhost:3000%?%localhost:%input%"],
@@ -70,7 +70,18 @@ const INITIAL_STATE = {
   },
   des: {
     args: ["desmos.com/calculator"],
-    icon: "fa fa-function",
+  },
+  tw: {
+    icon: "fab fa-twitter",
+    args: ["twitter.com%?%twitter.com/search?q=%input%&src=typed_query&f=top"],
+    color: "#0e7fca",
+  },
+
+  tr: {
+    args: [
+      "https://translate.google.com/?sl=en&tl=fa&text=%input%&op=translate",
+    ],
+    icon: "fa fa-language",
   },
   math: {
     args: ["math.microsoft.com/en%?%symbolab.com/"],

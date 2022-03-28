@@ -19,7 +19,7 @@ import SearchMode from "components/SearchMode";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const commands = useContext(CommandsContext);
-  const defaultIcon = useSelector(({ ui }) => ui.defaultIcon);
+  const defaultIcon = useSelector(({ data }) => data.terminal.defaultIcon);
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
   const tempIcon = useSelector(({ ui }) => ui.tempIcon);
