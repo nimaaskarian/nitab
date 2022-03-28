@@ -14,7 +14,7 @@ const Clock = () => {
 
   const dateEnabled = useSelector(({ data }) => data.date.enabled);
   const weatherEnabled = useSelector(({ data }) => data.weather.enabled);
-  const { position, align, format, enabled } = useSelector(
+  const { position, align, format24, enabled } = useSelector(
     ({
       data: {
         themes: { current, list },
@@ -30,7 +30,7 @@ const Clock = () => {
     <StyledClock position={position} align={align}>
       {enabled ? (
         <ClockTime onClick={() => dispatch(toggleClockFormat())}>
-          {format === "12" ? format12h(time) : format24h(time)}
+          {format24 ? format24h(time) : format12h(time)}
         </ClockTime>
       ) : null}
 

@@ -11,7 +11,7 @@ class Theme {
     this.clock = {
       position: "center",
       align: "center",
-      format: "24",
+      format24: false,
       enabled: true,
     };
   }
@@ -122,7 +122,7 @@ function themesReducer(state = INITIAL_STATE, action) {
           ...theme,
           clock: {
             ...theme.clock,
-            format: state.format === "12" ? "24" : "12",
+            format24: !theme.clock.format24,
           },
         }),
       };

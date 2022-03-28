@@ -25,7 +25,7 @@ const types = {
 
   SET_CLOCK_POSITION: "set-clock-position",
   SET_CLOCK_ALIGN: "set-clock-align",
-  TOGGLE_CLOCK_FORMAT: "set-clock-format",
+  TOGGLE_CLOCK_FORMAT: "toggle-clock-format",
   TOGGLE_CLOCK_ENABLED: "toggle-clock-enabled",
 
   CIRCLE_SEARCHMODE: "circle-searchmode",
