@@ -286,7 +286,17 @@ const defaultCommands = {
         switch (arg) {
           case "delete":
             return () => () => {
-              store.dispatch(deleteTheme(+type));
+              switch (type) {
+                case "light":
+                  store.dispatch(setLightTheme(-1));
+                  break;
+                case "dark":
+                  store.dispatch(setDarkTheme(-1));
+                  break;
+                default:
+                  store.dispatch(deleteTheme(+type));
+                  break;
+              }
               checkIcon();
             };
 
