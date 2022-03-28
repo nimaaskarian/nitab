@@ -14,12 +14,13 @@ const Clock = () => {
 
   const dateEnabled = useSelector(({ data }) => data.date.enabled);
   const weatherEnabled = useSelector(({ data }) => data.weather.enabled);
+
   const { position, align, format24, enabled } = useSelector(
     ({
       data: {
         themes: { current, list },
       },
-    }) => list[current].clock
+    }) => list[current].clock || {}
   );
 
   const isDatePersian = useSelector(({ data }) => data.date.isPersian);
