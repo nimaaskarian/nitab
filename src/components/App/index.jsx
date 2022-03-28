@@ -31,13 +31,14 @@ const App = () => {
   const commands = useCommands();
   const isTermEmpty = useSelector(({ ui }) => !ui.term);
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
-  const isRandom = useSelector(
+  const isBackgroundRandom = useSelector(
     ({
       data: {
         themes: { current, list },
       },
     }) => list[current].isBackgroundRandom
   );
+  const isThemeRandom = useSelector(({ data }) => data.themes.isRandom);
   const terminal = useRef();
 
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
@@ -78,9 +79,8 @@ const App = () => {
   useEffect(() => {
     const termFromQuery = new URLSearchParams(window.location.search).get("t");
     if (termFromQuery) dispatch(setTerm(termFromQuery));
-    if (isRandom) {
-      dispatch(setCurrentBackground("random"));
-    }
+    if (isBackgroundRandom) dispatch(setCurrentBackground("random"));
+    if (isThemeRandom) dispatch(setCurrentTheme("random"));
   }, []);
   useEffect(() => {
     const onKeydown = (e) => {

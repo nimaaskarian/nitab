@@ -58,6 +58,7 @@ const types = {
   SET_CURRENT_THEME: "set-current-theme",
   SET_DARK_THEME: "set-light-theme",
   SET_LIGHT_THEME: "set-dark-theme",
+  TOGGLE_IS_THEME_RANDOM: "toggle-is-theme-random",
   ADD_BACKGROUND: "add-background",
   DELETE_BACKGROUND: "delete-background",
 };

@@ -14,6 +14,7 @@ import {
   setDarkTheme,
   setLightTheme,
   setTempIcon,
+  toggleIsThemeRandom,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
@@ -280,6 +281,9 @@ const defaultCommands = {
 
       if (type === "add") {
         return () => () => store.dispatch(addTheme());
+      }
+      if (type === "random") {
+        return () => () => store.dispatch(toggleIsThemeRandom());
       }
       if (+type || type === "0") {
         switch (arg) {

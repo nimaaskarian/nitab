@@ -144,10 +144,29 @@ export function deleteTheme(index) {
     payload: index,
   };
 }
-export function setCurrentTheme(index) {
+export function toggleIsThemeRandom() {
+  return {
+    type: types.TOGGLE_IS_THEME_RANDOM,
+  };
+}
+export function setCurrentTheme(input) {
+  if (input === "random") {
+    return (dispatch, getState) => {
+      const max = getState().data.themes.length - 1;
+      const last = getState().data.themes.current;
+      let random;
+      do {
+        random = Math.round(Math.random() * max);
+      } while (last === random);
+      dispatch({
+        type: types.SET_CURRENT_THEME,
+        payload: random,
+      });
+    };
+  }
   return {
     type: types.SET_CURRENT_THEME,
-    payload: index,
+    payload: input,
   };
 }
 export function setDarkTheme(index) {
