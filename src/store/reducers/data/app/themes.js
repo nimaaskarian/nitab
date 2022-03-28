@@ -61,7 +61,7 @@ function themesReducer(state = INITIAL_STATE, action) {
         ...state,
         list: state.list.replace(index, {
           ...theme,
-          isBackgroundRandom: action.payload,
+          isBackgroundRandom: !theme.isBackgroundRandom,
         }),
       };
     }

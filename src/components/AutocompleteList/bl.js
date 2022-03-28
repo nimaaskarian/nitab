@@ -27,19 +27,15 @@ const AutocompleteLogic = () => {
   useEffect(() => {
     const acHandler = ({ ac }) => {
       setDuckDuckAc(
-        ac
-          .map((e) => {
-            return { ...e, key: nanoid(10) };
-          })
-          .map((e) => {
-            if (currentCommand.args && currentCommand.name !== "search")
-              return {
-                ...e,
-                phrase: `${identifier}${currentCommand.name} ${e.phrase}`,
-                icon: currentCommand.icon,
-              };
-            return e;
-          })
+        ac.map((e) => {
+          if (currentCommand.args && currentCommand.name !== "search")
+            return {
+              ...e,
+              phrase: `${identifier}${currentCommand.name} ${e.phrase}`,
+              icon: currentCommand.icon,
+            };
+          return e;
+        })
       );
     };
     if (!duckduckDisabled) {
@@ -56,8 +52,8 @@ const AutocompleteLogic = () => {
       .filter((e) => (identifier + e).includes(term.trim()))
       .sort()
       .sort(function (a, b) {
-        if (a.startsWith(term)) {
-          if (b.startsWith(term)) return 0;
+        if (a.startsWith(term) || (identifier + a).startsWith(term)) {
+          if (b.startsWith(term) || (identifier + a).startsWith(term)) return 0;
           return -1;
         }
         return 1;
@@ -65,7 +61,6 @@ const AutocompleteLogic = () => {
       .slice(0, suggestCommandsCount)
       .map((phrase) => {
         return {
-          key: nanoid(10),
           phrase: identifier + phrase + " ",
           icon: commands[phrase].icon || defaultIcon,
         };
@@ -116,20 +111,30 @@ const AutocompleteLogic = () => {
 
   const mapedRecommended = useMemo(
     () =>
-      (currentCommand.recommended || []).map((e) => {
-        return {
-          ...e,
-          phrase: identifier + currentCommand.name + " " + e?.phrase,
-          icon: e?.icon || currentCommand.icon,
-        };
-      }),
-    [currentCommand.name, currentCommand.recommended, identifier]
+      (currentCommand.recommended || [])
+        .map((e) => {
+          return {
+            ...e,
+            phrase: identifier + currentCommand.name + " " + e?.phrase,
+            icon: e?.icon || currentCommand.icon,
+          };
+        })
+        .sort()
+        .sort(function (a, b) {
+          if (a.phrase.startsWith(term)) {
+            if (b.phrase.startsWith(term)) return 0;
+            return -1;
+          }
+          return 1;
+        }),
+    [currentCommand.name, currentCommand.recommended, identifier, term]
   );
   return useMemo(
     () =>
       [...commandSuggestions, ...mapedRecommended, ...duckDuckAc]
         .filter((e) => !term.includes(e.phrase))
-        .slice(0, 8),
+        .slice(0, 8)
+        .map((e) => ({ ...e, key: nanoid(10) })),
     [duckDuckAc, commandSuggestions]
   );
 };
