@@ -47,7 +47,7 @@ const defaultCommands = {
     function(input) {
       if (input) {
         const [position, align] = input.toLowerCase().split(/\s/);
-        if (position && align)
+        if (position || align)
           return () => () => {
             store.dispatch(actions.setClockPosition(position));
             store.dispatch(

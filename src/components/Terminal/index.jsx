@@ -47,7 +47,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const handleSubmit = useCallback(
     (e) => {
       if (e.code !== "Enter") return;
-
+      console.log(currentCommand);
       let onSubmit = currentCommand.function(currentCommand.args)();
       if (typeof onSubmit === "string") {
         window.document.title = `${term} - ${identifier}Niotab`;

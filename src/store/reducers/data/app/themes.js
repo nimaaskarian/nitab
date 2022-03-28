@@ -104,7 +104,7 @@ function themesReducer(state = INITIAL_STATE, action) {
         ...state,
         list: state.list.replace(index, {
           ...theme,
-          clock: { ...theme.clock, position: action.payload },
+          clock: { ...theme?.clock, position: action.payload },
         }),
       };
     case types.SET_CLOCK_ALIGN:
@@ -112,7 +112,7 @@ function themesReducer(state = INITIAL_STATE, action) {
         ...state,
         list: state.list.replace(index, {
           ...theme,
-          clock: { ...theme.clock, align: action.payload },
+          clock: { ...theme?.clock, align: action.payload },
         }),
       };
     case types.TOGGLE_CLOCK_FORMAT:
@@ -121,8 +121,8 @@ function themesReducer(state = INITIAL_STATE, action) {
         list: state.list.replace(index, {
           ...theme,
           clock: {
-            ...theme.clock,
-            format24: !theme.clock.format24,
+            ...theme?.clock,
+            format24: !theme.clock?.format24 ?? false,
           },
         }),
       };
@@ -131,7 +131,7 @@ function themesReducer(state = INITIAL_STATE, action) {
         ...state,
         list: state.list.replace(index, {
           ...theme,
-          clock: { ...theme.clock, enabled: theme.clock.enabled },
+          clock: { ...theme?.clock, enabled: !theme.clock?.enabled ?? true },
         }),
       };
 

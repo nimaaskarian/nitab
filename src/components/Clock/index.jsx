@@ -28,8 +28,8 @@ const Clock = () => {
   const dispatch = useDispatch();
 
   return (
-    <StyledClock position={position} align={align}>
-      {enabled ? (
+    <StyledClock position={position || "center"} align={align || "center"}>
+      {enabled ?? true ? (
         <ClockTime onClick={() => dispatch(toggleClockFormat())}>
           {format24 ? format24h(time) : format12h(time)}
         </ClockTime>
