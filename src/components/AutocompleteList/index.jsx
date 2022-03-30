@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { setTerm } from "store/actions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import "./style.css";
+
 import AutocompleteLogic from "./bl";
 import AutocompleteItem from "components/AutocompleteItem";
+import { StyledAutocompleteList } from "./style";
 
-const Autocomplete = () => {
+const Autocomplete = ({ isRtl }) => {
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const ac = AutocompleteLogic();
@@ -39,18 +40,20 @@ const Autocomplete = () => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selectedIndex, ac]);
+  console.log(isRtl);
   return (
-    <div className="autocomplete">
+    <StyledAutocompleteList isRtl={isRtl}>
       {ac.map((e, i) => {
         return (
           <AutocompleteItem
+            onMouseEnter={() => setSelectedIndex(i)}
             selected={i === selectedIndex}
             key={e.key}
             suggestion={e}
           />
         );
       })}
-    </div>
+    </StyledAutocompleteList>
   );
 };
 

@@ -1,7 +1,0 @@
-.autocomplete {
-  position: absolute;
-  margin-top: 5px;
-}
-.autocomplete-item.selected {
-  background-color: rgba(0, 0, 0, 0.2);
-}

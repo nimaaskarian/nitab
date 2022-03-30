@@ -28,7 +28,7 @@ function themesReducer(state = INITIAL_STATE, action) {
   const theme = state.list[index];
   switch (action.type) {
     case types.TOGGLE_IS_THEME_RANDOM: {
-      return { ...state, isRandom: state.isRandom };
+      return { ...state, isRandom: !state.isRandom };
     }
     case types.ADD_THEME: {
       return { ...state, list: [...state.list, new Theme()] };

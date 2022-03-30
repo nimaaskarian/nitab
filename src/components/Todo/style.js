@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const TodoWrapper = styled.div`
-  direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -77,14 +77,20 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       window.removeEventListener("keydown", handleSubmit);
     };
   }, [handleSubmit]);
+  const isRtl = useMemo(
+    () =>
+      (forwardedRef.current &&
+        window.getComputedStyle(forwardedRef.current, null).direction ===
+          "rtl") ??
+      false,
+    [term, forwardedRef]
+  );
   return (
-    <StyledTerminal
-      isRtl={/^[\u0600-\u06FF\s]+/.test(term)}
-      color={currentColor}
-    >
+    <StyledTerminal color={currentColor}>
       <SearchMode />
       <TerminalAutoCompleteWrapper>
         <TerminalInput
+          dir="auto"
           value={term}
           ref={forwardedRef}
           autoFocus
@@ -94,7 +100,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         />
         <CurrentColorContext.Provider value={currentColor}>
           <CurrentCommandContext.Provider value={currentCommand}>
-            <Autocomplete />
+            <Autocomplete isRtl={isRtl} />
           </CurrentCommandContext.Provider>
         </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>

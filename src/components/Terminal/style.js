@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import isDark from "services/isdark-min";
 export const StyledTerminal = styled.div`
-  direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
-  & > span {
-    ${({ isRtl }) => (isRtl ? "padding-right" : "padding-left")}:15px;
-  }
   z-index: 4;
   align-items: center;
   display: flex;
@@ -40,6 +36,7 @@ export const TerminalInput = styled.input`
   }
 `;
 export const TerminalOutput = styled.span`
+  padding-left: 15px;
   border: none;
   background-color: transparent;
   box-shadow: none;

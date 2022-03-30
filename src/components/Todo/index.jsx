@@ -9,7 +9,7 @@ const Todo = ({ todo, index }) => {
   const dispatch = useDispatch();
 
   return (
-    <TodoWrapper isRtl={/^[\u0600-\u06FF\s]+/.test(todo.message)}>
+    <TodoWrapper dir="auto">
       <TodoMessage completed={todo.completed}>{todo.message}</TodoMessage>
       <TodoButton
         className={todo.completed ? "far fa-check-circle" : "far fa-circle"}

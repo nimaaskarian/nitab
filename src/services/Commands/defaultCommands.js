@@ -62,9 +62,9 @@ const defaultCommands = {
     },
     icon: "fa fa-clock",
     recommended: [
-      { phrase: "center" },
-      { phrase: "left" },
-      { phrase: "right" },
+      { phrase: "center " },
+      { phrase: "left " },
+      { phrase: "right " },
     ],
   },
   font: {
@@ -329,6 +329,9 @@ const defaultCommands = {
       {
         phrase: "add",
         icon: "fa fa-plus",
+      },
+      {
+        phrase:"random"
       },
       {
         phrase: "0 delete",

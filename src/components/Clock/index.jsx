@@ -6,7 +6,6 @@ import Weather from "components/Weather";
 import { toggleDateIsPersian, toggleClockFormat } from "store/actions";
 import useTime from "hooks/useTime";
 
-import "./style.css";
 import { StyledClock, ClockDate, ClockTime } from "./style";
 
 const Clock = () => {
