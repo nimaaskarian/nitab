@@ -11,7 +11,7 @@ import {
 
 import defaultCommands from "services/Commands/defaultCommands";
 
-import { TaskbarIconElement, TaskbarIconWrapper } from "./style";
+import { StyledTaskbarIcon, TaskbarIconWrapper } from "./style";
 
 const TaskbarIcon = React.forwardRef((props, ref) => {
   const isBlured = useSelector(
@@ -44,10 +44,14 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
       onDragStart={() => setIsDragging(true)}
       onDragEnd={() => setIsDragging(false)}
     >
-      <TaskbarIconElement
+      <StyledTaskbarIcon
         ref={ref}
         onDoubleClick={() => dispatch(deleteTaskbarIcon(props.index))}
-        color={r && g && b ? `rgba(${r},${g},${b},${a})` : null}
+        color={
+          ![null, undefined].includes(r ?? g ?? b)
+            ? `rgba(${r},${g},${b},${a})`
+            : null
+        }
         marginLeft={props.marginLeft}
         isBlured={isBlured}
         marginRight={props.marginRight}
