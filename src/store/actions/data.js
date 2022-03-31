@@ -152,7 +152,7 @@ export function toggleIsThemeRandom() {
 export function setCurrentTheme(input) {
   if (input === "random") {
     return (dispatch, getState) => {
-      const max = getState().data.themes.length - 1;
+      const max = getState().data.themes.list.length - 1;
       const last = getState().data.themes.current;
       let random;
       do {

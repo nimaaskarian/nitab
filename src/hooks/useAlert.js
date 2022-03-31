@@ -38,8 +38,6 @@ const Alert = (props) => {
     );
   }, [backgroundsLength]);
   useDidMountEffect(() => {
-    console.log(themesLength);
-
     alert.show(
       <AlertComponent>You have {themesLength} themes now</AlertComponent>
     );

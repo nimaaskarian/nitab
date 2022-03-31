@@ -40,7 +40,6 @@ const Autocomplete = ({ isRtl }) => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selectedIndex, ac]);
-  console.log(isRtl);
   return (
     <StyledAutocompleteList isRtl={isRtl}>
       {ac.map((e, i) => {

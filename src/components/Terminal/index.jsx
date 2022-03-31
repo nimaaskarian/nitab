@@ -47,7 +47,6 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const handleSubmit = useCallback(
     (e) => {
       if (e.code !== "Enter") return;
-      console.log(currentCommand);
       let onSubmit = currentCommand.function(currentCommand.args)();
       if (typeof onSubmit === "string") {
         window.document.title = `${term} - ${identifier}Niotab`;
@@ -70,6 +69,10 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     if (isSelfSubmit) {
       handleSubmit({ code: "Enter" });
     }
+    return () => {
+      const abortController = new AbortController();
+      abortController.abort();
+    };
   }, []);
   useEffect(() => {
     window.addEventListener("keydown", handleSubmit);
@@ -77,6 +80,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       window.removeEventListener("keydown", handleSubmit);
     };
   }, [handleSubmit]);
+
   const isRtl = useMemo(
     () =>
       (forwardedRef.current &&

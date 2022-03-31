@@ -38,24 +38,21 @@ const Background = ({ isTerminal }) => {
     ({ data }) => data.backgrounds[currentBackground]?.isForegroundAuto
   );
   const [background, setBackground] = useState(null);
+
   useEffect(() => {
     if (backgrounds[currentBackground]) {
-      const { id, cssValue } = backgrounds[currentBackground];
-      if (id) {
-        (async () => {
-          let blob;
-          while (!blob) {
-            blob = await localforage.getItem(id);
-            try {
-              setBackground(`url('${window.URL.createObjectURL(blob)}')`);
-            } catch (error) {}
-          }
-        })();
-      }
-      if (cssValue) setBackground(cssValue);
+      (async () => {
+        const { id } = backgrounds[currentBackground];
+        if (id) {
+          const getItemFallback = (blob) => {
+            if (!blob) return localforage.getItem(id).then(getItemFallback);
+            setBackground(`url('${window.URL.createObjectURL(blob)}')`);
+          };
+          localforage.getItem(id).then(getItemFallback);
+        }
+      })();
     }
   }, [backgrounds, currentBackground]);
-
   useEffect(() => {
     if (background && isForegroundAuto) {
       getImageLightness(
@@ -86,7 +83,7 @@ const Background = ({ isTerminal }) => {
     <StyledBackground
       parallax={parallax}
       scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
-      background={background}
+      background={backgrounds[currentBackground].cssValue || background}
       blur={
         isTaskbarEdit
           ? blur?.setting
