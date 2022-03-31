@@ -207,6 +207,7 @@ const defaultCommands = {
           })
         );
     },
+    icon: "fa fa-droplet",
   },
   br: {
     function(input) {
@@ -331,7 +332,7 @@ const defaultCommands = {
         icon: "fa fa-plus",
       },
       {
-        phrase:"random"
+        phrase: "random",
       },
       {
         phrase: "0 delete",
