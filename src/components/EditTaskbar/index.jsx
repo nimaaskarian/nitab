@@ -45,7 +45,8 @@ const EditTaskbar = () => {
     const values = iconToEdit || defaultValues;
     setIcon(values.icon);
     setUrl(values.url);
-    setColor(values.color);
+    setColor(values.color || "#cccccc");
+    setIsColorForeground(!values.color);
     setMarginLeft(values.marginLeft);
     setMarginRight(values.marginRight);
   }, [iconToEdit]);
