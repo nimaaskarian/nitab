@@ -13,10 +13,13 @@ export const StyledEditTaskbar = styled.form`
   z-index: 4;
   & * {
     user-select: none;
-    color: #e2e2e2;
   }
   & > div {
     margin: 5px;
+  }
+  & label,
+  & input {
+    color: #e2e2e2;
   }
 `;
 export const ButtonsWrapper = styled.div`
@@ -88,6 +91,7 @@ export const ColorPickerWrapper = styled.div`
 `;
 
 export const CloseButton = styled.button`
+  color: #e2e2e2;
   background: transparent;
   outline: none;
   border: none;

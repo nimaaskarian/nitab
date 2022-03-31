@@ -40,6 +40,7 @@ const EditTaskbar = () => {
   const [marginLeft, setMarginLeft] = useState(defaultValues.marginLeft);
   const [marginRight, setMarginRight] = useState(defaultValues.marginRight);
 
+  const [isColorForeground, setIsColorForeground] = useState(false);
   useEffect(() => {
     const values = iconToEdit || defaultValues;
     setIcon(values.icon);
@@ -48,12 +49,17 @@ const EditTaskbar = () => {
     setMarginLeft(values.marginLeft);
     setMarginRight(values.marginRight);
   }, [iconToEdit]);
-
   const dispatch = useDispatch();
   const addToLeft = () => {
     dispatch(
       addTaskbarIcon(
-        { icon, url, color, marginLeft, marginRight },
+        {
+          icon,
+          url,
+          color: isColorForeground ? null : color,
+          marginLeft,
+          marginRight,
+        },
         editTaskbarIndex ? editTaskbarIndex - 1 : 0
       )
     );
@@ -62,7 +68,13 @@ const EditTaskbar = () => {
   const addToRight = () => {
     dispatch(
       addTaskbarIcon(
-        { icon, url, color, marginLeft, marginRight },
+        {
+          icon,
+          url,
+          color: isColorForeground ? null : color,
+          marginLeft,
+          marginRight,
+        },
         editTaskbarIndex + 1
       )
     );
@@ -73,12 +85,26 @@ const EditTaskbar = () => {
     if (iconToEdit) {
       dispatch(
         editTaskbarIcon(
-          { icon, url, color, marginLeft, marginRight },
+          {
+            icon,
+            url,
+            color: isColorForeground ? null : color,
+            marginLeft,
+            marginRight,
+          },
           editTaskbarIndex
         )
       );
     } else {
-      dispatch(addTaskbarIcon({ icon, url, color, marginLeft, marginRight }));
+      dispatch(
+        addTaskbarIcon({
+          icon,
+          url,
+          color: isColorForeground ? null : color,
+          marginLeft,
+          marginRight,
+        })
+      );
     }
   };
   return (
@@ -91,7 +117,13 @@ const EditTaskbar = () => {
         }}
       />
       <TaskbarIcon
-        {...{ icon, url, color, marginLeft, marginRight }}
+        {...{
+          icon,
+          url,
+          color: isColorForeground ? null : color,
+          marginLeft,
+          marginRight,
+        }}
         index={-1}
       />
       <MultipleInputsWrapper>
@@ -114,6 +146,15 @@ const EditTaskbar = () => {
           value={marginRight}
           label="right Margin(px)"
         />
+        <div>
+          <label htmlFor="colorForeground">Color is foreground color</label>
+          <input
+            checked={isColorForeground}
+            id="colorForeground"
+            onChange={(e) => setIsColorForeground(e.target.checked)}
+            type="checkbox"
+          />
+        </div>
       </MultipleInputsWrapper>
       <ColorPickerWrapper>
         <ChromePicker color={color} onChange={({ rgb }) => setColor(rgb)} />

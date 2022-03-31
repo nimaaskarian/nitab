@@ -38,7 +38,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
     ({ data }) => data.terminal.enterOpensNewtab
   );
   const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
-  const { r, g, b, a } = props.color;
+  const { r, g, b, a } = props.color || {};
   return (
     <TaskbarIconWrapper
       onDragStart={() => setIsDragging(true)}
@@ -47,7 +47,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
       <TaskbarIconElement
         ref={ref}
         onDoubleClick={() => dispatch(deleteTaskbarIcon(props.index))}
-        color={`rgba(${r},${g},${b},${a})`}
+        color={r && g && b ? `rgba(${r},${g},${b},${a})` : null}
         marginLeft={props.marginLeft}
         isBlured={isBlured}
         marginRight={props.marginRight}
