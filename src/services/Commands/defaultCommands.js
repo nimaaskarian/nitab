@@ -339,7 +339,7 @@ const defaultCommands = {
         phrase: "0 delete",
       },
     ],
-    icon: "fa fa-pain-roller",
+    icon: "fa fa-paint-roller",
   },
   fg: {
     function(input) {
