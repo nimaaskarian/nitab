@@ -149,6 +149,12 @@ export function toggleIsThemeRandom() {
     type: types.TOGGLE_IS_THEME_RANDOM,
   };
 }
+export function setDefaultIcon(icon) {
+  return {
+    type: types.SET_DEFAULT_ICON,
+    payload: icon,
+  };
+}
 export function setCurrentTheme(input) {
   if (input === "random") {
     return (dispatch, getState) => {

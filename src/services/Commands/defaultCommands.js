@@ -15,6 +15,7 @@ import {
   setLightTheme,
   setTempIcon,
   toggleIsThemeRandom,
+  setDefaultIcon,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
@@ -338,6 +339,7 @@ const defaultCommands = {
         phrase: "0 delete",
       },
     ],
+    icon: "fa fa-pain-roller",
   },
   fg: {
     function(input) {
@@ -386,6 +388,11 @@ const defaultCommands = {
       },
     ],
   },
+  default: {
+    function(input) {
+      store.dispatch(setDefaultIcon(input));
+    },
+  },
   command: {
     function(input) {
       let [commandName, ...commandFunctions] = input
@@ -418,13 +425,14 @@ const defaultCommands = {
       };
     },
   },
-  rr: {
+  reset: {
     function(input) {
       if (input === "CONFIRM") {
         return () => () => store.dispatch(actions.resetStorage());
       }
     },
     icon: "fa fa-trash",
+    recommended: [{ phrase: "CONFIRM" }],
   },
   url: {
     function(input) {
