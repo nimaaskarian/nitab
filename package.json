@@ -34,6 +34,7 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build": "INLINE_RUNTIME_CHUNK=false react-app-rewired build",
+    "build:ext":"npm run build && cd ./build && web-ext build",
     "deploy": "gh-pages -b gh-pages -d build"
   },
   "eslintConfig": {
