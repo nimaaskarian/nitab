@@ -2,35 +2,41 @@ import { nanoid } from "nanoid";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { InputErrorNotifier, InputWrapper, StyledInput } from "./style";
-const TextInput = (props) => {
+const TextInput = ({
+  required,
+  value,
+  label,
+  placeholder,
+  onChange = () => {},
+}) => {
   const [error, setError] = useState(false);
 
   const [visited, setVisited] = useState(false);
   const id = useMemo(() => nanoid(10), []);
   useEffect(() => {
-    if (props.required && visited) {
-      setError(!props.value);
+    if (required && visited) {
+      setError(!value);
     }
-  }, [visited, props.value]);
-  const placeholder = useMemo(
-    () => props.placeholder || (props.required ? "Required" : "Optional"),
-    [props.required]
+  }, [visited, value]);
+  const computedPlaceholder = useMemo(
+    () => placeholder || (required ? "Required" : "Optional"),
+    [required, placeholder]
   );
 
   return (
     <InputWrapper>
       <label htmlFor={id}>
-        {props.label}
+        {label}
         {error ? <InputErrorNotifier /> : null}
       </label>
 
       <StyledInput
-        placeholder={placeholder}
+        placeholder={computedPlaceholder}
         id={id}
         onBlur={() => setVisited(true)}
-        value={props.value}
-        type={props.type || "text"}
-        onChange={(e) => props.onChange(e.target.value)}
+        value={value}
+        type={"text"}
+        onChange={(e) => onChange(e.target.value)}
       />
     </InputWrapper>
   );

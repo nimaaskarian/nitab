@@ -7,7 +7,7 @@ import TaskbarDrop from "../TaskbarDrop";
 
 import { StyledTaskbar } from "./style";
 const Taskbar = () => {
-  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
   const icons = useSelector(({ data }) => data.taskbar.icons);
 
   const renderedIcons = useMemo(() => {
@@ -44,7 +44,7 @@ const Taskbar = () => {
 
   const onTaskbarMouseMove = useCallback(
     (e) => {
-      if (!isTaskbarEdit && magnify)
+      if (!isSideMenu && magnify)
         iconsRefs.current.forEach((iconRef) => {
           if (!iconRef) return;
           const { left } = iconRef.getBoundingClientRect();
@@ -56,7 +56,7 @@ const Taskbar = () => {
             parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
         });
     },
-    [iconsRefs, isTaskbarEdit, magnify]
+    [iconsRefs, isSideMenu, magnify]
   );
 
   return (

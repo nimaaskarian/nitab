@@ -6,7 +6,7 @@ import { addBlobAsBackground } from "services/Images";
 import { setTerm } from "store/actions";
 import { ImageDropzoneContainer } from "./style";
 const Dropzone = ({ setDragMessage }) => {
-  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
 
   const alert = useAlert();
   const imageRegexp = new RegExp("image/.*");
@@ -58,7 +58,7 @@ const Dropzone = ({ setDragMessage }) => {
       }
     });
   };
-  if (isTaskbarEdit || isTaskbarDragging) return null;
+  if (isSideMenu || isTaskbarDragging) return null;
   return (
     <ImageDropzoneContainer
       onDragLeave={() => setDragMessage("")}

@@ -6,7 +6,7 @@ export const StyledTaskbar = styled.div`
   justify-self: end;
   display: flex;
   bottom: 0;
-  z-index: 4;
+  z-index: 5;
   position: absolute;
   margin-bottom: 20px;
 `;

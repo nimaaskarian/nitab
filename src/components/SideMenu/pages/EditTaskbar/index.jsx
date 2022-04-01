@@ -2,22 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import { ChromePicker } from "react-color";
+import { ColorPickerWrapper, StyledEditTaskbar } from "./style";
 import {
   Button,
   ButtonsWrapper,
-  CloseButton,
-  ColorPickerWrapper,
   MultipleInputsWrapper,
-  StyledEditTaskbar,
-} from "./style";
-import TextInput from "components/TextInput";
+} from "../../components/styled";
+import TextInput from "components/SideMenu/components/TextInput";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTaskbarIcon,
   editTaskbarIcon,
   resetTaskbarIcons,
   setEditTaskbarIndex,
-  toggleTaskbarEdit,
 } from "store/actions";
 import TaskbarIcon from "components/TaskbarIcon";
 
@@ -34,6 +31,7 @@ const EditTaskbar = () => {
   const iconToEdit = useSelector(
     ({ data }) => data.taskbar.icons[editTaskbarIndex]
   );
+  console.log(editTaskbarIndex);
   const [icon, setIcon] = useState(defaultValues.icon);
   const [url, setUrl] = useState(defaultValues.url);
   const [color, setColor] = useState(defaultValues.color);
@@ -110,13 +108,6 @@ const EditTaskbar = () => {
   };
   return (
     <StyledEditTaskbar onSubmit={handleSubmit}>
-      <CloseButton
-        className="fa fa-xmark"
-        type="button"
-        onClick={() => {
-          dispatch(toggleTaskbarEdit());
-        }}
-      />
       <TaskbarIcon
         {...{
           icon,

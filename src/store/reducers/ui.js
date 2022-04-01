@@ -1,7 +1,7 @@
 import types from "store/types/ui";
 
 const INITIAL_STATE = {
-  isTaskbarEdit: false,
+  isSideMenu: true,
   timerEditFocus: false,
   term: "",
   tempIcon: "",
@@ -18,8 +18,8 @@ const uiReducer = (state = INITIAL_STATE, action) => {
       return { ...state, tempIcon: action.payload };
     case types.SET_CURRENT_DRAGGING:
       return { ...state, currentDragging: action.payload };
-    case types.TOGGLE_TASKBAR_EDIT:
-      return { ...state, isTaskbarEdit: !state.isTaskbarEdit };
+    case types.SET_SIDE_MENU:
+      return { ...state, isSideMenu: action.payload };
     case types.SET_TERM:
       return { ...state, term: action.payload };
     case types.SET_IS_FETCHING_IMAGE:

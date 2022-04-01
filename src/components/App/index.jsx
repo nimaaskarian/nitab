@@ -25,6 +25,7 @@ import CommandsContext from "context/CommandsContext";
 import { AppContainer } from "./style";
 import Main from "components/Main";
 import useIsThemeDark from "hooks/useIsThemeDark";
+import SideMenu from "components/SideMenu";
 
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
@@ -41,7 +42,7 @@ const App = () => {
   const isThemeRandom = useSelector(({ data }) => data.themes.isRandom);
   const terminal = useRef();
 
-  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
   const foreground = useSelector(
     ({
       data: {
@@ -115,22 +116,17 @@ const App = () => {
         terminal.current.focus();
       }
     };
-    if (!isTaskbarEdit) window.addEventListener("keydown", onKeydown);
+    if (!isSideMenu) window.addEventListener("keydown", onKeydown);
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isTaskbarEdit, isTermEmpty]);
-
-  useEffect(() => {
-    if (isTaskbarEdit) dispatch(setTerm(""));
-  }, [isTaskbarEdit]);
+  }, [isSideMenu, isTermEmpty]);
 
   const RenderedContent = () => {
     if (!isTerminal)
       return (
         <>
           <Main />
-
           <Taskbar />
         </>
       );
@@ -150,6 +146,7 @@ const App = () => {
       <Background isTerminal={isTerminal} />
 
       <AppContainer color={foreground.color} font={font}>
+        <SideMenu />
         {dragMessage ? <h1>{dragMessage}...</h1> : <RenderedContent />}
       </AppContainer>
     </React.Fragment>

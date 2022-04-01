@@ -16,9 +16,7 @@ import { StyledTaskbarIcon, TaskbarIconWrapper } from "./style";
 const TaskbarIcon = React.forwardRef((props, ref) => {
   const isBlured = useSelector(
     ({ ui }) =>
-      ui.isTaskbarEdit &&
-      ui.editTaskbarIndex !== props.index &&
-      props.index !== -1
+      ui.isSideMenu && ui.editTaskbarIndex !== props.index && props.index !== -1
   );
   const dispatch = useDispatch();
   const [isDragging, setIsDragging] = useState(false);
@@ -37,7 +35,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
   const enterOpensNewtab = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
-  const isTaskbarEdit = useSelector(({ ui }) => ui.isTaskbarEdit);
+  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
   const { r, g, b, a } = props.color || {};
   return (
     <TaskbarIconWrapper
@@ -50,7 +48,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         color={
           ![null, undefined].includes(r ?? g ?? b)
             ? `rgba(${r},${g},${b},${a})`
-            : null
+            : props.color || null
         }
         marginLeft={props.marginLeft}
         isBlured={isBlured}
@@ -59,7 +57,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         className={props.icon}
         href={props.url ? defaultCommands.url.function(props.url)() : "#"}
         onClick={(e) => {
-          if (isTaskbarEdit) {
+          if (isSideMenu) {
             e.preventDefault();
             dispatch(setEditTaskbarIndex(props.index));
           }

@@ -5,7 +5,6 @@ import { useAlert } from "react-alert";
 import { useSelector } from "react-redux";
 import useDidMountEffect from "./useDidMountEffect";
 import AlertComponent from "components/Alert";
-import Todo from "components/Todo";
 import UnsplashLoading from "components/UnsplashLoading";
 const Alert = (props) => {
   const alert = useAlert();
@@ -13,7 +12,6 @@ const Alert = (props) => {
 
   const isFetchingImage = useSelector(({ ui }) => ui.isFetchingImage);
 
-  const todos = useSelector(({ data }) => data.todos);
   const currentCommands = useSelector(({ data }) => data.commands);
   const altNewtab = useSelector(({ data }) => data.altNewtab);
   const acCommands = useSelector(({ data }) => data.acCommands);
@@ -82,26 +80,6 @@ const Alert = (props) => {
       </AlertComponent>
     );
   }, [isAcCommands]);
-  useEffect(() => {
-    alert.removeAll();
-    if (!props.isTerminal)
-      todos
-        .sort(function (a, b) {
-          if (a.completed) {
-            if (b.completed) return 0;
-            return 1;
-          }
-          return -1;
-        })
-        .forEach((todo, index) => {
-          alert.show(
-            <AlertComponent>
-              <Todo todo={todo} index={index} />
-            </AlertComponent>,
-            { timeout: 0 }
-          );
-        });
-  }, [todos, props.isTerminal]);
 
   useEffect(() => {
     if (!prevCommands) setPrevCommands({ ...currentCommands });
