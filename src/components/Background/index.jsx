@@ -33,7 +33,7 @@ const Background = ({ isTerminal }) => {
   const brightness = useSelector(
     ({ data }) => data.backgrounds[currentBackground]?.brightness
   );
-  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
+  const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
   const isForegroundAuto = useSelector(
     ({ data }) => data.backgrounds[currentBackground]?.isForegroundAuto
   );
@@ -85,14 +85,14 @@ const Background = ({ isTerminal }) => {
       scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
       background={backgrounds[currentBackground].cssValue || background}
       blur={
-        isSideMenu
+        sideMenuIndex
           ? blur?.setting
           : isTerminal
           ? blur?.terminal
           : blur?.notTerminal
       }
       brightness={
-        isSideMenu
+        sideMenuIndex
           ? brightness?.setting
           : isTerminal
           ? brightness?.terminal

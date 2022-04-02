@@ -1,7 +1,7 @@
 import types from "store/types/ui";
 
 const INITIAL_STATE = {
-  isSideMenu: true,
+  sideMenuIndex: 0,
   timerEditFocus: false,
   term: "",
   tempIcon: "",
@@ -19,7 +19,7 @@ const uiReducer = (state = INITIAL_STATE, action) => {
     case types.SET_CURRENT_DRAGGING:
       return { ...state, currentDragging: action.payload };
     case types.SET_SIDE_MENU:
-      return { ...state, isSideMenu: action.payload };
+      return { ...state, sideMenuIndex: action.payload };
     case types.SET_TERM:
       return { ...state, term: action.payload };
     case types.SET_IS_FETCHING_IMAGE:

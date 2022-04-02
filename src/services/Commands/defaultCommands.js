@@ -16,6 +16,8 @@ import {
   setTempIcon,
   toggleIsThemeRandom,
   setDefaultIcon,
+  setSideMenuIndex,
+  setTerm,
 } from "store/actions";
 import { unsplash } from "apis";
 import axios from "axios";
@@ -76,12 +78,16 @@ const defaultCommands = {
   },
   todo: {
     function(input) {
+      if (!input)
+        return () => () => {
+          store.dispatch(setSideMenuIndex(2));
+          store.dispatch(setTerm(""));
+        };
       return () => () => {
-        checkIcon();
         store.dispatch(actions.addTodo({ message: input }));
       };
     },
-    icon: "clipboard-list-check",
+    icon: "far fa-circle-check",
   },
   par: {
     function(input) {
@@ -279,6 +285,11 @@ const defaultCommands = {
   },
   themes: {
     function(input) {
+      if (!input)
+        return () => () => {
+          store.dispatch(setSideMenuIndex(3));
+          store.dispatch(setTerm(""));
+        };
       const [type, arg] = input.split(/\s/);
 
       if (type === "add") {
@@ -491,7 +502,10 @@ const defaultCommands = {
   },
   taskbar: {
     function() {
-      return () => () => store.dispatch(actions.toggleTaskbarEdit());
+      return () => () => {
+        store.dispatch(actions.setSideMenuIndex(1));
+        store.dispatch(actions.setTerm(""));
+      };
     },
   },
 };

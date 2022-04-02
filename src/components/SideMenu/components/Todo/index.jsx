@@ -9,7 +9,7 @@ const Todo = ({ todo, index }) => {
   const dispatch = useDispatch();
 
   return (
-    <TodoWrapper dir="auto">
+    <TodoWrapper>
       <TodoMessage completed={todo.completed}>{todo.message}</TodoMessage>
       <TodoButton
         className={todo.completed ? "far fa-check-circle" : "far fa-circle"}

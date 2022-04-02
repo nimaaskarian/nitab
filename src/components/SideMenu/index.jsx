@@ -1,7 +1,7 @@
 import EditTaskbar from "components/SideMenu/pages/EditTaskbar";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsSideMenu } from "store/actions";
+import { setSideMenuIndex } from "store/actions";
 import TodoList from "components/SideMenu/pages/TodoList";
 import {
   CloseButton,
@@ -9,9 +9,10 @@ import {
   SideMenuWrapper,
   StyledNavItem,
   StyledSideMenu,
+  ContentWrapper,
 } from "./style";
+import Themes from "./pages/Themes";
 const NavItem = ({ children, onClick, enabled }) => {
-  console.log(enabled);
   return (
     <StyledNavItem enabled={enabled}>
       <a href="#" onClick={onClick}>
@@ -26,9 +27,9 @@ const Navbar = ({ items, enabled, setEnabled }) => {
       {items.map((e, i) => {
         return (
           <NavItem
-            onClick={() => setEnabled(i)}
+            onClick={() => setEnabled(i + 1)}
             key={e}
-            enabled={i === enabled}
+            enabled={i + 1 === enabled}
           >
             {e}
           </NavItem>
@@ -38,15 +39,13 @@ const Navbar = ({ items, enabled, setEnabled }) => {
   );
 };
 const PagesHandler = ({ children, enabled }) => {
-  return <>{children[enabled]}</>;
+  return <ContentWrapper>{children[enabled - 1]}</ContentWrapper>;
 };
 const SideMenu = () => {
-  const [focusedPage, setFocusedPage] = useState(0);
-  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
-  console.log(isSideMenu);
+  const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
   const dispatch = useDispatch();
-  const close = () => dispatch(setIsSideMenu(false));
-
+  const close = () => dispatch(setSideMenuIndex(0));
+  const setPage = (index) => dispatch(setSideMenuIndex(index));
   const font = useSelector(
     ({
       data: {
@@ -55,21 +54,22 @@ const SideMenu = () => {
     }) => list[current].font
   );
   return (
-    <SideMenuWrapper enabled={isSideMenu} onClick={close}>
+    <SideMenuWrapper enabled={sideMenuIndex} onClick={close}>
       <StyledSideMenu
         font={font}
-        enabled={isSideMenu}
+        enabled={sideMenuIndex}
         onClick={(e) => e.stopPropagation()}
       >
         <Navbar
           items={["Edit Taskbar", "To-dos", "Themes"]}
-          enabled={focusedPage}
-          setEnabled={setFocusedPage}
+          enabled={sideMenuIndex}
+          setEnabled={setPage}
         />
         <CloseButton onClick={close} className="fa fa-xmark" />
-        <PagesHandler enabled={focusedPage}>
+        <PagesHandler enabled={sideMenuIndex}>
           <EditTaskbar />
           <TodoList />
+          <Themes />
         </PagesHandler>
       </StyledSideMenu>
     </SideMenuWrapper>

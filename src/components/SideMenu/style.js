@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export const StyledSideMenu = styled.div`
- & label,
+  & label,
   & input {
     color: #e2e2e2;
-    
   }
-  & label::selection, & input::selection{
+  & label::selection,
+  & input::selection {
     background-color: #e2e2e2;
   }
   height: 100vh;
@@ -30,6 +30,10 @@ export const SideMenuWrapper = styled.div`
   z-index: 5;
   pointer-events: ${({ enabled }) => !enabled && "none"};
 `;
+export const ContentWrapper = styled.div`
+  max-height: 100%;
+  overflow: scroll;
+`;
 export const CloseButton = styled.button`
   color: #e2e2e2;
   background: transparent;
@@ -46,6 +50,7 @@ export const StyledNavbar = styled.div`
   & * {
     color: inherit;
   }
+  overflow-x: scroll;
   margin-bottom: 10px;
   box-sizing: border-box;
   width: 100%;

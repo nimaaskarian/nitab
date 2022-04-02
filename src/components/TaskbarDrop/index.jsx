@@ -11,7 +11,7 @@ const TaskbarDrop = ({ index, children }) => {
   const currentDragging = useSelector(({ ui }) => ui.currentDragging);
   const [isOver, setIsOver] = useState(false);
   const hasPlus = useSelector(
-    ({ data, ui }) => data.taskbar.icons.length === index && ui.isSideMenu
+    ({ data, ui }) => data.taskbar.icons.length === index && ui.sideMenuIndex
   );
   const dispatch = useDispatch();
   const handleDrop = (ev) => {

@@ -1,10 +1,10 @@
-import { Button, ButtonsWrapper } from "../../components/styled";
+import { Button, ButtonsWrapper, Header } from "../../components/styled";
 import TextInput from "../../components/TextInput";
 import Todo from "../../components/Todo";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTodo } from "store/actions";
-import { AddTodoForm, Header, TodosWrapper } from "./style";
+import { AddTodoForm } from "./style";
 import { nanoid } from "nanoid";
 
 const TodoList = () => {
@@ -16,7 +16,6 @@ const TodoList = () => {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const handleSubmit = (ev) => {
-    console.log("first");
     ev.preventDefault();
     if (message) {
       dispatch(addTodo({ message }));
@@ -40,6 +39,7 @@ const TodoList = () => {
       <Header>Todos</Header>
 
       {todosWithKeys
+        .map((todo, index) => ({ ...todo, index: index }))
         .sort(function (a, b) {
           if (a.completed) {
             if (b.completed) return 0;
@@ -47,8 +47,8 @@ const TodoList = () => {
           }
           return -1;
         })
-        .map((todo, index) => (
-          <Todo key={todo.key} todo={todo} index={index} />
+        .map((todo) => (
+          <Todo key={todo.key} todo={todo} index={todo.index} />
         ))}
     </div>
   );

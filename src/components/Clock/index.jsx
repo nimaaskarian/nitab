@@ -7,6 +7,7 @@ import { toggleDateIsPersian, toggleClockFormat } from "store/actions";
 import useTime from "hooks/useTime";
 
 import { StyledClock, ClockDate, ClockTime } from "./style";
+import TodoCount from "components/TodoCount";
 
 const Clock = () => {
   const time = useTime();
@@ -43,6 +44,7 @@ const Clock = () => {
         </ClockDate>
       ) : null}
       {weatherEnabled ? <Weather /> : null}
+      <TodoCount />
     </StyledClock>
   );
 };

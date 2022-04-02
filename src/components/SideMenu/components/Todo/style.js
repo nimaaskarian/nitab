@@ -20,7 +20,11 @@ export const TodoMessage = styled.div`
   flex-grow: 1;
 `;
 export const TodoButton = styled.a`
-  color: ${({ color }) => color};
+  &:hover {
+    color: ${({ color }) => color};
+  }
+  transition: color 50ms linear;
+  
   margin-left: 15px;
   cursor: pointer;
 `;

@@ -42,7 +42,7 @@ const App = () => {
   const isThemeRandom = useSelector(({ data }) => data.themes.isRandom);
   const terminal = useRef();
 
-  const isSideMenu = useSelector(({ ui }) => ui.isSideMenu);
+  const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
   const foreground = useSelector(
     ({
       data: {
@@ -116,11 +116,11 @@ const App = () => {
         terminal.current.focus();
       }
     };
-    if (!isSideMenu) window.addEventListener("keydown", onKeydown);
+    if (!sideMenuIndex) window.addEventListener("keydown", onKeydown);
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [isSideMenu, isTermEmpty]);
+  }, [sideMenuIndex, isTermEmpty]);
 
   const RenderedContent = () => {
     if (!isTerminal)

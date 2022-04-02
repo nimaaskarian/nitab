@@ -12,6 +12,9 @@ export const ButtonsWrapper = styled.div`
     margin: 0 !important;
   }
 `;
+export const Header = styled.h3`
+  color: #e2e2e2;
+`;
 export const Button = styled.button`
   display: inline-block;
   border: none;

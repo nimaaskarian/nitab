@@ -12,10 +12,10 @@ export function setEditTaskbarIndex(index) {
     payload: index,
   };
 }
-export function setIsSideMenu(isSideMenu) {
+export function setSideMenuIndex(sideMenuIndex) {
   return {
     type: types.SET_SIDE_MENU,
-    payload: isSideMenu,
+    payload: sideMenuIndex,
   };
 }
 export function setTempIcon(icon) {
