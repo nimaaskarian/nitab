@@ -9,10 +9,10 @@ const Todo = ({ todo, index }) => {
   const dispatch = useDispatch();
 
   return (
-    <TodoWrapper>
+    <TodoWrapper completed={todo.completed}>
       <TodoMessage completed={todo.completed}>{todo.message}</TodoMessage>
       <TodoButton
-        className={todo.completed ? "far fa-check-circle" : "far fa-circle"}
+        className={todo.completed ? "fa fa-check-circle" : "far fa-circle"}
         onClick={() => {
           dispatch(toggleTodoCompleted(index));
         }}

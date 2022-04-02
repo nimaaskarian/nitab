@@ -2,14 +2,15 @@ import styled from "styled-components";
 
 export const TodoWrapper = styled.div`
   & * {
-    color: #e2e2e2;
+    color: ${({ completed }) => (completed ? "#222" : "#e2e2e2")};
   }
   &:not(&:first-child) {
     margin-bottom: 10px;
   }
+  background-color: ${({ completed }) => completed && "#e2e2e2"};
   padding: 10px;
   border-radius: 10px;
-  background-color: #424242;
+  border: 2px solid;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -24,7 +25,7 @@ export const TodoButton = styled.a`
     color: ${({ color }) => color};
   }
   transition: color 50ms linear;
-  
+
   margin-left: 15px;
   cursor: pointer;
 `;
