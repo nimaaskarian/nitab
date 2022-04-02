@@ -7,6 +7,7 @@ import {
   deleteTaskbarIcon,
   setCurrentDragging,
   setEditTaskbarIndex,
+  setSideMenuIndex,
 } from "store/actions";
 
 import defaultCommands from "services/Commands/defaultCommands";
@@ -16,7 +17,9 @@ import { StyledTaskbarIcon, TaskbarIconWrapper } from "./style";
 const TaskbarIcon = React.forwardRef((props, ref) => {
   const isBlured = useSelector(
     ({ ui }) =>
-      ui.sideMenuIndex && ui.editTaskbarIndex !== props.index && props.index !== -1
+      ui.sideMenuIndex &&
+      ui.editTaskbarIndex !== props.index &&
+      props.index !== -1
   );
   const dispatch = useDispatch();
   const [isDragging, setIsDragging] = useState(false);
@@ -58,6 +61,7 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         href={props.url ? defaultCommands.url.function(props.url)() : "#"}
         onClick={(e) => {
           if (sideMenuIndex) {
+            dispatch(setSideMenuIndex(1));
             e.preventDefault();
             dispatch(setEditTaskbarIndex(props.index));
           }

@@ -10,7 +10,7 @@ export const TodoWrapper = styled.div`
   background-color: ${({ completed }) => completed && "#e2e2e2"};
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid;
+  border: 2px solid #e2e2e2;
   display: flex;
   flex-direction: row;
   align-items: center;

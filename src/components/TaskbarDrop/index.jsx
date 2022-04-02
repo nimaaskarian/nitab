@@ -4,6 +4,7 @@ import {
   addTaskbarIcon,
   changeTaskbarIconIndex,
   setEditTaskbarIndex,
+  setSideMenuIndex,
 } from "store/actions";
 import { StyledButton, StyledTaskbarDrop } from "./style";
 
@@ -48,7 +49,10 @@ const TaskbarDrop = ({ index, children }) => {
     >
       {hasPlus ? (
         <StyledButton
-          onClick={() => dispatch(setEditTaskbarIndex(-1))}
+          onClick={() => {
+            dispatch(setEditTaskbarIndex(-1));
+            dispatch(setSideMenuIndex(1));
+          }}
           className="fa fa-plus"
         />
       ) : null}
