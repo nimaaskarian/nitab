@@ -7,6 +7,8 @@ export const StyledBackground = styled.div`
   background: ${({ background }) => background || "#333"};
   filter: ${({ blur, brightness }) =>
     `blur(${blur}px) brightness(${brightness || 1})`};
+  transition: filter 450ms cubic-bezier(0.65, 0.05, 0.36, 1),
+    margin 300ms ease-out;
   overflow: hidden;
   display: flex;
   justify-content: center;
