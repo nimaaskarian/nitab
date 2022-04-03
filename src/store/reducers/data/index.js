@@ -69,7 +69,7 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
     case types.ADD_WEATHER_CITY: {
       return {
         ...state,
-        cities: [...state.cities, action.payload],
+        cities: [...(state.cities || []), action.payload],
       };
     }
     case types.TOGGLE_WEATHER_ENABLED:
@@ -78,8 +78,7 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
         enabled: !state.enabled,
       };
     default:
-      if (state.cities) return state;
-      if (!state.cities) return { ...state, cities: [] };
+      return state;
   }
 }
 const DATE_INITIAL_STATE = {

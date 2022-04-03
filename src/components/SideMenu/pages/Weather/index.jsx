@@ -31,7 +31,7 @@ const Weather = () => {
   const currentCityIndex = useSelector(({ data }) => data.weather.index);
   const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
   const citiesWithKeys = useMemo(
-    () => cities.map((city) => ({ ...city, key: nanoid() })),
+    () => (cities || []).map((city) => ({ ...city, key: nanoid() })),
     [cities]
   );
   useEffect(() => {

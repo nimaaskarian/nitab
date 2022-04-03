@@ -55,7 +55,7 @@ const Weather = (props) => {
   const alert = useAlert();
   const [error, setError] = useState("");
   const city = useSelector(
-    ({ data }) => data.weather.cities[data.weather.index]
+    ({ data }) => (data.weather.cities || [])[data.weather.index]
   );
   const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
   const isRefreshNeeded = (city) => {
