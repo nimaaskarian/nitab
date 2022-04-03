@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { CloseButton } from "components/SideMenu/style";
+import { DeleteButton } from "components/SideMenu/components/styled";
 export const ThemeBackground = styled.div`
   box-sizing: border-box;
   background: ${({ background }) => background};
@@ -11,18 +12,14 @@ export const ThemeBackground = styled.div`
   background-position-y: center !important;
   background-size: cover !important;
 `;
-
-export const DeleteButton = styled(CloseButton)`
-  &:hover {
-    color: #f28fad;
-  }
-  transition: color 50ms linear;
+export const StyledDeleteButton = styled(DeleteButton)`
   font-size: 18px;
-
+  position: absolute;
   left: 5px;
   top: 5px;
   z-index: 5;
 `;
+
 export const Theme = styled.div`
   position: relative;
   margin: 5px 0;

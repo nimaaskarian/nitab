@@ -9,16 +9,9 @@ to{
   transform: rotate(360deg);
 }
 `;
-
-export const WeatherSelector = styled.div`
-  display: inline-block;
-  margin-right: 5px;
+export const CityNameWrapper = styled.span`
   cursor: pointer;
-  max-height: 200px;
-  overflow-y: scroll;
-  & > * {
-    display: inline-block;
-  }
+  margin-right: 15px;
 `;
 export const WeatherWrapper = styled.div`
   display: flex;
@@ -30,7 +23,7 @@ export const WeatherWrapper = styled.div`
 `;
 export const WeatherLoading = styled.div`
   & > i {
-    animation: ${rotate} .7s ease-in-out infinite;
+    animation: ${rotate} 0.7s ease-in-out infinite;
     font-size: 22px;
   }
 `;

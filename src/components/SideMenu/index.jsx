@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import EditTaskbar from "components/SideMenu/pages/EditTaskbar";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSideMenuIndex } from "store/actions";
 import TodoList from "components/SideMenu/pages/TodoList";
@@ -12,6 +13,7 @@ import {
   ContentWrapper,
 } from "./style";
 import Themes from "./pages/Themes";
+import Weather from "./pages/Weather";
 const NavItem = ({ children, onClick, enabled }) => {
   return (
     <StyledNavItem enabled={enabled}>
@@ -61,7 +63,7 @@ const SideMenu = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <Navbar
-          items={["Edit Taskbar", "To-dos", "Themes"]}
+          items={["Edit Taskbar", "To-dos", "Themes", "Weather"]}
           enabled={sideMenuIndex}
           setEnabled={setPage}
         />
@@ -70,6 +72,7 @@ const SideMenu = () => {
           <EditTaskbar />
           <TodoList />
           <Themes />
+          <Weather />
         </PagesHandler>
       </StyledSideMenu>
     </SideMenuWrapper>

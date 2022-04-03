@@ -312,8 +312,14 @@ export function setWeatherData(data) {
     payload: data,
   };
 }
-export function setWeatherCity(q) {
-  return { type: types.SET_WEATHER_CITY, payload: q };
+export function addWeatherCity(cityObject) {
+  return { type: types.ADD_WEATHER_CITY, payload: cityObject };
+}
+export function setWeatherIndex(index) {
+  return { type: types.SET_WEATHER_INDEX, payload: index };
+}
+export function setWeatherIsAutomatic(isAutomatic) {
+  return { type: types.SET_WEATHER_IS_AUTOMATIC, payload: isAutomatic };
 }
 export function setUnsplashCollections(un) {
   return { type: types.SET_UNSPLASH_COLLECTIONS, payload: un };

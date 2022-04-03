@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setWeatherData, setWeatherCity } from "store/actions";
+import {
+  setSideMenuIndex,
+  setWeatherData,
+  setWeatherIsAutomatic,
+} from "store/actions";
 
 import {
   WeatherWrapper,
   WeatherLoading,
-  WeatherSelector,
   StyledTippy,
+  CityNameWrapper,
 } from "./style";
 
 import "tippy.js/dist/tippy.css";
-import axios from "axios";
 import { openWeather } from "apis";
+import { types, useAlert } from "react-alert";
+import Alert from "components/Alert";
 
 const icons = {
   "01d": "fa-sun",
@@ -43,38 +48,70 @@ const icons = {
   "50n": "fa-fog",
 };
 const minutesToExpire = 30;
+
 const Weather = (props) => {
   const data = useSelector(({ data }) => data.weather.data);
   const dispatch = useDispatch();
+  const alert = useAlert();
   const [error, setError] = useState("");
-  // const city = useSelector(({ data }) => data.weather.city);
+  const city = useSelector(
+    ({ data }) => data.weather.cities[data.weather.index]
+  );
+  const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
+  const isRefreshNeeded = (city) => {
+    if (data && data.time) {
+      if (data.city !== city) {
+        return true;
+      }
+      if (new Date().getTime() < data.time + minutesToExpire * 60000) {
+        return false;
+      }
+    }
+    return true;
+  };
+  const getWeather = ({ lon, lat }, city = "") => {
+    if (isRefreshNeeded(city))
+      openWeather
+        .get("/weather", {
+          params: {
+            lat,
+            lon,
+          },
+        })
+        .then((r) => r.data)
+        .then((data) =>
+          dispatch(
+            setWeatherData({ ...data, time: new Date().getTime(), city: city })
+          )
+        )
+        .catch((e) => {
+          setError(e.message);
+        });
+  };
+  useEffect(() => {
+    if (!isAutomatic && city) {
+      const { lon, lat } = city;
+      getWeather({ lon, lat }, city.name);
+    }
+  }, [city, isAutomatic]);
+
   useEffect(() => {
     (() => {
-      if (data && data.time) {
-        if (data.time <= new Date().getTime() + minutesToExpire * 60000) {
-          return;
-        }
-      }
-      navigator.geolocation.getCurrentPosition(
-        ({ coords: { latitude: lat, longitude: lon } }) => {
-          setError("");
-
-          openWeather
-            .get("/weather", {
-              params: {
-                lat,
-                lon,
-              },
-            })
-            .then((r) => r.data)
-            .then((data) =>
-              dispatch(setWeatherData({ ...data, time: new Date().getTime() }))
-            );
-        },
-        (e) => setError(e.message)
-      );
+      if (isAutomatic && isRefreshNeeded(""))
+        navigator.geolocation.getCurrentPosition(
+          ({ coords: { latitude: lat, longitude: lon } }) => {
+            getWeather({ lat, lon });
+          },
+          (e) => {
+            alert.show(<Alert>Automatic Weather: {e.message}</Alert>, {
+              type: types.ERROR,
+              timeout: 4500,
+            });
+            dispatch(setWeatherIsAutomatic(false));
+          }
+        );
     })();
-  }, [data]);
+  }, [isAutomatic, data]);
 
   const fontFamily = useSelector(
     ({
@@ -152,19 +189,13 @@ const Weather = (props) => {
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   return (
     <WeatherWrapper>
-      <span style={{ marginRight: "15px" }}>{data.name}</span>
-      {/* <WeatherSelector>
-        <Dropdown
-          options={["Automatic", ...cities]}
-          onChange={(q) => {
-            setWeatherCity(q.value);
-          }}
-          value={city}
-          arrowClosed={<span className="fa fa-chevron-down" />}
-          arrowOpen={<span className="fa fa-chevron-up" />}
-        />
-      </WeatherSelector> */}
-
+      <CityNameWrapper
+        onClick={() => {
+          dispatch(setSideMenuIndex(4));
+        }}
+      >
+        {data.name}
+      </CityNameWrapper>
       {error ? (
         <StyledTippy
           font={fontFamily}
@@ -178,7 +209,7 @@ const Weather = (props) => {
             style={{ cursor: "pointer" }}
             onClick={() => setErrorMessageVisible(!errorMessageVisible)}
             className="fa fa-close"
-          ></span>
+          />
         </StyledTippy>
       ) : (
         renderedWeather()

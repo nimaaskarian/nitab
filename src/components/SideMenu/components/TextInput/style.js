@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const InputWrapper = styled.div`
-  padding: 2px;
   font-size: 16px;
   flex-grow: 1;
   display: flex;

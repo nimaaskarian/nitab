@@ -48,3 +48,27 @@ export const MultipleInputsWrapper = styled.div`
   align-items: center;
   flex-grow: 1;
 `;
+export const TwoConditionElement = styled.div`
+  & * {
+    color: ${({ enabled }) => (enabled ? "#222" : "#e2e2e2")};
+  }
+
+  margin-bottom: 10px;
+
+  background-color: ${({ enabled }) => enabled && "#e2e2e2"};
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #e2e2e2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+export const DeleteButton = styled.a`
+  &:hover {
+    color: #f28fad;
+  }
+  transition: color 100ms ease-in;
+  margin-left: 15px;
+  cursor: pointer;
+`;

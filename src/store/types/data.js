@@ -3,7 +3,9 @@ const types = {
   TOGGLE_DATE_ENABLED: "toggle-date-enable",
 
   SET_WEATHER_DATA: "set-weather-data",
-  SET_WEATHER_CITY: "set-weather-city",
+  ADD_WEATHER_CITY: "add-weather-city",
+  SET_WEATHER_INDEX: "set-weather-index",
+  SET_WEATHER_IS_AUTOMATIC: "set-weather-is-automatic",
   TOGGLE_WEATHER_ENABLED: "toggle-weather-enabled",
 
   ADD_COMMAND: "add-command",

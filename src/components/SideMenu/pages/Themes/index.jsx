@@ -4,13 +4,18 @@ import {
   Header,
 } from "components/SideMenu/components/styled";
 import localforage from "localforage";
-import React, { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTheme, deleteTheme, setCurrentTheme } from "store/actions";
-import { ClockWrapper, DeleteButton, Theme, ThemeBackground } from "./style";
+import { ClockWrapper, DeleteButton, StyledDeleteButton, Theme, ThemeBackground } from "./style";
 
 const Themes = () => {
   const { list, current } = useSelector(({ data }) => data.themes);
+  const listWithKeys = useMemo(
+    () => list.map((theme) => ({ ...theme, key: nanoid() })),
+    [list]
+  );
   const backgrounds = useSelector(({ data }) => data.backgrounds);
   const [renderedBackgrounds, setRenderedBackgrounds] = useState({});
   const dispatch = useDispatch();
@@ -34,7 +39,7 @@ const Themes = () => {
         <Button onClick={() => dispatch(addTheme())}>Add a blank theme</Button>
       </ButtonsWrapper>
       <Header>Themes</Header>
-      {list.map((theme, index) => {
+      {listWithKeys.map((theme, index) => {
         const backgroundObject = backgrounds[theme.currentBackground];
         const blob = renderedBackgrounds[backgroundObject.id];
 
@@ -44,10 +49,11 @@ const Themes = () => {
         } catch (error) {}
         return (
           <Theme
+            key={theme.key}
             isCurrent={index === current}
             onClick={() => dispatch(setCurrentTheme(index))}
           >
-            <DeleteButton
+            <StyledDeleteButton
               className="fa fa-trash"
               onClick={() => dispatch(deleteTheme(index))}
             />

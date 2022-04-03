@@ -3,13 +3,17 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toggleTodoCompleted, removeTodo } from "store/actions";
-import { TodoButton, TodoMessage, TodoWrapper } from "./style";
+import { DeleteButton, TwoConditionElement } from "../styled";
+import {
+  TodoButton,
+  TodoMessage,
+} from "./style";
 
 const Todo = ({ todo, index }) => {
   const dispatch = useDispatch();
 
   return (
-    <TodoWrapper completed={todo.completed}>
+    <TwoConditionElement enabled={todo.completed}>
       <TodoMessage completed={todo.completed}>{todo.message}</TodoMessage>
       <TodoButton
         className={todo.completed ? "fa fa-check-circle" : "far fa-circle"}
@@ -17,14 +21,13 @@ const Todo = ({ todo, index }) => {
           dispatch(toggleTodoCompleted(index));
         }}
       />
-      <TodoButton
+      <DeleteButton
         className="fa fa-trash"
-        color="#f28fad"
         onClick={(e) => {
           dispatch(removeTodo(index));
         }}
       />
-    </TodoWrapper>
+    </TwoConditionElement>
   );
 };
 
