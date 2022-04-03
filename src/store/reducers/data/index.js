@@ -78,7 +78,8 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
         enabled: !state.enabled,
       };
     default:
-      return state;
+      if (state.cities) return state;
+      if (!state.cities) return { ...state, cities: [] };
   }
 }
 const DATE_INITIAL_STATE = {
