@@ -6,6 +6,7 @@ const types = {
   ADD_WEATHER_CITY: "add-weather-city",
   SET_WEATHER_INDEX: "set-weather-index",
   SET_WEATHER_IS_AUTOMATIC: "set-weather-is-automatic",
+  DELETE_WEATHER_CITY: "delete-weather-city",
   TOGGLE_WEATHER_ENABLED: "toggle-weather-enabled",
 
   ADD_COMMAND: "add-command",

@@ -48,6 +48,12 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
         data: action.payload,
       };
     }
+    case types.DELETE_WEATHER_CITY: {
+      return {
+        ...state,
+        cities: state.cities.delete(action.payload),
+      };
+    }
     case types.SET_WEATHER_IS_AUTOMATIC: {
       return {
         ...state,

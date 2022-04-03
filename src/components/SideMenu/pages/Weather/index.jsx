@@ -18,6 +18,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   addWeatherCity,
+  deleteWeatherCity,
   setWeatherIndex,
   setWeatherIsAutomatic,
 } from "store/actions";
@@ -78,7 +79,10 @@ const Weather = () => {
                 >
                   {selected ? "Selected" : "Select"}
                 </Button>
-                <DeleteButton className="fa fa-trash" />
+                <DeleteButton
+                  onClick={() => dispatch(deleteWeatherCity(index))}
+                  className="fa fa-trash"
+                />
               </div>
             </TwoConditionElement>
           );

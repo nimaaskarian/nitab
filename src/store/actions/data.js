@@ -321,6 +321,9 @@ export function setWeatherIndex(index) {
 export function setWeatherIsAutomatic(isAutomatic) {
   return { type: types.SET_WEATHER_IS_AUTOMATIC, payload: isAutomatic };
 }
+export function deleteWeatherCity(index) {
+  return { type: types.DELETE_WEATHER_CITY, payload: index };
+}
 export function setUnsplashCollections(un) {
   return { type: types.SET_UNSPLASH_COLLECTIONS, payload: un };
 }
