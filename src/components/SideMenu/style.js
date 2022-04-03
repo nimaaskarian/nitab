@@ -9,6 +9,8 @@ export const StyledSideMenu = styled.div`
   & input::selection {
     background-color: #e2e2e2;
   }
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   position: relative;
   /* left: 0; */
@@ -50,7 +52,6 @@ export const StyledNavbar = styled.div`
   & * {
     color: inherit;
   }
-  overflow-x: scroll;
   margin-bottom: 10px;
   box-sizing: border-box;
   width: 100%;
