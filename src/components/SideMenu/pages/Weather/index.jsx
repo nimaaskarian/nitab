@@ -8,7 +8,7 @@ import {
 import TextInput from "components/SideMenu/components/TextInput";
 import { nanoid } from "nanoid";
 import React, { useEffect, useMemo, useState } from "react";
-import "flag-icons/css/flag-icons.min.css";
+import "flag-icons/css/flag-icons.css";
 import {
   AddedCitiesWrapper,
   CityWrapper,
