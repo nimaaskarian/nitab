@@ -1,128 +1,65 @@
 {
   "name": "nitab",
   "version": "4.1.2",
-
-  "homepage": "./", 
-
+  "homepage": "./",
   "private": true,
-
   "dependencies": {
-
     "@testing-library/jest-dom": "^5.16.3",
-
     "@testing-library/react": "^12.1.4",
-
     "@testing-library/user-event": "^13.5.0",
-
     "@tippyjs/react": "^4.2.6",
-
     "axios": "^0.26.1",
-
     "flag-icons": "^6.1.1",
-
     "history": "^5.3.0",
-
     "localforage": "^1.10.0",
-
     "nanoid": "^3.3.1",
-
     "persian-date": "^1.1.0",
-
     "react": "^17.0.2",
-
     "react-alert": "^7.0.3",
-
     "react-alert-template-basic": "^1.0.2",
-
     "react-app-rewired": "^2.2.1",
-
     "react-color": "^2.19.3",
-
     "react-dom": "^17.0.2",
-
     "react-helmet": "^6.1.0",
-
     "react-redux": "^7.2.6",
-
     "react-scripts": "5.0.0",
-
     "redux": "^4.1.2",
-
     "redux-devtools-extension": "^2.13.9",
-
     "redux-persist": "^6.0.0",
-
     "redux-thunk": "^2.4.1",
-
     "styled-components": "^5.3.5",
-
     "tippy.js": "^6.3.7"
-
   },
-
   "scripts": {
-
     "start": "react-app-rewired start",
-
     "test": "react-app-rewired test",
-
     "eject": "react-scripts eject",
-
     "build": "INLINE_RUNTIME_CHUNK=false react-app-rewired build",
-
     "build:ext": "npm run build && cd ./build && web-ext build",
-
     "deploy": "gh-pages -b gh-pages -d build"
-
   },
-
   "eslintConfig": {
-
     "extends": [
-
       "react-app",
-
       "react-app/jest"
-
     ]
-
   },
-
   "browserslist": {
-
     "production": [
-
       ">0.2%",
-
       "not dead",
-
       "not op_mini all"
-
     ],
-
     "development": [
-
       "last 1 chrome version",
-
       "last 1 firefox version",
-
       "last 1 safari version"
-
     ]
-
   },
-
   "devDependencies": {
-
     "babel-plugin-styled-components": "^2.0.6",
-
     "customize-cra": "^1.0.0",
-
     "gh-pages": "^3.2.3",
-
     "riek": "^1.1.0"
-
   }
-
 }
-
