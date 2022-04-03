@@ -4,6 +4,7 @@ export const InputWrapper = styled.div`
   font-size: 16px;
   flex-grow: 1;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
 `;
 export const InputErrorNotifier = styled.span`
