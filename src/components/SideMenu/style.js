@@ -1,9 +1,9 @@
 import styled from "styled-components";
+import { TwoConditionElement } from "./components/styled";
 
 export const StyledSideMenu = styled.div`
   & label,
   & input {
-    color: #e2e2e2;
   }
   & label::selection,
   & input::selection {
@@ -52,23 +52,15 @@ export const StyledNavbar = styled.div`
   & * {
     color: inherit;
   }
+  gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
   margin-bottom: 10px;
   box-sizing: border-box;
   width: 100%;
 `;
 
-export const StyledNavItem = styled.div`
-  display: inline-block;
-  padding: 2px;
-  margin: 0 5px;
-
-  border-bottom: ${({ enabled }) => enabled && "2px solid"};
-  & a {
-    color: inherit;
-
-    text-decoration: none;
-  }
-  &:first-child {
-    margin-left: 0;
-  }
+export const StyledNavItem = styled(TwoConditionElement)`
+  user-select: none;
+  cursor: pointer;
 `;

@@ -9,6 +9,7 @@ import {
   circleSearchMode,
   setCurrentBackground,
   setCurrentTheme,
+  setSideMenuIndex,
 } from "store/actions";
 
 import Terminal from "../Terminal";
@@ -107,7 +108,8 @@ const App = () => {
         e.preventDefault();
       }
       if (e.key === "Escape") {
-        setIsTerminal(false);
+        if (isTerminal) setIsTerminal(false);
+        else dispatch(setSideMenuIndex(5));
         return;
       }
 

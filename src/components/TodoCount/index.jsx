@@ -16,7 +16,7 @@ const TodoCount = () => {
         className={
           totalCount === completedCount
             ? "fa fa-circle-check"
-            : "fa fa-triangle-exclamation"
+            : "far fa-circle"
         }
       />
       {completedCount}/{totalCount}

@@ -14,27 +14,20 @@ import {
 } from "./style";
 import Themes from "./pages/Themes";
 import Weather from "./pages/Weather";
-const NavItem = ({ children, onClick, enabled }) => {
-  return (
-    <StyledNavItem enabled={enabled}>
-      <a href="#" onClick={onClick}>
-        {children}
-      </a>
-    </StyledNavItem>
-  );
-};
+import Overview from "./pages/Overview";
+
 const Navbar = ({ items, enabled, setEnabled }) => {
   return (
     <StyledNavbar>
       {items.map((e, i) => {
         return (
-          <NavItem
+          <StyledNavItem
             onClick={() => setEnabled(i + 1)}
             key={e}
             enabled={i + 1 === enabled}
           >
             {e}
-          </NavItem>
+          </StyledNavItem>
         );
       })}
     </StyledNavbar>
@@ -63,7 +56,7 @@ const SideMenu = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <Navbar
-          items={["Edit Taskbar", "To-dos", "Themes", "Weather"]}
+          items={["Edit Taskbar", "To-dos", "Themes", "Weather", "Overview"]}
           enabled={sideMenuIndex}
           setEnabled={setPage}
         />
@@ -73,6 +66,7 @@ const SideMenu = () => {
           <TodoList />
           <Themes />
           <Weather />
+          <Overview />
         </PagesHandler>
       </StyledSideMenu>
     </SideMenuWrapper>

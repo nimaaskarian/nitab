@@ -1,3 +1,4 @@
+import isDark from "services/isdark-min";
 import styled from "styled-components";
 
 export const ButtonsWrapper = styled.div`
@@ -38,7 +39,8 @@ export const Button = styled.button`
       : ""}
   &:hover {
     background-color: ${({ color }) => color || "#e2e2e2"};
-    color: #333;
+    color: ${({ color }) =>
+      isDark(color || "#e2e2e2") ? "#e2e2e2" : "#333"} !important;
   }
 `;
 
@@ -49,16 +51,16 @@ export const MultipleInputsWrapper = styled.div`
   flex-grow: 1;
 `;
 export const TwoConditionElement = styled.div`
+  &,
   & * {
-    color: ${({ enabled }) => (enabled ? "#222" : "#e2e2e2")};
+    color: ${({ enabled, color }) =>
+      enabled ? isDark(color) || "#222" : color || "#e2e2e2"} !important;
   }
-
   margin-bottom: 10px;
-
-  background-color: ${({ enabled }) => enabled && "#e2e2e2"};
+  background-color: ${({ enabled, color }) => enabled && (color || "#e2e2e2")};
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid #e2e2e2;
+  border: 2px solid ${({ color }) => color || "#e2e2e2"};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -66,7 +68,7 @@ export const TwoConditionElement = styled.div`
 `;
 export const DeleteButton = styled.a`
   &:hover {
-    color: #f28fad;
+    color: #f28fad !important;
   }
   transition: color 100ms ease-in;
   margin-left: 15px;

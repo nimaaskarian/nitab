@@ -85,6 +85,8 @@ const defaultCommands = {
         };
       return () => () => {
         store.dispatch(actions.addTodo({ message: input }));
+        const term = store.getState().ui.term;
+        store.dispatch(actions.setTerm(term.replace(input, "")));
       };
     },
     icon: "far fa-circle-check",

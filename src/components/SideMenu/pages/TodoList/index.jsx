@@ -19,6 +19,7 @@ const TodoList = () => {
     ev.preventDefault();
     if (message) {
       dispatch(addTodo({ message }));
+      setMessage("");
     }
   };
 
