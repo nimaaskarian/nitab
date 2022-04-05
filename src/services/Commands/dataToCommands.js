@@ -1,5 +1,27 @@
 import defaultCommands from "./defaultCommands";
 
+function mapTermToInnerCommands(commandArray, commands) {
+  return commandArray.map((item) => {
+    if (!item) return;
+    console.log(item);
+    const usedCommands = /%.+=?.*%/.exec(item) || [];
+    if (usedCommands.length) {
+      usedCommands.forEach((command) => {
+        const [commandName, commandArg] = command.replace(/%/g, "").split("=");
+
+        const func = (
+          commands[commandName] ||
+          defaultCommands[commandName] ||
+          {}
+        ).function;
+        console.log(typeof func(commandArg)() === "string");
+        if (func && typeof func(commandArg)() === "string")
+          item = item.replace(command, func(commandArg || "")());
+      });
+    }
+    return item;
+  });
+}
 const dataToCommands = (data) => {
   let commands = {};
   Object.keys(data).forEach((command) => {
@@ -11,9 +33,14 @@ const dataToCommands = (data) => {
       if (!data[command].args) return;
       if (data[command].args.length === 1)
         return () => {
-          const [hasntInput, hasInput] = data[command].args[0]
+          let [hasntInput, hasInput] = data[command].args[0]
             .replace("%input%", input)
             .split("%?%");
+          [hasntInput, hasInput] = mapTermToInnerCommands(
+            [hasntInput, hasInput],
+            commands
+          );
+
           if (hasInput) {
             if (input) return defaultCommands.url.function(hasInput)();
             return defaultCommands.url.function(hasntInput)();
@@ -21,20 +48,22 @@ const dataToCommands = (data) => {
           return defaultCommands.url.function(hasntInput)();
         };
       else
-        return () =>
-          ({ input }) => {
-            data[command].args.forEach((element) => {
-              const [hasntInput, hasInput] = element
-                .replace("%input%", input)
-                .split("%?%");
-
-              if (hasInput) {
-                if (input)
-                  window.open(defaultCommands.url.function(hasInput)());
-                else window.open(defaultCommands.url.function(hasntInput)());
-              } else window.open(defaultCommands.url.function(hasntInput)());
-            });
-          };
+        return () => () => {
+          data[command].args.forEach((element) => {
+            console.log(input);
+            let [hasntInput, hasInput] = element
+              .replace("%input%", input)
+              .split("%?%");
+            [hasntInput, hasInput] = mapTermToInnerCommands(
+              [hasntInput, hasInput],
+              commands
+            );
+            if (hasInput) {
+              if (input) window.open(defaultCommands.url.function(hasInput)());
+              else window.open(defaultCommands.url.function(hasntInput)());
+            } else window.open(defaultCommands.url.function(hasntInput)());
+          });
+        };
     };
   });
   const defaultCommandsCustomized = Object.fromEntries(

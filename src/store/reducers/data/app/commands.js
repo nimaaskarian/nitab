@@ -98,6 +98,13 @@ export default function commandsReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case types.ADD_COMMAND: {
       const commandCopy = state[action.payload.name] || {};
+      action.payload = Object.fromEntries(
+        Object.entries(action.payload).map(([key, value]) => {
+          console.log(key, value);
+          if (!value || !value.length) return [key, commandCopy[key]];
+          return [key, value];
+        })
+      );
       return {
         ...state,
         [action.payload.name]: { ...commandCopy, ...action.payload },
