@@ -50,7 +50,7 @@ const SideMenu = () => {
   );
   useEffect(() => {
     const handleKey = (e) => {
-      if (e.key) close();
+      if (e.key === "Escape") close();
     };
 
     window.addEventListener("keydown", handleKey);

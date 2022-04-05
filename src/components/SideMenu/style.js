@@ -3,7 +3,9 @@ import { TwoConditionElement } from "./components/styled";
 
 export const StyledSideMenu = styled.div`
   & label,
-  & input {
+  & input,
+  button {
+    color: #e2e2e2;
   }
   & label::selection,
   & input::selection {

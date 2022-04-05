@@ -17,9 +17,9 @@ CommandContainer.Name = styled.div`
   margin-bottom: 5px;
   &,
   & * {
-    background-color: ${({ color }) => color || "#e1e1e1"};
+    background-color: ${({ color }) => color || "#e2e2e2"};
     color: ${({ color }) =>
-      isDark(color || "#e1e1e1") ? "#e1e1e1" : "#333"} !important;
+      isDark(color || "#e2e2e2") ? "#e2e2e2" : "#333"} !important;
   }
 `;
 CommandContainer.Icon = styled.span`

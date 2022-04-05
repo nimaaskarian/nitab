@@ -13,10 +13,11 @@ export const ThemeBackground = styled.div`
   background-size: cover !important;
 `;
 export const StyledDeleteButton = styled(DeleteButton)`
+  margin-left: 0;
   font-size: 18px;
   position: absolute;
-  left: 5px;
-  top: 5px;
+  left: 10px;
+  top: 10px;
   z-index: 5;
 `;
 

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import isDark from "services/isdark-min";
 import Commands from "./components/Commands";
 import CommandContainer from "./components/Commands/style";
+import { StyledOverview } from "./style";
 
 const Overview = () => {
   const [totalCount, completedCount] = useSelector(({ data }) => [
@@ -21,7 +22,7 @@ const Overview = () => {
     }) => list[current].foreground
   );
   return (
-    <div>
+    <StyledOverview>
       <Header>Todos</Header>
       <div>
         <strong>Total: </strong>
@@ -53,7 +54,7 @@ const Overview = () => {
         <span>{foreground.isOvr ? "Yes" : "No"}</span>
       </div>
       <Commands />
-    </div>
+    </StyledOverview>
   );
 };
 

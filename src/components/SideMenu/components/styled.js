@@ -66,10 +66,15 @@ export const TwoConditionElement = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
-export const DeleteButton = styled.a`
+export const DeleteButton = styled.button`
   &:hover {
     color: #f28fad !important;
   }
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
   transition: color 100ms ease-in;
   margin-left: 15px;
   cursor: pointer;
