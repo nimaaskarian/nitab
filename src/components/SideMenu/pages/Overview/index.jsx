@@ -4,15 +4,14 @@ import { useSelector } from "react-redux";
 import isDark from "services/isdark-min";
 import Commands from "./components/Commands";
 import CommandContainer from "./components/Commands/style";
-import { StyledOverview } from "./style";
+import OverviewElement from "./style";
 
 const Overview = () => {
-  const [totalCount, completedCount] = useSelector(({ data }) => [
-    data.todos.length,
-    data.todos.filter((e) => e.completed).length,
-  ]);
-  const themesLength = useSelector(({ data }) => data.themes.list.length);
-  const currentTheme = useSelector(({ data }) => data.themes.current);
+  const todoCount = useSelector(({ data }) => data.todos.length);
+  const themesCount = useSelector(({ data }) => data.themes.list.length);
+  const bgCount = useSelector(({ data }) => data.backgrounds.length);
+
+  // const currentTheme = useSelector(({ data }) => data.themes.current);
 
   const foreground = useSelector(
     ({
@@ -22,39 +21,30 @@ const Overview = () => {
     }) => list[current].foreground
   );
   return (
-    <StyledOverview>
-      <Header>Todos</Header>
-      <div>
-        <strong>Total: </strong>
-        <span>{totalCount}</span>
-      </div>
-      <div>
-        <strong>Completed: </strong>
-        <span>{completedCount}</span>
-      </div>
-      <Header>Themes</Header>
-      <div>
-        <strong>Total: </strong>
-        <span>{themesLength}</span>
-      </div>
-      <div>
-        <strong>Selected: </strong>
-        <span>{currentTheme}</span>
-      </div>
-      <Header>Foreground Color</Header>
-      <strong>Color: </strong>
-      <CommandContainer.Name
-        style={{ display: "inline-block" }}
-        color={foreground.color}
-      >
-        {foreground.color}
-      </CommandContainer.Name>
-      <div>
-        <strong>Will override? </strong>
-        <span>{foreground.isOvr ? "Yes" : "No"}</span>
-      </div>
+    <div>
+      <OverviewElement.Container>
+        <OverviewElement>
+          <OverviewElement.Header>{todoCount}</OverviewElement.Header>
+          <OverviewElement.Small>Todos</OverviewElement.Small>
+        </OverviewElement>
+        <OverviewElement>
+          <OverviewElement.Header>{themesCount}</OverviewElement.Header>
+          <OverviewElement.Small>Themes</OverviewElement.Small>
+        </OverviewElement>
+        <OverviewElement>
+          <OverviewElement.Header>{bgCount}</OverviewElement.Header>
+          <OverviewElement.Small>bckgrnds</OverviewElement.Small>
+        </OverviewElement>
+        <OverviewElement color={foreground.color}>
+          <OverviewElement.Header>FG</OverviewElement.Header>
+          <OverviewElement.Small>
+            {foreground.isOvr ? "override" : "no override"}
+          </OverviewElement.Small>
+        </OverviewElement>
+      </OverviewElement.Container>
+
       <Commands />
-    </StyledOverview>
+    </div>
   );
 };
 

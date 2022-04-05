@@ -6,6 +6,7 @@ const CommandContainer = styled(TwoConditionElement)`
   display: flex;
   flex-direction: column;
   align-items: start;
+  overflow: hidden;
   & strong {
     margin: 5px 0;
   }

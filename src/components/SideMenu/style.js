@@ -19,7 +19,7 @@ export const StyledSideMenu = styled.div`
   box-sizing: border-box;
   max-width: 400px;
   width: 100vw;
-  background-color: rgba(22, 22, 22, 0.9);
+  background-color: rgba(22, 22, 22, 0.75);
   color: white;
   padding: 20px;
   transform: ${({ enabled }) => `translateX(${enabled ? "0" : "-400px"})`};

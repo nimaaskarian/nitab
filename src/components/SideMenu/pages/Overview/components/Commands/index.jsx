@@ -12,7 +12,8 @@ const Commands = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   return (
-    <Accordion headerComponent={<Header>Commands</Header>}>
+    <div>
+      <Header>Commands</Header>
       <TextInput
         value={searchTerm}
         onChange={setSearchTerm}
@@ -49,7 +50,7 @@ const Commands = () => {
             })}
           </CommandContainer>
         ))}
-    </Accordion>
+    </div>
   );
 };
 

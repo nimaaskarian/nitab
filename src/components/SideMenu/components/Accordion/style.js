@@ -9,4 +9,5 @@ export const AccordionHeader = styled.div`
 `;
 export const AccordionButton = styled.a`
   margin-left: 10px;
+  color: #e2e2e2;
 `;
