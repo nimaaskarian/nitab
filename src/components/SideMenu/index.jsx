@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import EditTaskbar from "components/SideMenu/pages/EditTaskbar";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSideMenuIndex } from "store/actions";
 import TodoList from "components/SideMenu/pages/TodoList";
@@ -48,6 +48,17 @@ const SideMenu = () => {
       },
     }) => list[current].font
   );
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key) close();
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, []);
+
   return (
     <SideMenuWrapper enabled={sideMenuIndex} onClick={close}>
       <StyledSideMenu

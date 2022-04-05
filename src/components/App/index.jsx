@@ -108,8 +108,10 @@ const App = () => {
         e.preventDefault();
       }
       if (e.key === "Escape") {
-        if (isTerminal) setIsTerminal(false);
-        else dispatch(setSideMenuIndex(5));
+        setIsTerminal(false);
+
+        if (!isTerminal) dispatch(setSideMenuIndex(5));
+
         return;
       }
 
@@ -122,7 +124,7 @@ const App = () => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [sideMenuIndex, isTermEmpty]);
+  }, [sideMenuIndex, isTermEmpty, isTerminal]);
 
   const RenderedContent = () => {
     if (!isTerminal)
