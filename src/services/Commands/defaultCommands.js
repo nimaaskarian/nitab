@@ -64,11 +64,18 @@ const defaultCommands = {
       }
     },
     icon: "fa fa-clock",
-    recommended: [
-      { phrase: "center " },
-      { phrase: "left " },
-      { phrase: "right " },
-    ],
+    recommended: (() => {
+      const recommended = [
+        { phrase: "center" },
+        { phrase: "start" },
+        { phrase: "end" },
+      ];
+      return [
+        { phrase: "center", recommended },
+        { phrase: "left", recommended },
+        { phrase: "right", recommended },
+      ];
+    })(),
   },
   font: {
     function(input) {

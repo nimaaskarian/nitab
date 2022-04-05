@@ -108,17 +108,53 @@ const AutocompleteLogic = () => {
       }
     };
   }, [term, suggestCommandsEnabled, duckduckDisabled]);
+  const mapCallback = (
+    recommend,
+    index,
+    ar,
+    icons = [recommend.icon, currentCommand.icon],
+    parent = ""
+  ) => {
+    const phrase =
+      identifier + currentCommand.name + parent + " " + recommend?.phrase;
+    const icon = icons.find((e) => !!e);
 
-  const mapedRecommended = useMemo(
+    if (
+      !ar.some((e) =>
+        term.startsWith(
+          identifier + currentCommand.name + parent + " " + e.phrase
+        )
+      )
+    ) {
+      return {
+        ...recommend,
+        phrase,
+        icon,
+      };
+    }
+    if (
+      recommend.recommended &&
+      ar.find((e) =>
+        term.startsWith(
+          identifier + currentCommand.name + parent + " " + e.phrase
+        )
+      ) === recommend
+    )
+      return recommend.recommended.flatMap((r, index, ar) =>
+        mapCallback(
+          r,
+          index,
+          ar,
+          [recommend.recommended.icon, ...icons],
+          parent + " " + recommend?.phrase
+        )
+      );
+    return [];
+  };
+  const mappedRecommended = useMemo(
     () =>
       (currentCommand.recommended || [])
-        .map((e) => {
-          return {
-            ...e,
-            phrase: identifier + currentCommand.name + " " + e?.phrase,
-            icon: e?.icon || currentCommand.icon,
-          };
-        })
+        .flatMap(mapCallback)
         .sort()
         .sort(function (a, b) {
           if (a.phrase.startsWith(term)) {
@@ -131,7 +167,7 @@ const AutocompleteLogic = () => {
   );
   return useMemo(
     () =>
-      [...commandSuggestions, ...mapedRecommended, ...duckDuckAc]
+      [...commandSuggestions, ...mappedRecommended, ...duckDuckAc]
         .filter((e) => !term.includes(e.phrase))
         .slice(0, 8)
         .map((e) => ({ ...e, key: nanoid(10) })),
