@@ -153,7 +153,12 @@ const AutocompleteLogic = () => {
   };
   const mappedRecommended = useMemo(
     () =>
-      (currentCommand.recommended || [])
+      (
+        (typeof currentCommand.recommended === "function" &&
+          currentCommand.recommended()) ||
+        currentCommand.recommended ||
+        []
+      )
         .flatMap(mapCallback)
         .sort()
         .sort(function (a, b) {

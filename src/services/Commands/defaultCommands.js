@@ -22,7 +22,13 @@ import {
 import { unsplash } from "apis";
 import axios from "axios";
 import { addBlobAsBackground } from "services/Images";
-
+function recommendations(phrases = [], recommended, icons = []) {
+  return phrases.map((phrase, index) => ({
+    phrase,
+    icon: icons[index],
+    recommended: recommendations(recommended),
+  }));
+}
 function checkIcon(timeout = 1500) {
   store.dispatch(setTempIcon("fa fa-check"));
   setTimeout(() => {
@@ -64,18 +70,10 @@ const defaultCommands = {
       }
     },
     icon: "fa fa-clock",
-    recommended: (() => {
-      const recommended = [
-        { phrase: "center" },
-        { phrase: "start" },
-        { phrase: "end" },
-      ];
-      return [
-        { phrase: "center", recommended },
-        { phrase: "left", recommended },
-        { phrase: "right", recommended },
-      ];
-    })(),
+    recommended: recommendations(
+      ["center", "left", "right"],
+      ["center", "start", "end"]
+    ),
   },
   font: {
     function(input) {
@@ -311,18 +309,7 @@ const defaultCommands = {
         switch (arg) {
           case "delete":
             return () => () => {
-              switch (type) {
-                case "light":
-                  store.dispatch(setLightTheme(-1));
-                  break;
-                case "dark":
-                  store.dispatch(setDarkTheme(-1));
-                  break;
-                default:
-                  store.dispatch(deleteTheme(+type));
-                  break;
-              }
-              checkIcon();
+              store.dispatch(deleteTheme(+type));
             };
 
           case "dark":
@@ -347,18 +334,17 @@ const defaultCommands = {
         }
       }
     },
-    recommended: [
-      {
-        phrase: "add",
-        icon: "fa fa-plus",
-      },
-      {
-        phrase: "random",
-      },
-      {
-        phrase: "0 delete",
-      },
-    ],
+    recommended: () => {
+      const themes = store.getState().data.themes.list;
+      return [
+        { phrase: "add" },
+        ...recommendations(
+          themes.map((e, i) => i),
+          ["light", "dark", "delete"]
+        ),
+      ];
+    },
+
     icon: "fa fa-paint-roller",
   },
   fg: {
