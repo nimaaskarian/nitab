@@ -30,6 +30,8 @@ export const TerminalInput = styled.input`
   font-size: 36px;
   font-weight: 500 !important;
   line-height: 2;
+  padding: 0;
+
   &:focus {
     outline: none;
     box-shadow: none;
@@ -44,4 +46,5 @@ export const TerminalOutput = styled.span`
 `;
 export const TerminalAutoCompleteWrapper = styled.div`
   flex-grow: 1;
+  position: relative;
 `;

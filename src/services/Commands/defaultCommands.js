@@ -288,7 +288,16 @@ const defaultCommands = {
         return () => () => store.dispatch(addBackground({ cssValue: input }));
     },
     icon: "fa fa-image",
-    recommended: [{ phrase: "un" }, { phrase: "random" }],
+    recommended: () => {
+      return [
+        { phrase: "un" },
+        { phrase: "random" },
+        ...recommendations(
+          store.getState().data.backgrounds.map((e, i) => i),
+          ["delete"]
+        ),
+      ];
+    },
   },
   themes: {
     function(input) {

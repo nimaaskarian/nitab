@@ -4,9 +4,10 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import AutocompleteLogic from "./bl";
 import AutocompleteItem from "components/AutocompleteItem";
-import { StyledAutocompleteList } from "./style";
+import { Selected, StyledAutocompleteList } from "./style";
 
 const Autocomplete = ({ isRtl }) => {
+  const term = useSelector(({ ui }) => ui.term);
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const ac = AutocompleteLogic();
@@ -41,18 +42,28 @@ const Autocomplete = ({ isRtl }) => {
     };
   }, [selectedIndex, ac]);
   return (
-    <StyledAutocompleteList isRtl={isRtl}>
-      {ac.map((e, i) => {
-        return (
-          <AutocompleteItem
-            onMouseEnter={() => setSelectedIndex(i)}
-            selected={i === selectedIndex}
-            key={e.key}
-            suggestion={e}
-          />
-        );
-      })}
-    </StyledAutocompleteList>
+    <>
+      <Selected>
+        {(() => {
+          const phrase = (ac[selectedIndex] || {}).phrase || "";
+          console.log(phrase);
+          if (phrase.startsWith(term)) return phrase;
+          return null;
+        })()}
+      </Selected>
+      <StyledAutocompleteList isRtl={isRtl}>
+        {ac.map((e, i) => {
+          return (
+            <AutocompleteItem
+              onMouseEnter={() => setSelectedIndex(i)}
+              selected={i === selectedIndex}
+              key={e.key}
+              suggestion={e}
+            />
+          );
+        })}
+      </StyledAutocompleteList>
+    </>
   );
 };
 
