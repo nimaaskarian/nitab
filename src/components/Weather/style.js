@@ -26,6 +26,7 @@ export const WeatherLoading = styled.div`
     animation: ${rotate} 0.7s ease-in-out infinite;
     font-size: 22px;
   }
+  cursor: pointer;
 `;
 
 export const StyledTippy = styled(Tippy)`

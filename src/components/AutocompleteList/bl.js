@@ -63,6 +63,7 @@ const AutocompleteLogic = () => {
         return {
           phrase: identifier + phrase + " ",
           icon: commands[phrase].icon || defaultIcon,
+          color: commands[phrase].color || true,
         };
       });
   }, [

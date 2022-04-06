@@ -1,15 +1,15 @@
 import CurrentColorContext from "context/CurrentColorContext";
 import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setTerm } from "store/actions";
 import { StyledAutocompleteItem } from "./style";
 
 const AutocompleteItem = ({
-  suggestion: { phrase, icon },
+  suggestion: { phrase, icon, color },
   onMouseEnter,
   selected,
 }) => {
-  const currentColor = useContext(CurrentColorContext);
+  const [currentColor, defaultColor, isOvr] = useContext(CurrentColorContext);
   const dispatch = useDispatch();
   return (
     <StyledAutocompleteItem
@@ -17,7 +17,9 @@ const AutocompleteItem = ({
         dispatch(setTerm(phrase));
       }}
       onMouseEnter={onMouseEnter}
-      color={currentColor}
+      color={
+        color ? (color === true || isOvr ? defaultColor : color) : currentColor
+      }
       selected={selected}
     >
       <span className={icon} style={{ marginRight: "5px" }} />

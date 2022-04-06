@@ -180,7 +180,11 @@ const Weather = (props) => {
       );
     } else {
       return (
-        <WeatherLoading>
+        <WeatherLoading
+          onClick={() => {
+            dispatch(setSideMenuIndex(4));
+          }}
+        >
           <i className="fa fa-spinner"></i>
         </WeatherLoading>
       );

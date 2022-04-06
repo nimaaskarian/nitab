@@ -40,6 +40,7 @@ const defaultCommands = {
     function() {
       return () => () => {
         store.dispatch(actions.toggleDateEnabled());
+        store.dispatch(actions.setTerm(""));
       };
     },
     icon: "fa fa-calendar",

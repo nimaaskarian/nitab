@@ -102,7 +102,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
             dispatch(setTerm(e.target.value.trimStart()));
           }}
         />
-        <CurrentColorContext.Provider value={currentColor}>
+        <CurrentColorContext.Provider value={[currentColor, color, isOvr]}>
           <CurrentCommandContext.Provider value={currentCommand}>
             <Autocomplete isRtl={isRtl} />
           </CurrentCommandContext.Provider>
