@@ -1,3 +1,4 @@
+import { TwoConditionElement } from "components/SideMenu/components/styled";
 import styled from "styled-components";
 
 export const StyledEditTaskbar = styled.form`
@@ -16,7 +17,10 @@ export const StyledEditTaskbar = styled.form`
     margin-top: 0;
   }
 `;
-
+export const StyledTwoConditionElement = styled(TwoConditionElement)`
+  margin-bottom: 0;
+  padding: 5px;
+`;
 export const ColorPickerWrapper = styled.div`
   flex-grow: 1;
   display: flex;

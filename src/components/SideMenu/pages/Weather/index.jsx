@@ -22,6 +22,7 @@ import {
   setWeatherIndex,
   setWeatherIsAutomatic,
 } from "store/actions";
+import { TodoButton } from "components/SideMenu/components/Todo/style";
 
 const Weather = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,12 +57,17 @@ const Weather = () => {
   return (
     <div>
       <Header>Settings</Header>
-      <label>Automatic Weather</label>
-      <input
-        type="checkbox"
-        checked={isAutomatic}
-        onChange={(e) => dispatch(setWeatherIsAutomatic(e.target.checked))}
-      />
+      <TwoConditionElement
+        enabled={isAutomatic}
+        onClick={() => dispatch(setWeatherIsAutomatic(!isAutomatic))}
+      >
+        Automatic Weather
+        <TodoButton
+          className={isAutomatic ? "fa fa-check-circle" : "far fa-circle"}
+          onClick={() => dispatch(setWeatherIsAutomatic(!isAutomatic))}
+        />
+      </TwoConditionElement>
+
       <AddedCitiesWrapper>
         {citiesWithKeys.map((city, index) => {
           const selected = index === currentCityIndex;

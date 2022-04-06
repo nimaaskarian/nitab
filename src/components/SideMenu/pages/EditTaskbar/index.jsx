@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { ChromePicker } from "react-color";
-import { ColorPickerWrapper, StyledEditTaskbar } from "./style";
+import { ColorPickerWrapper, StyledEditTaskbar, StyledTwoConditionElement } from "./style";
 import {
   Button,
   ButtonsWrapper,
   MultipleInputsWrapper,
+  TwoConditionElement,
 } from "../../components/styled";
 import TextInput from "components/SideMenu/components/TextInput";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +18,7 @@ import {
   setEditTaskbarIndex,
 } from "store/actions";
 import TaskbarIcon from "components/TaskbarIcon";
+import { TodoButton } from "components/SideMenu/components/Todo/style";
 
 const defaultValues = {
   icon: "",
@@ -138,13 +140,15 @@ const EditTaskbar = () => {
           label="right Margin(px)"
         />
         <div>
-          <label htmlFor="colorForeground">Color is foreground color</label>
-          <input
-            checked={isColorForeground}
-            id="colorForeground"
-            onChange={(e) => setIsColorForeground(e.target.checked)}
-            type="checkbox"
-          />
+          <StyledTwoConditionElement enabled={isColorForeground}>
+            Color is foreground color
+            <TodoButton
+              className={
+                isColorForeground ? "fa fa-circle-check" : "far fa-circle"
+              }
+              onClick={() => setIsColorForeground(!isColorForeground)}
+            />
+          </StyledTwoConditionElement>
         </div>
       </MultipleInputsWrapper>
       <ColorPickerWrapper>
