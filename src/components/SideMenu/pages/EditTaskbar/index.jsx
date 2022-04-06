@@ -2,12 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { ChromePicker } from "react-color";
-import { ColorPickerWrapper, StyledEditTaskbar, StyledTwoConditionElement } from "./style";
+import {
+  ColorPickerWrapper,
+  StyledEditTaskbar,
+  StyledTwoConditionElement,
+} from "./style";
 import {
   Button,
   ButtonsWrapper,
   MultipleInputsWrapper,
-  TwoConditionElement,
 } from "../../components/styled";
 import TextInput from "components/SideMenu/components/TextInput";
 import { useDispatch, useSelector } from "react-redux";
