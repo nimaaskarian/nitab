@@ -5,14 +5,15 @@ export const StyledAutocompleteList = styled.div`
   margin-top: 5px;
 
   direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
-  right: ${({ isRtl }) => isRtl && "5vw"}; ;
+  right: ${({ isRtl }) => isRtl && "0"}; ;
 `;
 export const Selected = styled.div`
+  direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
   position: absolute;
   top: 0;
   height: 100%;
   width: 100%;
-  z-index: 1;
+  z-index: -1000;
   pointer-events: none;
   color: inherit !important;
   font-family: inherit !important;

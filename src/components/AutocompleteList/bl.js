@@ -49,11 +49,18 @@ const AutocompleteLogic = () => {
   const commandSuggestions = useMemo(() => {
     if (!suggestCommandsEnabled || !term) return [];
     return Object.keys(commands)
-      .filter((e) => (identifier + e).includes(term.trim()))
+      .filter((e) => (identifier + e).toLowerCase().includes(term.trim()))
       .sort()
       .sort(function (a, b) {
-        if (a.startsWith(term) || (identifier + a).startsWith(term)) {
-          if (b.startsWith(term) || (identifier + a).startsWith(term)) return 0;
+        if (
+          a.startsWith(term) ||
+          (identifier + a).toLowerCase().startsWith(term)
+        ) {
+          if (
+            b.startsWith(term) ||
+            (identifier + a).toLowerCase().startsWith(term)
+          )
+            return 0;
           return -1;
         }
         return 1;

@@ -43,7 +43,7 @@ const Autocomplete = ({ isRtl }) => {
   }, [selectedIndex, ac]);
   return (
     <>
-      <Selected>
+      <Selected isRtl={isRtl}>
         {(() => {
           const phrase = (ac[selectedIndex] || {}).phrase || "";
           console.log(phrase);
