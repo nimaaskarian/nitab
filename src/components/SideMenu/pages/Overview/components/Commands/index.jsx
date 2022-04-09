@@ -36,7 +36,7 @@ const Commands = () => {
               {key}
             </CommandContainer.Name>
 
-            {value.args.map((e, i) => {
+            {value?.args?.map((e, i) => {
               const [noInput, hasInput] = e.split("%?%");
               if (!hasInput) return <div key={key + i}>{noInput}</div>;
               return (
