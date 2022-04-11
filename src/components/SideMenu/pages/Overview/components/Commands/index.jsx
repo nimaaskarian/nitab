@@ -24,7 +24,7 @@ const Commands = () => {
         .filter(
           ([key, value]) =>
             key.includes(searchTerm) ||
-            value.args.findIndex((e) => e.includes(searchTerm)) !== -1 ||
+            value?.args?.find((e) => e.includes(searchTerm)) ||
             !searchTerm
         )
         .map(([key, value]) => (
