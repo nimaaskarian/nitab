@@ -31,7 +31,7 @@
   If you type anything on Nitab, It'll open a window with a text input on it. Thats what we call Terminal. You can type and press "Enter key" to search google with anything that you typed.
   You can hold while pressing "Enter key" to open the result in a new tab.
   You can reverse this functionality by pressing "Ctrl + B" or "Alt + B".
-  You can also type commands. 
+  You can also type commands.
 
   - ##### Suggestions
 
