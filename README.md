@@ -47,6 +47,10 @@
     You can use taskbar by clicking on each icon, or use "Alt + <taskbar item index>". For example, You want to open second taskbar item using your keyboard. You'll have to press "Alt + 2". both numpad and num-row keys can be used.
 
 - #### Sidebar menu
+Theres a sidebar menu which you can edit some settings and review your customizations in it. You can open using "Escape" key. 
+It has multiple pages. You can navigate between them using navigation buttons.
+- ##### Overview
+You can see a overview of what 
 - #### Terminal
 
   If you type anything on Nitab, It'll open a window with a text input on it. Thats what we call Terminal. You can type and press "Enter key" to search google with anything that you typed.
