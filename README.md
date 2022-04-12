@@ -25,26 +25,7 @@
 ## Features
   
 ### Basics
-
-- #### The Terminal
-
-  If you type anything on Nitab, It'll open a window with a text input on it. Thats what we call Terminal. You can type and press "Enter key" to search google with anything that you typed.
-  You can hold while pressing "Enter key" to open the result in a new tab.
-  You can reverse this functionality by pressing "Ctrl + B" or "Alt + B".
-  You can also type commands.
-
-  - ##### Suggestions
-
-    Nitab will suggest default and your own commands to you based on what you typed. It also uses DuckDuckGo API for autosuggestions. You can navigate between suggestions using "Arrow keys" or "Mouse" and you can apply its content to your Terminal using "Tab key" or "Mouse Left Click".
-
-  - ##### Searches
-
-    Nitab can also search through your Bookmarks, Tabs and History and suggests based on what you typed. You can circle between them or turn it off using "Ctrl + Q" or "Alt + Q".
-    These suggestions can be accessed using "Mouse Left Click" or "Ctrl or Alt + <key of index of item>". For example, If you want to open second item, You can use both "Alt + 2" and "Ctrl + 2". You can use both numpad and num-row keys.
-
-  **Attention: If I ever mentioned Terminal in the following text, I'm referring to this Terminal. You don't need any external application in order to customize Nitab**
-
-- #### The Main
+- #### Main
 
   First page you see when you open Nitab. It contains your To-dos, taskbar and clock.
 
@@ -65,6 +46,23 @@
 
     You can use taskbar by clicking on each icon, or use "Alt + <taskbar item index>". For example, You want to open second taskbar item using your keyboard. You'll have to press "Alt + 2". both numpad and num-row keys can be used.
 
+- #### Sidebar menu
+- #### Terminal
+
+  If you type anything on Nitab, It'll open a window with a text input on it. Thats what we call Terminal. You can type and press "Enter key" to search google with anything that you typed.
+  You can hold while pressing "Enter key" to open the result in a new tab.
+  You can reverse this functionality by pressing "Ctrl + B" or "Alt + B".
+  You can also type commands.
+
+  - ##### Suggestions
+
+    Nitab will suggest default and your own commands to you based on what you typed. It also uses DuckDuckGo API for autosuggestions. You can navigate between suggestions using "Arrow keys" or "Mouse" and you can apply its content to your Terminal using "Tab key" or "Mouse Left Click".
+
+  - ##### Searches
+
+    Nitab can also search through your Bookmarks, Tabs and History and suggests based on what you typed. You can circle between them or turn it off using "Ctrl + Q" or "Alt + Q".
+    These suggestions can be accessed using "Mouse Left Click" or "Ctrl or Alt + <key of index of item>". For example, If you want to open second item, You can use both "Alt + 2" and "Ctrl + 2". You can use both numpad and num-row keys.
+   **Attention: If I ever mentioned Terminal in the following text, I'm referring to this Terminal. You don't need any external application in order to customize Nitab.**
 ## Author
 
 👤 **Nima Askarian**
