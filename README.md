@@ -48,12 +48,6 @@
 
   First page you see when you open Nitab. It contains your To-dos, taskbar and clock.
 
-  - ##### To-dos
-
-    You can temporarily close them using X button, delete them using Trash can button, Or mark it as "finished" using Circle button.
-    If its finished, You can un-finish it using Circle Check button.
-    Attention You can't add todos using GUI at the time. It will be an update for this very soon. You can add them using Terminal
-
   - ##### Clock
 
     You can switch between 24h and 12h format by clicking on clock itself.
