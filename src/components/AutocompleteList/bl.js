@@ -3,6 +3,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import CommandsContext from "context/CommandsContext";
 import CurrentCommandContext from "context/CurrentCommandContext";
 import { nanoid } from "nanoid";
+import axios from "axios";
 
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
@@ -96,6 +97,14 @@ const AutocompleteLogic = () => {
     if (currentCommand.args) input = currentCommand.args;
     const url =
       "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
+    axios
+      .get("https://api.duckduckgo.com/?q=DuckDuckGo", {
+        params: {
+          q: input,
+          format: "json",
+        },
+      })
+      .then((r) => console.log(r));
     const script = document.createElement("script");
     try {
       script.src = url;

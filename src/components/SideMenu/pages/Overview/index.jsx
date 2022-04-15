@@ -1,7 +1,7 @@
 import { Header } from "components/SideMenu/components/styled";
 import React from "react";
 import { useSelector } from "react-redux";
-import isDark from "services/isdark-min";
+import isDark from "services/isdark.min";
 import Commands from "./components/Commands";
 import CommandContainer from "./components/Commands/style";
 import OverviewElement from "./style";

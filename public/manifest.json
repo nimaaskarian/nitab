@@ -23,5 +23,10 @@
     "search",
     "tabs"
   ],
-  "content_security_policy": "script-src 'unsafe-eval' 'self' https://duckduckgo.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://duckduckgo.com; object-src 'self'",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "test@gmail.com"
+    }
+  }
 }

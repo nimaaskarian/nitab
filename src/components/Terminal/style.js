@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import isDark from "services/isdark-min";
+import isDark from "services/isdark.min";
 export const StyledTerminal = styled.div`
   z-index: 4;
   align-items: center;

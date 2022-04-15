@@ -46,7 +46,6 @@ const Autocomplete = ({ isRtl }) => {
       <Selected isRtl={isRtl}>
         {(() => {
           const phrase = (ac[selectedIndex] || {}).phrase || "";
-          console.log(phrase);
           if (phrase.startsWith(term)) return phrase;
           return null;
         })()}
