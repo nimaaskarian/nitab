@@ -118,7 +118,7 @@ export default function commandsReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         ...state[action.payload.name].filter(
-          (e, i) => !action.payload.indexs.includes(i)
+          (e, i) => !action.payload.indexes.includes(i)
         ),
       };
     case types.ADD_TO_COMMAND:

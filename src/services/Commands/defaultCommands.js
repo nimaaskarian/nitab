@@ -142,7 +142,7 @@ const defaultCommands = {
   iden: {
     function(input) {
       return () => () => {
-        store.dispatch(actions.setIndentifier(input.trim()));
+        store.dispatch(actions.setIdentifier(input.trim()));
         checkIcon();
       };
     },
@@ -172,7 +172,7 @@ const defaultCommands = {
           fileReader.onload = ({ target: { result } }) => {
             const dataKeys = Object.keys(store.getState().data);
             const data = JSON.parse(result);
-            const filteredEnteries = Object.entries(data)
+            const filteredEntries = Object.entries(data)
               .map(([key, value]) => {
                 if (dataKeys.includes(key)) return [key, value];
                 return [key, null];
@@ -180,7 +180,7 @@ const defaultCommands = {
               .filter(([key, value]) => !!value);
 
             store.dispatch(
-              actions.importData(Object.fromEntries(filteredEnteries))
+              actions.importData(Object.fromEntries(filteredEntries))
             );
           };
         });
@@ -363,14 +363,14 @@ const defaultCommands = {
         let color, isOvr;
         if (input === "default") color = "white";
         if (input === "auto")
-          return () => () => store.dispatch(actions.setIsForegoundAuto(true));
+          return () => () => store.dispatch(actions.setIsForegroundAuto(true));
 
         color = input.replace(/ovr\s/, "");
         isOvr = input.includes("ovr");
 
         return () => () => {
           store.dispatch(actions.setForeground({ color, isOvr }));
-          store.dispatch(actions.setIsForegoundAuto(false));
+          store.dispatch(actions.setIsForegroundAuto(false));
         };
       }
     },

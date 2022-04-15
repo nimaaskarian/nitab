@@ -3,27 +3,27 @@ import {
   Button,
   DeleteButton,
   Header,
-  TwoConditionElement,
+  TwoConditionElement
 } from "components/SideMenu/components/styled";
 import TextInput from "components/SideMenu/components/TextInput";
-import { nanoid } from "nanoid";
-import React, { useEffect, useMemo, useState } from "react";
+import { TodoButton } from "components/SideMenu/components/Todo/style";
 import "flag-icons/css/flag-icons.min.css";
-import {
-  AddedCitiesWrapper,
-  CityWrapper,
-  IconWrapper,
-  ResultWrapper,
-} from "./style";
+import { nanoid } from "nanoid";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addWeatherCity,
   deleteWeatherCity,
   setWeatherIndex,
   setWeatherIsAutomatic,
-  toggleWeatherEnabled,
+  toggleWeatherEnabled
 } from "store/actions";
-import { TodoButton } from "components/SideMenu/components/Todo/style";
+import {
+  AddedCitiesWrapper,
+  CityWrapper,
+  IconWrapper,
+  ResultWrapper
+} from "./style";
 
 const Weather = () => {
   const [searchTerm, setSearchTerm] = useState("");

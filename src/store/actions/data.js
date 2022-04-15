@@ -7,7 +7,7 @@ export function addCommand(name, args, icon, color) {
     payload: { name, args, icon, color },
   };
 }
-export function setIsForegoundAuto(isFgAuto) {
+export function setIsForegroundAuto(isFgAuto) {
   return { type: types.SET_ISFOREGROUND_AUTO, payload: isFgAuto };
 }
 export function clearCommands() {
@@ -40,10 +40,10 @@ export function addToCommand(name, args) {
     payload: { name, args },
   };
 }
-export function removeFromCommand(name, indexs) {
+export function removeFromCommand(name, indexes) {
   return {
     type: types.REMOVE_FROM_COMMAND,
-    payload: { name, indexs },
+    payload: { name, indexes: indexes },
   };
 }
 export function setClockPosition(position) {
@@ -69,7 +69,7 @@ export function setFont(font) {
     payload: font,
   };
 }
-export function setIndentifier(iden) {
+export function setIdentifier(iden) {
   return {
     type: types.SET_IDENTIFIER,
     payload: iden,
