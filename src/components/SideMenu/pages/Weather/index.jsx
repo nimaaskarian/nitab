@@ -21,6 +21,7 @@ import {
   deleteWeatherCity,
   setWeatherIndex,
   setWeatherIsAutomatic,
+  toggleWeatherEnabled,
 } from "store/actions";
 import { TodoButton } from "components/SideMenu/components/Todo/style";
 
@@ -31,6 +32,8 @@ const Weather = () => {
   const cities = useSelector(({ data }) => data.weather.cities);
   const currentCityIndex = useSelector(({ data }) => data.weather.index);
   const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
+  const isEnabled = useSelector(({ data }) => data.weather.enabled);
+
   const citiesWithKeys = useMemo(
     () => (cities || []).map((city) => ({ ...city, key: nanoid() })),
     [cities]
@@ -58,13 +61,21 @@ const Weather = () => {
     <div>
       <Header>Settings</Header>
       <TwoConditionElement
+        enabled={isEnabled}
+        onClick={() => dispatch(toggleWeatherEnabled())}
+      >
+        Weather Enabled
+        <TodoButton
+          className={isEnabled ? "fa fa-check-circle" : "far fa-circle"}
+        />
+      </TwoConditionElement>
+      <TwoConditionElement
         enabled={isAutomatic}
         onClick={() => dispatch(setWeatherIsAutomatic(!isAutomatic))}
       >
         Automatic Weather
         <TodoButton
           className={isAutomatic ? "fa fa-check-circle" : "far fa-circle"}
-          onClick={() => dispatch(setWeatherIsAutomatic(!isAutomatic))}
         />
       </TwoConditionElement>
 
