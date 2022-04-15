@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import CommandContainer from "./style";
 const Commands = () => {
   const commands = useSelector(({ data }) => data.commands);
+  const defaultIcon = useSelector(({ data }) => data.terminal.defaultIcon);
 
   const [searchTerm, setSearchTerm] = useState("");
   return (
@@ -31,7 +32,7 @@ const Commands = () => {
           <CommandContainer color={value.color} key={key}>
             <CommandContainer.Name color={value.color}>
               <CommandContainer.Icon
-                className={value.icon}
+                className={value.icon || defaultIcon}
               ></CommandContainer.Icon>
               {key}
             </CommandContainer.Name>

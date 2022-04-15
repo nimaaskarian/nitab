@@ -97,14 +97,6 @@ const AutocompleteLogic = () => {
     if (currentCommand.args) input = currentCommand.args;
     const url =
       "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
-    axios
-      .get("https://api.duckduckgo.com/?q=DuckDuckGo", {
-        params: {
-          q: input,
-          format: "json",
-        },
-      })
-      .then((r) => console.log(r));
     const script = document.createElement("script");
     try {
       script.src = url;

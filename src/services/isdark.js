@@ -5,7 +5,7 @@ function isDark(color) {
 
   document.body.appendChild(div);
   color = window.getComputedStyle(div).color || color;
-
+  document.body.removeChild(div);
   //Color in RGB
   // Variables for red, green, blue values
   var r, g, b, hsp;
@@ -31,7 +31,6 @@ function isDark(color) {
 
   // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
   hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
   // Using the HSP value, determine whether the color is light or dark
   if (hsp > 127.5) {
     return false;

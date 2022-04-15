@@ -51,20 +51,25 @@ export const MultipleInputsWrapper = styled.div`
   flex-grow: 1;
 `;
 export const TwoConditionElement = styled.div`
-  &,
-  & * {
-    color: ${({ enabled, color }) =>
-      enabled ? isDark(color) || "#222" : color || "#e2e2e2"} !important;
+  & {
+    --color: ${({ enabled, color }) =>
+      enabled ? isDark(color) && "#222" : color || "#e2e2e2"};
+    --bg-color: ${({ color }) => color || "#e2e2e2"};
   }
+  border: 2px solid var(--bg-color);
+  background-color: ${({ enabled }) => enabled && "var(--bg-color)"};
   margin-bottom: 10px;
-  background-color: ${({ enabled, color }) => enabled && (color || "#e2e2e2")};
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid ${({ color }) => color || "#e2e2e2"};
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+
+  &,
+  & * {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color) !important;
+  }
 `;
 export const DeleteButton = styled.button`
   &:hover {
