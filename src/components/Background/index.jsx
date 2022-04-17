@@ -37,53 +37,60 @@ const Background = ({ isTerminal }) => {
   const isForegroundAuto = useSelector(
     ({ data }) => data.backgrounds[currentBackground]?.isForegroundAuto
   );
-  const [background, setBackground] = useState(null);
+  const [pictureBlob, setPictureBlob] = useState(null);
+  const [videoBlob, setVideoBlob] = useState(null);
+  console.log(videoBlob);
 
   useEffect(() => {
     if (backgrounds[currentBackground]) {
       (async () => {
-        const { id } = backgrounds[currentBackground];
-        if (id) {
+        const { id, video } = backgrounds[currentBackground];
+
+        if (id || video) {
           const getItemFallback = (blob) => {
-            if (!blob) return localforage.getItem(id).then(getItemFallback);
-            setBackground(`url('${window.URL.createObjectURL(blob)}')`);
+            if (!blob)
+              return localforage.getItem(id || video).then(getItemFallback);
+            const url = window.URL.createObjectURL(blob);
+            if (id) setPictureBlob(`url('${url}')`);
+            if (video) setVideoBlob(url);
+            else setVideoBlob(null);
           };
           localforage.getItem(id).then(getItemFallback);
         }
       })();
     }
   }, [backgrounds, currentBackground]);
-  useEffect(() => {
-    if (background && isForegroundAuto) {
-      getImageLightness(
-        background.replace(/^url\('|^url\("/g, "").replace(/"\)|'\)/g, ""),
-        (br) => {
-          if (br !== null)
-            dispatch(
-              setForeground(
-                `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
-                  br < 127.5 ? 255 : 0
-                })`
-              )
-            );
-          else
-            dispatch(
-              setForeground(
-                `rgb(${isDark(background) ? 255 : 0},${
-                  isDark(background) ? 255 : 0
-                },${isDark(background) ? 255 : 0})`
-              )
-            );
-        }
-      );
-    }
-  }, [background, isForegroundAuto]);
+  // useEffect(() => {
+  //   if (pictureBlob && isForegroundAuto) {
+  //     getImageLightness(
+  //       pictureBlob.replace(/^url\('|^url\("/g, "").replace(/"\)|'\)/g, ""),
+  //       (br) => {
+  //         if (br !== null)
+  //           dispatch(
+  //             setForeground(
+  //               `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
+  //                 br < 127.5 ? 255 : 0
+  //               })`
+  //             )
+  //           );
+  //         else
+  //           dispatch(
+  //             setForeground(
+  //               `rgb(${isDark(pictureBlob) ? 255 : 0},${
+  //                 isDark(pictureBlob) ? 255 : 0
+  //               },${isDark(pictureBlob) ? 255 : 0})`
+  //             )
+  //           );
+  //       }
+  //     );
+  //   }
+  // }, [pictureBlob, isForegroundAuto]);
 
   return (
     <StyledBackground
       parallax={parallax}
       scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
-      background={backgrounds[currentBackground].cssValue || background}
+      background={backgrounds[currentBackground].cssValue || pictureBlob}
       blur={
         sideMenuIndex
           ? blur?.setting
@@ -98,7 +105,11 @@ const Background = ({ isTerminal }) => {
           ? brightness?.terminal
           : brightness?.notTerminal
       }
-    />
+    >
+      {videoBlob ? (
+        <video muted autoPlay loop src={videoBlob} type="video/*" />
+      ) : null}
+    </StyledBackground>
   );
 };
 

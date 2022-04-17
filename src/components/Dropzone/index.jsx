@@ -10,9 +10,17 @@ const Dropzone = ({ setDragMessage }) => {
 
   const alert = useAlert();
   const imageRegexp = new RegExp("image/.*");
+  const videoRegexp = new RegExp("video/.*");
+
   const dispatch = useDispatch();
   const isTaskbarDragging = useSelector(({ ui }) => ui.currentDragging !== -1);
-
+  const handleVideo = (file) => {
+    alert.show(
+      <Alert>{file.name} has been set as your background video</Alert>
+    );
+    const videoBlob = new Blob([file], { type: "image/*" });
+    addBlobAsBackground(videoBlob, null, "video");
+  };
   const handleImage = (file) => {
     alert.show(
       <Alert>{file.name} has been set as your background picture</Alert>
@@ -48,8 +56,10 @@ const Dropzone = ({ setDragMessage }) => {
     setDragMessage("");
     ev.preventDefault();
     [...ev.dataTransfer.items].forEach((item, index) => {
-      if (imageRegexp.test(item.type))
-        handleImage(ev.dataTransfer.files[index]);
+      const currentFile = ev.dataTransfer.files[index];
+      const { type } = item;
+      if (imageRegexp.test(type)) handleImage(currentFile);
+      if (videoRegexp.test(type)) handleVideo(currentFile);
     });
 
     [...ev.dataTransfer.items].forEach((item) => {

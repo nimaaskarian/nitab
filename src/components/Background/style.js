@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 export const StyledBackground = styled.div`
+  & > video {
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+  }
   margin-left: ${({ parallax }) => parallax.x}vw;
   margin-top: ${({ parallax }) => parallax.y}vh;
   transform: scale(${({ scale }) => scale});

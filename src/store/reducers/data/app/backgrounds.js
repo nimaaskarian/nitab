@@ -1,12 +1,13 @@
 import types from "store/types/data";
 
 class Background {
-  constructor({ id, cssValue }, meta) {
+  constructor({ id, cssValue, video }, meta) {
     if (id) this.id = id;
     if (cssValue) this.cssValue = cssValue;
-    if (meta) {
-      this.meta = meta;
-    }
+    if (video) this.video = video;
+
+    if (meta) this.meta = meta;
+
     this.parallaxFactor = 5;
     this.parallaxEnabled = false;
     this.blur = {
