@@ -22,6 +22,7 @@ import {
 import { unsplash } from "apis";
 import axios from "axios";
 import { addBlobAsBackground } from "services/Images";
+import openFilePrompt, { types } from "services/openFilePrompt";
 function recommendations(phrases = [], recommended, icons = []) {
   return phrases.map((phrase, index) => ({
     phrase,
@@ -157,32 +158,19 @@ const defaultCommands = {
   imp: {
     function() {
       return () => () => {
-        const fileReader = new window.FileReader();
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".json";
-        input.style.opacity = "0";
-        input.style.position = "absolute";
-        input.style.bottom = "0";
-        document.body.appendChild(input);
-        input.click();
-        input.addEventListener("change", () => {
-          if (!input.files.length || input.files.length > 1) return;
-          fileReader.readAsText(input.files[0]);
-          fileReader.onload = ({ target: { result } }) => {
-            const dataKeys = Object.keys(store.getState().data);
-            const data = JSON.parse(result);
-            const filteredEntries = Object.entries(data)
-              .map(([key, value]) => {
-                if (dataKeys.includes(key)) return [key, value];
-                return [key, null];
-              })
-              .filter(([key, value]) => !!value);
+        openFilePrompt(({ target: { result } }) => {
+          const dataKeys = Object.keys(store.getState().data);
+          const data = JSON.parse(result);
+          const filteredEntries = Object.entries(data)
+            .map(([key, value]) => {
+              if (dataKeys.includes(key)) return [key, value];
+              return [key, null];
+            })
+            .filter(([key, value]) => !!value);
 
-            store.dispatch(
-              actions.importData(Object.fromEntries(filteredEntries))
-            );
-          };
+          store.dispatch(
+            actions.importData(Object.fromEntries(filteredEntries))
+          );
         });
       };
     },
@@ -245,6 +233,23 @@ const defaultCommands = {
   },
   bg: {
     function(input) {
+      if (!input) {
+        return () => () =>
+          openFilePrompt(
+            (blobs) => {
+              blobs.forEach((blob) => {
+                addBlobAsBackground(
+                  blob,
+                  null,
+                  blob.type.replace(/\/.*/, "") === "video" ? "video" : "id"
+                );
+              });
+            },
+            types.BLOB,
+            "image/*,video/*",
+            true
+          );
+      }
       if (input === "random") {
         return () => () => store.dispatch(toggleIsBackgroundRandom());
       }
