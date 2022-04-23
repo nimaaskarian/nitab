@@ -1,5 +1,5 @@
 import { TwoConditionElement } from "components/SideMenu/components/styled";
-import isDark from "services/isdark.min";
+import isDark from "services/isdark";
 import styled from "styled-components";
 
 const CommandContainer = styled(TwoConditionElement)`

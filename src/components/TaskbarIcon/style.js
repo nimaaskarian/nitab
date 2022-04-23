@@ -1,4 +1,4 @@
-import isDark from "services/isdark.min";
+import isDark from "services/isdark";
 import styled from "styled-components";
 
 export const TaskbarIconWrapper = styled.div`

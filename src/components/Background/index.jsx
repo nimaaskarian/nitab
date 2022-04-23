@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import localforage from "localforage";
 
 import useParallax from "hooks/useParallax";
-import { StyledBackground } from "./style";
+import { BackgroundWrapper, StyledBackground } from "./style";
 const Background = ({ isTerminal }) => {
   const parallax = useParallax();
   const currentBackground = useSelector(
@@ -53,29 +53,31 @@ const Background = ({ isTerminal }) => {
     }
   }, [backgrounds, currentBackground]);
   return (
-    <StyledBackground
-      parallax={parallax}
-      scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
-      background={backgrounds[currentBackground].cssValue || pictureBlob}
-      blur={
-        sideMenuIndex
-          ? blur?.setting
-          : isTerminal
-          ? blur?.terminal
-          : blur?.notTerminal
-      }
-      brightness={
-        sideMenuIndex
-          ? brightness?.setting
-          : isTerminal
-          ? brightness?.terminal
-          : brightness?.notTerminal
-      }
-    >
-      {videoBlob ? (
-        <video muted autoPlay loop src={videoBlob} type="video/*" />
-      ) : null}
-    </StyledBackground>
+    <BackgroundWrapper>
+      <StyledBackground
+        parallax={parallax}
+        scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
+        background={backgrounds[currentBackground].cssValue || pictureBlob}
+        blur={
+          sideMenuIndex
+            ? blur?.setting
+            : isTerminal
+            ? blur?.terminal
+            : blur?.notTerminal
+        }
+        brightness={
+          sideMenuIndex
+            ? brightness?.setting
+            : isTerminal
+            ? brightness?.terminal
+            : brightness?.notTerminal
+        }
+      >
+        {videoBlob ? (
+          <video muted autoPlay loop src={videoBlob} type="video/*" />
+        ) : null}
+      </StyledBackground>
+    </BackgroundWrapper>
   );
 };
 

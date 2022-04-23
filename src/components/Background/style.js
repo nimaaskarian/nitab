@@ -1,5 +1,9 @@
 import styled from "styled-components";
-
+export const BackgroundWrapper = styled.div`
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+`;
 export const StyledBackground = styled.div`
   & > video {
     position: fixed;
