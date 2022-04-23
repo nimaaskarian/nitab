@@ -13,7 +13,6 @@ const AutocompleteItem = ({
   const [currentColor, defaultColor, isOvr, isDark] =
     useContext(CurrentColorContext);
   const itemColor = color && (color === true || isOvr ? defaultColor : color);
-  console.log(color);
   const colorIsDark = useIsDarkColor(itemColor);
   const dispatch = useDispatch();
   return (
