@@ -3,7 +3,6 @@ import defaultCommands from "./defaultCommands";
 function mapTermToInnerCommands(commandArray, commands) {
   return commandArray.map((item) => {
     if (!item) return;
-    console.log(item);
     const usedCommands = /%.+=?.*%/.exec(item) || [];
     if (usedCommands.length) {
       usedCommands.forEach((command) => {
@@ -14,7 +13,6 @@ function mapTermToInnerCommands(commandArray, commands) {
           defaultCommands[commandName] ||
           {}
         ).function;
-        console.log(typeof func(commandArg)() === "string");
         if (func && typeof func(commandArg)() === "string")
           item = item.replace(command, func(commandArg || "")());
       });
@@ -50,7 +48,6 @@ const dataToCommands = (data) => {
       else
         return () => () => {
           data[command].args.forEach((element) => {
-            console.log(input);
             let [hasntInput, hasInput] = element
               .replace("%input%", input)
               .split("%?%");

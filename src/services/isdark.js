@@ -1,8 +1,8 @@
 function isDark(color) {
+  if (!color || typeof color !== "string") return;
   const div = document.createElement("div");
   div.style.display = "none";
   div.style.color = color;
-
   document.body.appendChild(div);
   color = window.getComputedStyle(div).color || color;
   document.body.removeChild(div);

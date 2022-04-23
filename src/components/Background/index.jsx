@@ -32,7 +32,6 @@ const Background = ({ isTerminal }) => {
   const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
   const [pictureBlob, setPictureBlob] = useState(null);
   const [videoBlob, setVideoBlob] = useState(null);
-  console.log(videoBlob);
 
   useEffect(() => {
     if (backgrounds[currentBackground]) {
