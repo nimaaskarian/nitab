@@ -1,14 +1,13 @@
 import styled from "styled-components";
-import isDark from "services/isdark.min";
 export const AppContainer = styled.div`
   font-family: ${({ font }) => `${font}`};
-  ${({ color }) => {
+  ${({ color, isDark }) => {
     return `& *{
       color:${color};
     }
   & *::selection{
     background-color:${color};
-    color:${isDark(color) ? "#CCC" : "#333"};
+    color:${isDark ? "#CCC" : "#333"};
   }`;
   }}
   overflow: hidden;

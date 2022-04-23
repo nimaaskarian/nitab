@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import isDark from "services/isdark.min";
 export const StyledTerminal = styled.div`
   z-index: 4;
   align-items: center;
@@ -9,13 +8,13 @@ export const StyledTerminal = styled.div`
   justify-content: space-between;
   padding: 0 5vw;
 
-  ${({ color }) => {
+  ${({ color, isDark }) => {
     return `&>*{
       color:${color} !important;
     }
   & *::selection{
     background-color:${color} !important;
-    color:${isDark(color) ? "#CCC" : "#333"} !important;
+    color:${isDark ? "#CCC" : "#333"} !important;
   }`;
   }}
 `;

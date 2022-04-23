@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import localforage from "localforage";
-import { setForeground } from "store/actions";
 
 import useParallax from "hooks/useParallax";
 import { StyledBackground } from "./style";
-import { getImageLightness } from "services/Images";
-import isDark from "services/isdark.min";
 const Background = ({ isTerminal }) => {
-  const dispatch = useDispatch();
   const parallax = useParallax();
   const currentBackground = useSelector(
     ({
@@ -34,9 +30,6 @@ const Background = ({ isTerminal }) => {
     ({ data }) => data.backgrounds[currentBackground]?.brightness
   );
   const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
-  const isForegroundAuto = useSelector(
-    ({ data }) => data.backgrounds[currentBackground]?.isForegroundAuto
-  );
   const [pictureBlob, setPictureBlob] = useState(null);
   const [videoBlob, setVideoBlob] = useState(null);
   console.log(videoBlob);
@@ -60,32 +53,6 @@ const Background = ({ isTerminal }) => {
       })();
     }
   }, [backgrounds, currentBackground]);
-  // useEffect(() => {
-  //   if (pictureBlob && isForegroundAuto) {
-  //     getImageLightness(
-  //       pictureBlob.replace(/^url\('|^url\("/g, "").replace(/"\)|'\)/g, ""),
-  //       (br) => {
-  //         if (br !== null)
-  //           dispatch(
-  //             setForeground(
-  //               `rgb(${br < 127.5 ? 255 : 0},${br < 127.5 ? 255 : 0},${
-  //                 br < 127.5 ? 255 : 0
-  //               })`
-  //             )
-  //           );
-  //         else
-  //           dispatch(
-  //             setForeground(
-  //               `rgb(${isDark(pictureBlob) ? 255 : 0},${
-  //                 isDark(pictureBlob) ? 255 : 0
-  //               },${isDark(pictureBlob) ? 255 : 0})`
-  //             )
-  //           );
-  //       }
-  //     );
-  //   }
-  // }, [pictureBlob, isForegroundAuto]);
-
   return (
     <StyledBackground
       parallax={parallax}

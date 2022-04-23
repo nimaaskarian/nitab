@@ -16,6 +16,7 @@ import {
 import CurrentColorContext from "context/CurrentColorContext";
 import SearchResultList from "components/SearchResultList";
 import SearchMode from "components/SearchMode";
+import useIsDarkColor from "hooks/useIsDarkColor";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
   const commands = useContext(CommandsContext);
@@ -43,7 +44,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const currentColor = useMemo(() => {
     return isOvr ? color : currentCommand.color || color;
   }, [isOvr, color, currentCommand.color]);
-
+  const isDark = useIsDarkColor(currentColor);
   const handleSubmit = useCallback(
     (e) => {
       if (e.code !== "Enter") return;
@@ -87,10 +88,10 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         window.getComputedStyle(forwardedRef.current, null).direction ===
           "rtl") ??
       false,
-    [term, forwardedRef]
+    [forwardedRef]
   );
   return (
-    <StyledTerminal color={currentColor}>
+    <StyledTerminal color={currentColor} isDark={isDark}>
       <SearchMode />
       <TerminalAutoCompleteWrapper>
         <TerminalInput

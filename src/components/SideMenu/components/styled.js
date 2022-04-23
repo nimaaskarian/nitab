@@ -1,4 +1,3 @@
-import isDark from "services/isdark.min";
 import styled from "styled-components";
 
 export const ButtonsWrapper = styled.div`
@@ -20,8 +19,8 @@ export const Button = styled.button`
   display: inline-block;
   border: none;
   background-color: transparent;
-  color: ${({ color }) => color || "#e2e2e2"};
-  border-color: ${({ color }) => color || "#e2e2e2"};
+  color: ${({ bgColor }) => bgColor || "#e2e2e2"};
+  border-color: ${({ bgColor }) => bgColor || "#e2e2e2"};
   border-style: solid;
   border-width: 2px;
   border-radius: 5px;
@@ -38,9 +37,8 @@ export const Button = styled.button`
         }`
       : ""}
   &:hover {
-    background-color: ${({ color }) => color || "#e2e2e2"};
-    color: ${({ color }) =>
-      isDark(color || "#e2e2e2") ? "#e2e2e2" : "#333"} !important;
+    background-color: ${({ bgColor }) => bgColor || "#e2e2e2"};
+    color: ${({ color }) => color || "#333"} !important;
   }
 `;
 
@@ -52,8 +50,8 @@ export const MultipleInputsWrapper = styled.div`
 `;
 export const TwoConditionElement = styled.div`
   & {
-    --color: ${({ enabled, color }) =>
-      enabled ? isDark(color) && "#222" : color || "#e2e2e2"};
+    --color: ${({ enabled, color, bgColor }) =>
+      enabled ? color || "#222" : bgColor || "#e2e2e2"};
     --bg-color: ${({ color }) => color || "#e2e2e2"};
   }
   border: 2px solid var(--bg-color);

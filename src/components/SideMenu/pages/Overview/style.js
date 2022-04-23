@@ -1,4 +1,3 @@
-import isDark from "services/isdark.min";
 import styled from "styled-components";
 
 const OverviewElement = styled.div`
@@ -6,10 +5,9 @@ const OverviewElement = styled.div`
   height: 62px;
   border-radius: 10px;
   cursor: default;
-  background-color: ${(props) => props.color || "#e2e2e2"};
+  background-color: ${({ color }) => color || "#e2e2e2"};
   & > * {
-    color: ${(props) =>
-      isDark(props.color || "#e2e2e2") ? "#e2e2e2" : "#333"};
+    color: ${({ color, isDark }) => (isDark ? "#e2e2e2" : "#333")};
   }
   &:hover {
     box-shadow: 0px 10px 14px -14px rgba(218, 218, 218, 0.8);

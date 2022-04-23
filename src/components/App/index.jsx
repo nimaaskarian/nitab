@@ -27,6 +27,7 @@ import { AppContainer } from "./style";
 import Main from "components/Main";
 import useIsThemeDark from "hooks/useIsThemeDark";
 import SideMenu from "components/SideMenu";
+import useIsDarkColor from "hooks/useIsDarkColor";
 
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
@@ -62,6 +63,7 @@ const App = () => {
   const lightIndex = useSelector(({ data: { themes } }) => themes.light);
 
   const isDarkTheme = useIsThemeDark();
+  const isDarkColor = useIsDarkColor(foreground.color);
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 
   useAlert({ isTerminal });
@@ -149,7 +151,7 @@ const App = () => {
       </Helmet>
       <Background isTerminal={isTerminal} />
 
-      <AppContainer color={foreground.color} font={font}>
+      <AppContainer color={foreground.color} isDark={isDarkColor} font={font}>
         <SideMenu />
         {dragMessage ? <h1>{dragMessage}...</h1> : <RenderedContent />}
       </AppContainer>

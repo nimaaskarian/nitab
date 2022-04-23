@@ -1,4 +1,3 @@
-import isDark from "services/isdark.min";
 import styled from "styled-components";
 
 export const StyledAutocompleteItem = styled.div`
@@ -10,14 +9,14 @@ export const StyledAutocompleteItem = styled.div`
   & * {
     transition: none !important;
   }
-  ${({ selected, color }) => {
+  ${({ selected, color, isDark }) => {
     if (selected)
       return `
       padding: 4px;
 
       background-color: ${color};
       &, & *{
-        color: ${isDark(color) ? "#ccc" : "#333"} !important;
+        color: ${isDark ? "#ccc" : "#333"} !important;
       }
       `;
     else return `&, & *{color: ${color} !important;}`;

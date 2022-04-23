@@ -1,8 +1,4 @@
-import Accordion from "components/SideMenu/components/Accordion";
-import {
-  Header,
-  TwoConditionElement,
-} from "components/SideMenu/components/styled";
+import { Header } from "components/SideMenu/components/styled";
 import TextInput from "components/SideMenu/components/TextInput";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -29,7 +25,7 @@ const Commands = () => {
             !searchTerm
         )
         .map(([key, value]) => (
-          <CommandContainer color={value.color} key={key}>
+          <CommandContainer color={value.color} bgColor={value.color} key={key}>
             <CommandContainer.Name color={value.color}>
               <CommandContainer.Icon
                 className={value.icon || defaultIcon}

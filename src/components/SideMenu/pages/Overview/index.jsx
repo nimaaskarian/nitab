@@ -1,16 +1,13 @@
-import { Header } from "components/SideMenu/components/styled";
+import useIsDarkColor from "hooks/useIsDarkColor";
 import React from "react";
 import { useSelector } from "react-redux";
-import isDark from "services/isdark.min";
 import Commands from "./components/Commands";
-import CommandContainer from "./components/Commands/style";
 import OverviewElement from "./style";
 
 const Overview = () => {
   const todoCount = useSelector(({ data }) => data.todos.length);
   const themesCount = useSelector(({ data }) => data.themes.list.length);
   const bgCount = useSelector(({ data }) => data.backgrounds.length);
-
   // const currentTheme = useSelector(({ data }) => data.themes.current);
 
   const foreground = useSelector(
@@ -20,6 +17,8 @@ const Overview = () => {
       },
     }) => list[current].foreground
   );
+  const isDark = useIsDarkColor(foreground.color);
+
   return (
     <div>
       <OverviewElement.Container>
@@ -35,7 +34,7 @@ const Overview = () => {
           <OverviewElement.Header>{bgCount}</OverviewElement.Header>
           <OverviewElement.Small>bckgrnds</OverviewElement.Small>
         </OverviewElement>
-        <OverviewElement color={foreground.color}>
+        <OverviewElement color={foreground.color} isDark={isDark}>
           <OverviewElement.Header>FG</OverviewElement.Header>
           <OverviewElement.Small>
             {foreground.isOvr ? "override" : "no override"}

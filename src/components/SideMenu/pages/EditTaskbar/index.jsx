@@ -174,7 +174,8 @@ const EditTaskbar = () => {
         ) : null}
         <Button
           type="button"
-          color="red"
+          bgColor="red"
+          color="#e2e2e2"
           onClick={() => dispatch(resetTaskbarIcons())}
         >
           Clear Icons
