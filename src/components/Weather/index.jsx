@@ -18,6 +18,8 @@ import "tippy.js/dist/tippy.css";
 import { openWeather } from "apis";
 import { types, useAlert } from "react-alert";
 import Alert from "components/Alert";
+import needsRefresh from "services/Weather/needsRefresh";
+import fetchWeather from "services/Weather/fetchWeather";
 
 const icons = {
   "01d": "fa-sun",
@@ -47,7 +49,6 @@ const icons = {
   "50d": "fa-fog",
   "50n": "fa-fog",
 };
-const minutesToExpire = 30;
 
 const Weather = (props) => {
   const data = useSelector(({ data }) => data.weather.data);
@@ -58,49 +59,20 @@ const Weather = (props) => {
     ({ data }) => (data.weather.cities || [])[data.weather.index]
   );
   const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
-  const isRefreshNeeded = (city) => {
-    if (data && data.time) {
-      if (data.city !== city) {
-        return true;
-      }
-      if (new Date().getTime() < data.time + minutesToExpire * 60000) {
-        return false;
-      }
-    }
-    return true;
-  };
-  const getWeather = ({ lon, lat }, city = "") => {
-    if (isRefreshNeeded(city))
-      openWeather
-        .get("/weather", {
-          params: {
-            lat,
-            lon,
-          },
-        })
-        .then((r) => r.data)
-        .then((data) =>
-          dispatch(
-            setWeatherData({ ...data, time: new Date().getTime(), city: city })
-          )
-        )
-        .catch((e) => {
-          setError(e.message);
-        });
-  };
+
   useEffect(() => {
     if (!isAutomatic && city) {
       const { lon, lat } = city;
-      getWeather({ lon, lat }, city.name);
+      fetchWeather({ lon, lat }, city.name, (e) => setError(e.message));
     }
   }, [city, isAutomatic]);
 
   useEffect(() => {
     (() => {
-      if (isAutomatic && isRefreshNeeded(""))
+      if (isAutomatic && needsRefresh("", data))
         navigator.geolocation.getCurrentPosition(
           ({ coords: { latitude: lat, longitude: lon } }) => {
-            getWeather({ lat, lon });
+            fetchWeather({ lat, lon });
           },
           (e) => {
             alert.show(<Alert>Automatic Weather: {e.message}</Alert>, {
@@ -130,67 +102,36 @@ const Weather = (props) => {
   const tempHide = () => setTempVisible(false);
 
   const spanStyle = { margin: "0 5px" };
-
-  const renderedWeather = (props) => {
-    if (data && data.main) {
-      return (
-        <>
-          <StyledTippy
-            font={fontFamily}
-            allowHTML
-            onClickOutside={tempHide}
-            content={
-              <div>
-                <span style={spanStyle}>
-                  <i className="fa fa-temperature-half" />
-                  {data.main.temp}°
-                </span>
-                <span style={spanStyle}>
-                  <i className="fa fa-droplet-percent" />
-                  {data.main.humidity}%
-                </span>
-                <span style={spanStyle}>
-                  {data.main.feels_like !== data.main.temp
-                    ? `Feels Like: ${data.main.feels_like}°`
-                    : ""}
-                </span>
-              </div>
-            }
-            visible={tempVisible}
-            placement="bottom"
-          >
-            <span onClick={tempVisible ? tempHide : tempShow}>
-              {Math.round(data.main.temp)}&#176;C
-            </span>
-          </StyledTippy>
-          <StyledTippy
-            font={fontFamily}
-            onClickOutside={conditionHide}
-            content={data.weather[0].description}
-            visible={conditionVisible}
-            placement="bottom"
-          >
-            <i
-              onClick={conditionVisible ? conditionHide : conditionShow}
-              style={{ marginLeft: "5px" }}
-              className={`fa ${icons[data.weather[0].icon]}`}
-            />
-          </StyledTippy>
-        </>
-      );
-    } else {
-      return (
-        <WeatherLoading
-          onClick={() => {
-            dispatch(setSideMenuIndex(4));
-          }}
-        >
-          <i className="fa fa-spinner"></i>
-        </WeatherLoading>
-      );
-    }
-  };
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  if (!data || !data.main) {
+    return (
+      <WeatherLoading
+        onClick={() => {
+          dispatch(setSideMenuIndex(4));
+        }}
+      >
+        <i className="fa fa-spinner"></i>
+      </WeatherLoading>
+    );
+  }
+  if (error) {
+    return (
+      <StyledTippy
+        font={fontFamily}
+        visible={error && errorMessageVisible}
+        content={error}
+        placement="bottom"
+        onClickOutside={() => setErrorMessageVisible(false)}
+        allowHTML
+      >
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => setErrorMessageVisible(!errorMessageVisible)}
+          className="fa fa-close"
+        />
+      </StyledTippy>
+    );
+  }
   return (
     <WeatherWrapper>
       <CityNameWrapper
@@ -200,24 +141,47 @@ const Weather = (props) => {
       >
         {data.name}
       </CityNameWrapper>
-      {error ? (
-        <StyledTippy
-          font={fontFamily}
-          visible={error && errorMessageVisible}
-          content={error}
-          placement="bottom"
-          onClickOutside={() => setErrorMessageVisible(false)}
-          allowHTML
-        >
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() => setErrorMessageVisible(!errorMessageVisible)}
-            className="fa fa-close"
-          />
-        </StyledTippy>
-      ) : (
-        renderedWeather()
-      )}
+      <StyledTippy
+        font={fontFamily}
+        allowHTML
+        onClickOutside={tempHide}
+        content={
+          <div>
+            <span style={spanStyle}>
+              <i className="fa fa-temperature-half" />
+              {data.main.temp}°
+            </span>
+            <span style={spanStyle}>
+              <i className="fa fa-droplet-percent" />
+              {data.main.humidity}%
+            </span>
+            <span style={spanStyle}>
+              {data.main.feels_like !== data.main.temp
+                ? `Feels Like: ${data.main.feels_like}°`
+                : ""}
+            </span>
+          </div>
+        }
+        visible={tempVisible}
+        placement="bottom"
+      >
+        <span onClick={tempVisible ? tempHide : tempShow}>
+          {Math.round(data.main.temp)}&#176;C
+        </span>
+      </StyledTippy>
+      <StyledTippy
+        font={fontFamily}
+        onClickOutside={conditionHide}
+        content={data.weather[0].description}
+        visible={conditionVisible}
+        placement="bottom"
+      >
+        <i
+          onClick={conditionVisible ? conditionHide : conditionShow}
+          style={{ marginLeft: "5px" }}
+          className={`fa ${icons[data.weather[0].icon]}`}
+        />
+      </StyledTippy>
     </WeatherWrapper>
   );
 };

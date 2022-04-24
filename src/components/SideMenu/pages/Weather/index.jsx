@@ -3,11 +3,12 @@ import {
   Button,
   DeleteButton,
   Header,
-  TwoConditionElement
+  TwoConditionElement,
 } from "components/SideMenu/components/styled";
 import TextInput from "components/SideMenu/components/TextInput";
 import { TodoButton } from "components/SideMenu/components/Todo/style";
 import "flag-icons/css/flag-icons.min.css";
+import useTime from "hooks/useTime";
 import { nanoid } from "nanoid";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,13 +17,13 @@ import {
   deleteWeatherCity,
   setWeatherIndex,
   setWeatherIsAutomatic,
-  toggleWeatherEnabled
+  toggleWeatherEnabled,
 } from "store/actions";
 import {
   AddedCitiesWrapper,
   CityWrapper,
   IconWrapper,
-  ResultWrapper
+  ResultWrapper,
 } from "./style";
 
 const Weather = () => {
@@ -33,7 +34,8 @@ const Weather = () => {
   const currentCityIndex = useSelector(({ data }) => data.weather.index);
   const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
   const isEnabled = useSelector(({ data }) => data.weather.enabled);
-
+  const weatherTime = useSelector(({ data }) => data.weather.data.time);
+  const currentTime = useTime().getTime();
   const citiesWithKeys = useMemo(
     () => (cities || []).map((city) => ({ ...city, key: nanoid() })),
     [cities]
@@ -59,7 +61,19 @@ const Weather = () => {
   }, [searchTerm]);
   return (
     <div>
+      <p>
+        <i className="fa fa-sync-alt" style={{ marginRight: "5px" }}></i>
+        Last updated{" "}
+        {(() => {
+          const timeDifference = Math.round(
+            (currentTime - weatherTime) / 60000
+          );
+          if (timeDifference) return `${timeDifference} mins ago`;
+          return "just now";
+        })()}
+      </p>
       <Header>Settings</Header>
+
       <TwoConditionElement
         enabled={isEnabled}
         onClick={() => dispatch(toggleWeatherEnabled())}
@@ -79,32 +93,6 @@ const Weather = () => {
         />
       </TwoConditionElement>
 
-      <AddedCitiesWrapper>
-        {citiesWithKeys.map((city, index) => {
-          const selected = index === currentCityIndex;
-          return (
-            <TwoConditionElement key={city.key} enabled={selected}>
-              <div>
-                <IconWrapper className={`fi fis fi-${city.iconCode}`} />
-                <span>{city.name}</span>
-              </div>
-              <div>
-                <Button
-                  onClick={() => {
-                    dispatch(setWeatherIndex(index));
-                  }}
-                >
-                  {selected ? "Selected" : "Select"}
-                </Button>
-                <DeleteButton
-                  onClick={() => dispatch(deleteWeatherCity(index))}
-                  className="fa fa-trash"
-                />
-              </div>
-            </TwoConditionElement>
-          );
-        })}
-      </AddedCitiesWrapper>
       <Header>Add a City</Header>
       <TextInput
         onChange={setSearchTerm}
@@ -127,7 +115,8 @@ const Weather = () => {
               </CityWrapper>
               <div>
                 <Button
-                  onClick={() =>
+                  onClick={() => {
+                    setSearchTerm("");
                     dispatch(
                       addWeatherCity({
                         lat: item.latitude,
@@ -135,8 +124,8 @@ const Weather = () => {
                         name: item.name,
                         iconCode,
                       })
-                    )
-                  }
+                    );
+                  }}
                 >
                   Add
                 </Button>
@@ -145,6 +134,35 @@ const Weather = () => {
           );
         })
       )}
+      {citiesWithKeys.length ? <Header>Added cities list</Header> : null}
+
+      <AddedCitiesWrapper>
+        {citiesWithKeys.map((city, index) => {
+          const selected = index === currentCityIndex && !isAutomatic;
+          return (
+            <TwoConditionElement key={city.key} enabled={selected}>
+              <div>
+                <IconWrapper className={`fi fis fi-${city.iconCode}`} />
+                <span>{city.name}</span>
+              </div>
+              <div>
+                <Button
+                  onClick={() => {
+                    dispatch(setWeatherIsAutomatic(false));
+                    dispatch(setWeatherIndex(index));
+                  }}
+                >
+                  {selected ? "Selected" : "Select"}
+                </Button>
+                <DeleteButton
+                  onClick={() => dispatch(deleteWeatherCity(index))}
+                  className="fa fa-trash"
+                />
+              </div>
+            </TwoConditionElement>
+          );
+        })}
+      </AddedCitiesWrapper>
     </div>
   );
 };
