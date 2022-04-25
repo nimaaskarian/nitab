@@ -12,6 +12,7 @@ import {
   WeatherLoading,
   StyledTippy,
   CityNameWrapper,
+  WeatherIcon,
 } from "./style";
 
 import "tippy.js/dist/tippy.css";
@@ -103,17 +104,7 @@ const Weather = (props) => {
 
   const spanStyle = { margin: "0 5px" };
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  if (!data || !data.main) {
-    return (
-      <WeatherLoading
-        onClick={() => {
-          dispatch(setSideMenuIndex(4));
-        }}
-      >
-        <i className="fa fa-spinner"></i>
-      </WeatherLoading>
-    );
-  }
+
   if (error) {
     return (
       <StyledTippy
@@ -124,12 +115,23 @@ const Weather = (props) => {
         onClickOutside={() => setErrorMessageVisible(false)}
         allowHTML
       >
-        <span
+        <WeatherIcon
           style={{ cursor: "pointer" }}
           onClick={() => setErrorMessageVisible(!errorMessageVisible)}
           className="fa fa-close"
         />
       </StyledTippy>
+    );
+  }
+  if (!data || !data.main) {
+    return (
+      <WeatherLoading
+        onClick={() => {
+          dispatch(setSideMenuIndex(4));
+        }}
+      >
+        <i className="fa fa-spinner"></i>
+      </WeatherLoading>
     );
   }
   return (

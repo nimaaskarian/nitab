@@ -21,12 +21,17 @@ export const WeatherWrapper = styled.div`
   margin-bottom: auto;
   margin-top: 12px;
 `;
-export const WeatherLoading = styled.div`
+export const WeatherIcon = styled.div`
+  &,
   & > i {
-    animation: ${rotate} 0.7s ease-in-out infinite;
     font-size: 22px;
   }
   cursor: pointer;
+`;
+export const WeatherLoading = styled(WeatherIcon)`
+  & > i {
+    animation: ${rotate} 0.7s ease-in-out infinite;
+  }
 `;
 
 export const StyledTippy = styled(Tippy)`
