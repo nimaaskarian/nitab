@@ -90,6 +90,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       false,
     [forwardedRef]
   );
+  console.log("rerender");
   return (
     <StyledTerminal color={currentColor} isDark={isDark}>
       <SearchMode />
@@ -99,9 +100,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           value={term}
           ref={forwardedRef}
           autoFocus
-          onChange={(e) => {
-            dispatch(setTerm(e.target.value.trimStart()));
-          }}
+          onChange={(e) => dispatch(setTerm(e.target.value.trimStart()))}
         />
         <CurrentColorContext.Provider
           value={[currentColor, color, isOvr, isDark]}
