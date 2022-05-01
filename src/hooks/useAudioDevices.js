@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
   const [mediaDevices, setMediaDevices] = useState([]);
@@ -10,11 +10,6 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
   const [dataInt8Array, setDataInt8Array] = useState(
     new Uint8Array(frequencyBinCount)
   );
-
-  // const stopMediaRecorder = () => {
-  //   mediaRecorder.stop();
-  //   mediaRecorder.stream.getTracks().forEach((track) => track.stop());
-  // };
   useEffect(() => {
     setAudioContext(new AudioContext());
     const fetchMediaDevices = async () => {
@@ -36,6 +31,11 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
   useEffect(() => {
     const fetchRecorder = async () => {
       const audio = deviceId ? { deviceId: { exact: deviceId } } : true;
+      try {
+        mediaRecorder.stream.getTracks().forEach((t) => t.stop());
+      } catch (error) {
+        console.log(error);
+      }
       const stream = await navigator.mediaDevices.getUserMedia({ audio });
       setMediaRecorder(new MediaRecorder(stream));
     };
@@ -47,10 +47,14 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
   }, [deviceId]);
   useEffect(() => {
     if (mediaRecorder && audioContext) {
-      mediaRecorder.start();
+      if (mediaRecorder.state !== "recording") mediaRecorder.start();
       setSource(audioContext.createMediaStreamSource(mediaRecorder.stream));
-      mediaRecorder.ondataavailable = (event) => {
-        console.log(event.data);
+      // mediaRecorder.ondataavailable = (event) => {
+      //   console.log(event.data);
+      // };
+      return () => {
+        if (mediaRecorder.state !== "inactive") mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach((t) => t.stop());
       };
     }
   }, [audioContext, mediaRecorder]);
@@ -59,7 +63,6 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
   }, [analyser, frequencyBinCount]);
 
   useEffect(() => {
-    console.log(analyser, source);
     if (source && analyser) {
       source.connect(analyser);
       const report = () => {
@@ -69,9 +72,12 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
         requestAnimationFrame(report);
       };
       report();
+      return () => {
+        source.disconnect();
+      };
     }
   }, [analyser, source]);
-  return dataInt8Array;
+  return [dataInt8Array, mediaDevices];
 };
 
 export default useAudioDevices;
