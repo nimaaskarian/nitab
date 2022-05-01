@@ -28,6 +28,7 @@ import Main from "components/Main";
 import useIsThemeDark from "hooks/useIsThemeDark";
 import SideMenu from "components/SideMenu";
 import useIsDarkColor from "hooks/useIsDarkColor";
+import Visualizer from "components/Visualizer";
 
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
@@ -150,7 +151,7 @@ const App = () => {
         <title>{identifier}Niotab</title>
       </Helmet>
       <Background isTerminal={isTerminal} />
-
+      <Visualizer />
       <AppContainer color={foreground.color} isDark={isDarkColor} font={font}>
         <SideMenu />
         {dragMessage ? <h1>{dragMessage}...</h1> : <RenderedContent />}

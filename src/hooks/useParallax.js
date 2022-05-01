@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
+const formatParallax = (currentPositon, firstPosition, parallaxFactor) => {
+  return (
+    (0.5 - Math.round((currentPositon / firstPosition) * 10) / 10) *
+    parallaxFactor
+  );
+};
 const useParallax = () => {
   const currentBackground = useSelector(
     ({
@@ -18,16 +23,6 @@ const useParallax = () => {
   );
 
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
-
-  const formatParallax = useCallback(
-    (currentPositon, firstPosition) => {
-      return (
-        (0.5 - Math.round((currentPositon / firstPosition) * 10) / 10) *
-        parallaxFactor
-      );
-    },
-    [parallaxFactor]
-  );
 
   useEffect(() => {
     const mouseOver = (e) => {

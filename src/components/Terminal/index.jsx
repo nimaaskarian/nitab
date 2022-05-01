@@ -90,7 +90,6 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       false,
     [forwardedRef]
   );
-  console.log("rerender");
   return (
     <StyledTerminal color={currentColor} isDark={isDark}>
       <SearchMode />
