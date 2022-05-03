@@ -74,7 +74,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       const abortController = new AbortController();
       abortController.abort();
     };
-  }, []);
+  }, [handleSubmit]);
   useEffect(() => {
     window.addEventListener("keydown", handleSubmit);
     return () => {

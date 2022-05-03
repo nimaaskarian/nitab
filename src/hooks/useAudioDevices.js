@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
+const useAudioDevices = (
+  frequencyBinCount = 128,
+  deviceId,
+  roundingStep = 5
+) => {
   const [mediaDevices, setMediaDevices] = useState([]);
   const [mediaRecorder, setMediaRecorder] = useState();
   const [source, setSource] = useState(null);
   const [analyser, setAnalyser] = useState(null);
   const [audioContext, setAudioContext] = useState(null);
 
-  const [dataInt8Array, setDataInt8Array] = useState(
-    new Uint8Array(frequencyBinCount)
-  );
+  const [dataArray, setDataArray] = useState(new Uint8Array(frequencyBinCount));
   useEffect(() => {
     setAudioContext(new AudioContext());
     const fetchMediaDevices = async () => {
@@ -47,17 +49,15 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
   }, [deviceId]);
   useEffect(() => {
     if (mediaRecorder && audioContext) {
-      if (mediaRecorder.state !== "recording") mediaRecorder.start();
+      if (!["recording", "inactive"].includes(mediaRecorder.state))
+        mediaRecorder.start();
       setSource(audioContext.createMediaStreamSource(mediaRecorder.stream));
-      // mediaRecorder.ondataavailable = (event) => {
-      //   console.log(event.data);
-      // };
       return () => {
         if (mediaRecorder.state !== "inactive") mediaRecorder.stop();
         mediaRecorder.stream.getTracks().forEach((t) => t.stop());
       };
     }
-  }, [audioContext, mediaRecorder]);
+  }, [audioContext, mediaRecorder, mediaRecorder?.inactive]);
   useEffect(() => {
     if (analyser) analyser.fftSize = frequencyBinCount;
   }, [analyser, frequencyBinCount]);
@@ -68,16 +68,24 @@ const useAudioDevices = (frequencyBinCount = 128, deviceId) => {
       const report = () => {
         const _int8data = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(_int8data);
-        setDataInt8Array(_int8data);
+        setDataArray([..._int8data]);
         requestAnimationFrame(report);
       };
       report();
       return () => {
         source.disconnect();
+        cancelAnimationFrame(report);
       };
     }
   }, [analyser, source]);
-  return [dataInt8Array, mediaDevices];
+  const memoizedDataArray = useMemo(
+    () =>
+      dataArray.map((e) =>
+        roundingStep === 1 ? e : Math.round(e / roundingStep) * roundingStep
+      ),
+    [dataArray, roundingStep]
+  );
+  return [memoizedDataArray, mediaDevices];
 };
 
 export default useAudioDevices;

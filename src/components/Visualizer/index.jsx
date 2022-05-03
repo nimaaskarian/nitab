@@ -1,17 +1,16 @@
 import useAudioDevices from "hooks/useAudioDevices";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { StyledVisualization } from "./style";
 const bufferLength = 256;
 
 const Visualizer = () => {
-  const canvasRef = useRef();
   const [currentDeviceId, setCurrentDeviceId] = useState("");
   const [dataArray, mediaDevices] = useAudioDevices(
     bufferLength,
     currentDeviceId
   );
- 
+
   const handleSelectChange = (ev) => {
     setCurrentDeviceId(ev.target.value);
   };
@@ -34,7 +33,7 @@ const Visualizer = () => {
         })}
       </select>
       <StyledVisualization>
-        {[...dataArray].map((singleData, index) => {
+        {dataArray.map((singleData, index) => {
           return (
             <StyledVisualization.Bar
               key={`${index}-${singleData}`}
