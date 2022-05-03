@@ -47,28 +47,31 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const isDark = useIsDarkColor(currentColor);
   const handleSubmit = useCallback(
     (e) => {
-      if (e.code !== "Enter") return;
-      let onSubmit = currentCommand.function(currentCommand.args)();
+      if (e.code !== "Enter" || !currentCommand.function) return;
+      const onSubmit = currentCommand.function(currentCommand.args)();
+      const altKey = e.altKey === enterOpensNewtab;
       if (typeof onSubmit === "string") {
+        console.log(altKey);
         window.document.title = `${term} - ${identifier}Niotab`;
         history.push({ search: "?t=" + term });
-        if (e.altKey === enterOpensNewtab) document.location = onSubmit;
+        if (altKey) document.location = onSubmit;
         else {
           window.open(onSubmit);
         }
       } else {
         onSubmit({
-          altKey: e.altKey === enterOpensNewtab,
+          altKey,
         });
       }
+      return true;
     },
     [currentCommand, term, identifier, enterOpensNewtab]
   );
   useEffect(() => {
-    const isSelfSubmit =
-      new URLSearchParams(window.location.search).get("selfSubmit") === "true";
-    if (isSelfSubmit) {
-      handleSubmit({ code: "Enter" });
+    const params = new URLSearchParams(window.location.search);
+    const isSelfSubmit = params.get("selfSubmit") === "true";
+    if (isSelfSubmit && handleSubmit({ code: "Enter", altKey: false })) {
+      window.location.replace("/index.html");
     }
     return () => {
       const abortController = new AbortController();
