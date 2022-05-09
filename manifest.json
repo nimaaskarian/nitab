@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Nitab",
-  "version": "4.1.3",
+  "version": "4.1.6",
   "description": "A Neat, advanced and customizable start page for your browser.",
   "icons": {
     "16": "icons/16.png",
@@ -21,7 +21,13 @@
     "storage",
     "bookmarks",
     "search",
-    "tabs"
+    "tabs",
+    "audioCapture"
   ],
-  "content_security_policy": "script-src 'unsafe-eval' 'self' https://duckduckgo.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://duckduckgo.com; object-src 'self'",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "test@gmail.com"
+    }
+  }
 }
