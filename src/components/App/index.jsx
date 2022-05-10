@@ -151,7 +151,7 @@ const App = () => {
         <title>{identifier}Niotab</title>
       </Helmet>
       <Background isTerminal={isTerminal} />
-      <Visualizer />
+      {/* <Visualizer /> */}
       <AppContainer color={foreground.color} isDark={isDarkColor} font={font}>
         <SideMenu />
         {dragMessage ? <h1>{dragMessage}...</h1> : <RenderedContent />}
