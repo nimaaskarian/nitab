@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 const formatParallax = (currentPositon, firstPosition, parallaxFactor) => {
   return (

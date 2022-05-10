@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useContext } from "react";
+import React, { useEffect, useMemo, useCallback, useContext } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import history from "services/history";
 import Autocomplete from "../AutocompleteList";
@@ -40,12 +40,13 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const currentCommand = useMemo(() => {
     const { name, args } = termToCommand(term, identifier, commands);
     return { ...commands[name], args, name };
-  }, [commands, identifier, term]);
-
-  const currentColor = isOvr ? color : currentCommand.color || color;
+  }, [term, identifier, commands]);
+  const currentColor = useMemo(() => {
+    return isOvr ? color : currentCommand.color || color;
+  }, [isOvr, color, currentCommand.color]);
   const isDark = useIsDarkColor(currentColor);
-  useEffect(() => {
-    const handleSubmit = (e) => {
+  const handleSubmit = useCallback(
+    (e) => {
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
       const altKey = e.altKey === enterOpensNewtab;
@@ -63,12 +64,26 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
         });
       }
       return true;
+    },
+    [currentCommand, term, identifier, enterOpensNewtab]
+  );
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const isSelfSubmit = params.get("selfSubmit") === "true";
+    if (isSelfSubmit && handleSubmit({ code: "Enter", altKey: false })) {
+      window.location.replace("/index.html");
+    }
+    return () => {
+      const abortController = new AbortController();
+      abortController.abort();
     };
+  }, [handleSubmit]);
+  useEffect(() => {
     window.addEventListener("keydown", handleSubmit);
     return () => {
       window.removeEventListener("keydown", handleSubmit);
     };
-  }, [currentCommand, enterOpensNewtab, identifier, term]);
+  }, [handleSubmit]);
 
   const isRtl = useMemo(
     () =>

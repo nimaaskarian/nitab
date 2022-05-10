@@ -18,6 +18,10 @@ const TextInput = ({
       setError(!value);
     }
   }, [visited, value]);
+  const computedPlaceholder = useMemo(
+    () => placeholder || (required ? "Required" : "Optional"),
+    [required, placeholder]
+  );
 
   return (
     <InputWrapper>
@@ -27,7 +31,7 @@ const TextInput = ({
       </label>
 
       <StyledInput
-        placeholder={placeholder || (required ? "Required" : "Optional")}
+        placeholder={computedPlaceholder}
         id={id}
         onBlur={() => setVisited(true)}
         value={value}
