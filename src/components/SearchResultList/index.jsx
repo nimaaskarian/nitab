@@ -1,6 +1,6 @@
 /*global chrome*/
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import SearchResult from "../SearchResult";
@@ -13,21 +13,19 @@ const SearchResultList = ({ currentCommand, searchCommand, term }) => {
   const searchMode = useSelector(({ data }) => data.terminal.searchMode);
 
   const [results, setResults] = useState([]);
-  const handleKeydown = useCallback(
-    (event) => {
-      if (+event.key && (event.altKey || event.ctrlKey)) {
-        searchResultRefs.current[+event.key - 1].click();
-      }
-    },
-    [searchResultRefs]
-  );
   useEffect(() => {
-    window.addEventListener("keydown", handleKeydown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeydown);
-    };
-  }, [handleKeydown]);
+    if (searchResultRefs.current) {
+      const handleKeydown = (event) => {
+        if (+event.key && (event.altKey || event.ctrlKey)) {
+          searchResultRefs.current[+event.key - 1].click();
+        }
+      };
+      window.addEventListener("keydown", handleKeydown);
+      return () => {
+        window.removeEventListener("keydown", handleKeydown);
+      };
+    }
+  }, [searchResultRefs]);
   useEffect(() => {
     const isNameSearch = currentCommand.name === "search";
     function searchSuggest(term) {
