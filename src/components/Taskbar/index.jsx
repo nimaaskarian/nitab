@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import TaskbarIcon from "../TaskbarIcon";
@@ -42,23 +42,19 @@ const Taskbar = () => {
     };
   }, []);
 
-  const onTaskbarMouseMove = useCallback(
-    (e) => {
-      if (!sideMenuIndex && magnify)
-        iconsRefs.current.forEach((iconRef) => {
-          if (!iconRef) return;
-          const { left } = iconRef.getBoundingClientRect();
-          let distance =
-            Math.abs(e.clientX - left - iconRef.offsetWidth / 2) / 30;
-          if (distance <= 1) distance = 0.6;
+  const onTaskbarMouseMove = (e) => {
+    if (!sideMenuIndex && magnify)
+      iconsRefs.current.forEach((iconRef) => {
+        if (!iconRef) return;
+        const { left } = iconRef.getBoundingClientRect();
+        let distance =
+          Math.abs(e.clientX - left - iconRef.offsetWidth / 2) / 30;
+        if (distance <= 1) distance = 0.6;
 
-          iconRef.style.fontSize =
-            parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
-        });
-    },
-    [iconsRefs, sideMenuIndex, magnify]
-  );
-
+        iconRef.style.fontSize =
+          parseInt((35 + 6.5 / distance) * 10) / 10 + "px";
+      });
+  };
   return (
     <StyledTaskbar
       onMouseEnter={onTaskbarMouseMove}

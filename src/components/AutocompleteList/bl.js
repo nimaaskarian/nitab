@@ -177,7 +177,7 @@ const AutocompleteLogic = () => {
           }
           return 1;
         }),
-    [currentCommand.name, currentCommand.recommended, identifier, term]
+    [currentCommand, term]
   );
   return useMemo(
     () =>
@@ -185,7 +185,7 @@ const AutocompleteLogic = () => {
         .filter((e) => !term.includes(e.phrase))
         .slice(0, 8)
         .map((e) => ({ ...e, key: nanoid(10) })),
-    [duckDuckAc, commandSuggestions]
+    [commandSuggestions, mappedRecommended, duckDuckAc, term]
   );
 };
 
