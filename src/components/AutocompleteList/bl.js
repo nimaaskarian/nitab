@@ -179,14 +179,10 @@ const AutocompleteLogic = () => {
         }),
     [currentCommand, term]
   );
-  return useMemo(
-    () =>
-      [...commandSuggestions, ...mappedRecommended, ...duckDuckAc]
-        .filter((e) => !term.includes(e.phrase))
-        .slice(0, 8)
-        .map((e) => ({ ...e, key: nanoid(10) })),
-    [commandSuggestions, mappedRecommended, duckDuckAc, term]
-  );
+  return [...commandSuggestions, ...mappedRecommended, ...duckDuckAc]
+    .filter((e) => !term.includes(e.phrase))
+    .slice(0, 8)
+    .map((e) => ({ ...e, key: nanoid(10) }));
 };
 
 export default AutocompleteLogic;
