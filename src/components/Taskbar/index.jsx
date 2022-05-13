@@ -6,6 +6,7 @@ import TaskbarIcon from "../TaskbarIcon";
 import TaskbarDrop from "../TaskbarDrop";
 
 import { StyledTaskbar } from "./style";
+import eventKeyNumber from "services/eventKeyNumber";
 const Taskbar = () => {
   const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
   const icons = useSelector(({ data }) => data.taskbar.icons);
@@ -28,10 +29,11 @@ const Taskbar = () => {
   const iconsRefs = useRef([]);
 
   const magnify = useSelector(({ data }) => data.taskbar.magnify);
-  const handleKeydown = (e) => {
-    if ((e.altKey || e.ctrlKey) && +e.key) {
-      e.preventDefault();
-      iconsRefs.current[+e.key - 1].click();
+  const handleKeydown = (ev) => {
+    const keyNumber = eventKeyNumber(ev);
+    if ((ev.altKey || ev.ctrlKey) && keyNumber) {
+      ev.preventDefault();
+      iconsRefs.current[keyNumber - 1].click();
     }
   };
   useEffect(() => {

@@ -7,6 +7,7 @@ import SearchResult from "../SearchResult";
 
 import { nanoid } from "nanoid";
 import { StyledSearchResultList } from "./style";
+import eventKeyNumber from "services/eventKeyNumber";
 
 const SearchResultList = ({ currentCommand, searchCommand, term }) => {
   const searchResultRefs = useRef([]);
@@ -15,9 +16,10 @@ const SearchResultList = ({ currentCommand, searchCommand, term }) => {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    const handleKeydown = (event) => {
-      if (+event.key && (event.altKey || event.ctrlKey)) {
-        searchResultRefs.current[+event.key - 1].click();
+    const handleKeydown = (ev) => {
+      const keyNumber = eventKeyNumber(ev);
+      if (keyNumber && (ev.altKey || ev.ctrlKey)) {
+        searchResultRefs.current[keyNumber - 1].click();
       }
     };
     window.addEventListener("keydown", handleKeydown);

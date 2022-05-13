@@ -54,13 +54,13 @@ const Autocomplete = ({ isRtl }) => {
         })()}
       </Selected>
       <StyledAutocompleteList isRtl={isRtl}>
-        {ac.map((e, i) => {
+        {ac.map((acItem, index) => {
           return (
             <AutocompleteItem
-              onMouseEnter={() => setSelectedIndex(i)}
-              selected={i === selectedIndex}
-              key={e.key}
-              suggestion={e}
+              onMouseEnter={() => setSelectedIndex(index)}
+              selected={index === selectedIndex}
+              key={acItem.key}
+              suggestion={acItem}
             />
           );
         })}

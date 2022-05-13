@@ -110,7 +110,7 @@ const App = () => {
       if (e.altKey || e.code === "Tab") {
         e.preventDefault();
       }
-      if (e.key === "Escape") {
+      if (e.code === "Escape") {
         setIsTerminal(false);
 
         if (!isTerminal) dispatch(setSideMenuIndex(5));
