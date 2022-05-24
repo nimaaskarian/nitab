@@ -82,3 +82,9 @@ export const DeleteButton = styled.button`
   margin-left: 15px;
   cursor: pointer;
 `;
+export const Text = styled.p`
+  &,
+  & * {
+    color: #e2e2e2;
+  }
+`;

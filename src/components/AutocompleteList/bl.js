@@ -155,7 +155,7 @@ const AutocompleteLogic = () => {
           index,
           ar,
           [recommend.recommended.icon, ...icons],
-          parent + " " + recommend?.phrase
+          parent + " " + recommend.phrase
         )
       );
     return [];

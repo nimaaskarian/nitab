@@ -159,7 +159,7 @@ const Weather = (props) => {
             </span>
             <span style={spanStyle}>
               {data.main.feels_like !== data.main.temp
-                ? `Feels Like: ${data.main.feels_like}°`
+                ? `Feels Like: ${data.main.feels_like}°C`
                 : ""}
             </span>
           </div>

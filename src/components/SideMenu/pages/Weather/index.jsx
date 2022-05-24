@@ -3,6 +3,7 @@ import {
   Button,
   DeleteButton,
   Header,
+  Text,
   TwoConditionElement,
 } from "components/SideMenu/components/styled";
 import TextInput from "components/SideMenu/components/TextInput";
@@ -61,7 +62,7 @@ const Weather = () => {
   }, [searchTerm]);
   return (
     <div>
-      <p>
+      <Text>
         <i className="fa fa-sync-alt" style={{ marginRight: "5px" }}></i>
         Last updated{" "}
         {(() => {
@@ -71,7 +72,7 @@ const Weather = () => {
           if (timeDifference) return `${timeDifference} mins ago`;
           return "just now";
         })()}
-      </p>
+      </Text>
       <Header>Settings</Header>
 
       <TwoConditionElement
