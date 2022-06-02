@@ -24,10 +24,5 @@
     "tabs",
     "audioCapture"
   ],
-  "content_security_policy": "script-src 'self' object-src 'self'",
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "test@gmail.com"
-    }
-  }
+  "content_security_policy": "script-src 'self' object-src 'self'"
 }
