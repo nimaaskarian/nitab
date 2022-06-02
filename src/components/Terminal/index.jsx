@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useContext } from "react";
+import React, { useEffect, useMemo, useContext, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import history from "services/history";
 import Autocomplete from "../AutocompleteList";
@@ -24,7 +24,9 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
   const tempIcon = useSelector(({ ui }) => ui.tempIcon);
-
+  // const [scrollLeft, setScrollLeft] = useState(
+  //   forwardedRef.current?.scrollLeft || 0
+  // );
   const enterOpensNewtab = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
@@ -88,6 +90,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           dir="auto"
           value={term}
           ref={forwardedRef}
+          // onScroll={() => setScrollLeft(forwardedRef.current?.scrollLeft)}
           autoFocus
           onChange={(e) => dispatch(setTerm(e.target.value.trimStart()))}
         />
@@ -95,7 +98,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           value={[currentColor, color, isOvr, isDark]}
         >
           <CurrentCommandContext.Provider value={currentCommand}>
-            <Autocomplete isRtl={isRtl} />
+            <Autocomplete isRtl={isRtl} /*scrollLeft={scrollLeft}*/ />
           </CurrentCommandContext.Provider>
         </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>

@@ -5,7 +5,7 @@ class Theme {
     this.unsplashCollections = "9389477,908506,219941";
     this.foreground = { color: "white", isOvr: false };
     this.currentBackground = 0;
-    this.font = "FiraCode, IranSans";
+    this.font = "VazirCodeHack";
     this.isBackgroundRandom = false;
     this.isForegroundAuto = false;
     this.clock = {
@@ -126,7 +126,7 @@ function themesReducer(state = INITIAL_STATE, action) {
           ...theme,
           clock: {
             ...theme?.clock,
-            format24: !theme.clock?.format24 ?? false,
+            format24: !theme?.clock?.format24 ?? false,
           },
         }),
       };
@@ -135,7 +135,7 @@ function themesReducer(state = INITIAL_STATE, action) {
         ...state,
         list: state.list.replace(index, {
           ...theme,
-          clock: { ...theme?.clock, enabled: !theme.clock?.enabled ?? true },
+          clock: { ...theme?.clock, enabled: !theme?.clock?.enabled ?? true },
         }),
       };
 

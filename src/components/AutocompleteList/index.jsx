@@ -8,11 +8,11 @@ import { Selected, StyledAutocompleteList } from "./style";
 import useIsDarkColor from "hooks/useIsDarkColor";
 import CurrentColorContext from "context/CurrentColorContext";
 
-const Autocomplete = ({ isRtl }) => {
+const Autocomplete = ({ isRtl, scrollLeft }) => {
   const term = useSelector(({ ui }) => ui.term);
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  
+
   const ac = AutocompleteLogic();
   useEffect(() => {
     setSelectedIndex(0);
@@ -44,13 +44,18 @@ const Autocomplete = ({ isRtl }) => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selectedIndex, ac]);
+  console.log(scrollLeft);
   return (
     <>
-      <Selected isRtl={isRtl}>
+      <Selected isRtl={isRtl} /*marginLeft={scrollLeft}*/>
         {(() => {
           const phrase = (ac[selectedIndex] || {}).phrase || "";
-          if (phrase.startsWith(term)) return phrase;
-          return null;
+          if (
+            (!isRtl && /[\u0600-\u06FF]+/.test(term)) ||
+            !phrase.startsWith(term)
+          )
+            return null;
+          return phrase;
         })()}
       </Selected>
       <StyledAutocompleteList isRtl={isRtl}>
