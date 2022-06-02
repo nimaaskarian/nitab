@@ -25,28 +25,6 @@ const AutocompleteLogic = () => {
 
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 
-  useEffect(() => {
-    const acHandler = ({ ac }) => {
-      setDuckDuckAc(
-        ac.map((e) => {
-          if (currentCommand.args && currentCommand.name !== "search")
-            return {
-              ...e,
-              phrase: `${identifier}${currentCommand.name} ${e.phrase}`,
-              icon: currentCommand.icon,
-            };
-          return e;
-        })
-      );
-    };
-    if (!duckduckDisabled) {
-      document.addEventListener("autocomplete", acHandler, false);
-      return () => {
-        document.removeEventListener("autocomplete", acHandler);
-      };
-    }
-  }, [term, identifier, duckduckDisabled]);
-
   const commandSuggestions = useMemo(() => {
     if (!suggestCommandsEnabled || !term) return [];
     return Object.keys(commands)
@@ -82,41 +60,7 @@ const AutocompleteLogic = () => {
     term,
     defaultIcon,
   ]);
-  useEffect(() => {
-    if (
-      (currentCommand.name !== "search" && !currentCommand.args) ||
-      currentCommand.recommended
-    ) {
-      setDuckDuckDisabled(true);
-    } else {
-      setDuckDuckDisabled(false);
-    }
-    if (duckduckDisabled) return;
 
-    let input = term;
-    if (currentCommand.args) input = currentCommand.args;
-    const url =
-      "https://duckduckgo.com/ac/?callback=autocompleteCallback&q=" + input;
-    const script = document.createElement("script");
-    try {
-      script.src = url;
-    } catch (error) {}
-    let timeoutId, appended;
-
-    setDuckDuckAc([]);
-    if (input) {
-      timeoutId = setTimeout(() => {
-        document.body.appendChild(script);
-        appended = true;
-      }, 200);
-    }
-    return () => {
-      if (input) {
-        clearTimeout(timeoutId);
-        if (appended) document.body.removeChild(script);
-      }
-    };
-  }, [term, suggestCommandsEnabled, duckduckDisabled]);
   const mapCallback = (
     recommend,
     index,
@@ -181,11 +125,11 @@ const AutocompleteLogic = () => {
   );
   return useMemo(
     () =>
-      [...commandSuggestions, ...mappedRecommended, ...duckDuckAc]
+      [...commandSuggestions, ...mappedRecommended]
         .filter((e) => !term.includes(e.phrase))
         .slice(0, 8)
         .map((e) => ({ ...e, key: nanoid(10) })),
-    [duckDuckAc, commandSuggestions]
+    [commandSuggestions]
   );
 };
 
