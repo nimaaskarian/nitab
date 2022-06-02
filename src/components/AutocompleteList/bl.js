@@ -1,16 +1,14 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import CommandsContext from "context/CommandsContext";
 import CurrentCommandContext from "context/CurrentCommandContext";
 import { nanoid } from "nanoid";
-import axios from "axios";
 
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
   const commands = useContext(CommandsContext);
   const defaultIcon = useSelector(({ data }) => data.terminal.defaultIcon);
   const term = useSelector(({ ui }) => ui.term, shallowEqual);
-  const [duckduckDisabled, setDuckDuckDisabled] = useState(false);
 
   const suggestCommandsCount = useSelector(
     ({ data }) => data.terminal.suggestCommandsCount,
@@ -20,8 +18,6 @@ const AutocompleteLogic = () => {
     ({ data }) => data.terminal.suggestCommandsEnabled,
     shallowEqual
   );
-
-  const [duckDuckAc, setDuckDuckAc] = useState([]);
 
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 

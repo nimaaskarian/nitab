@@ -1,18 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { setTerm } from "store/actions";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import AutocompleteLogic from "./bl";
 import AutocompleteItem from "components/AutocompleteItem";
 import { Selected, StyledAutocompleteList } from "./style";
-import useIsDarkColor from "hooks/useIsDarkColor";
-import CurrentColorContext from "context/CurrentColorContext";
 
 const Autocomplete = ({ isRtl }) => {
   const term = useSelector(({ ui }) => ui.term);
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  
+
   const ac = AutocompleteLogic();
   useEffect(() => {
     setSelectedIndex(0);
