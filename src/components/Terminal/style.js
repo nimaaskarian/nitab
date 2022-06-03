@@ -45,6 +45,5 @@ export const TerminalOutput = styled.span`
 `;
 export const TerminalAutoCompleteWrapper = styled.div`
   flex-grow: 1;
-  overflow-x: hidden;
   position: relative;
 `;

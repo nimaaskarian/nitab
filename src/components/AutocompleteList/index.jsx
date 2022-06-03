@@ -44,7 +44,6 @@ const Autocomplete = ({ isRtl, scrollLeft }) => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selectedIndex, ac]);
-  console.log(scrollLeft);
   return (
     <>
       <Selected isRtl={isRtl} /*marginLeft={scrollLeft}*/>

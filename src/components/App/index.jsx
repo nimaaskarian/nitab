@@ -10,6 +10,8 @@ import {
   setCurrentBackground,
   setCurrentTheme,
   setSideMenuIndex,
+  setForeground,
+  addBackground,
 } from "store/actions";
 
 import Terminal from "../Terminal";
@@ -29,6 +31,7 @@ import useIsThemeDark from "hooks/useIsThemeDark";
 import SideMenu from "components/SideMenu";
 import useIsDarkColor from "hooks/useIsDarkColor";
 import Visualizer from "components/Visualizer";
+import axios from "axios";
 
 const App = () => {
   //bookmark === 0, history === 1, nothing === 0
@@ -69,6 +72,18 @@ const App = () => {
 
   useAlert({ isTerminal });
   const dispatch = useDispatch();
+  useEffect(() => {
+    axios.get("../colors").then((e) => {
+      if (localStorage.getItem("colors_data") !== e.data) {
+        localStorage.setItem("colors_data", e.data);
+        const colorsArray = e.data.split("\n");
+
+        console.log(colorsArray[1]);
+        dispatch(setForeground({ color: colorsArray[3], isOvr: true }));
+        dispatch(addBackground({ cssValue: colorsArray[0] }));
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (darkIndex !== -1 && isDarkTheme) dispatch(setCurrentTheme(darkIndex));
