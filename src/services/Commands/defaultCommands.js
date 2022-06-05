@@ -27,7 +27,9 @@ function recommendations(phrases = [], recommended, icons = []) {
   return phrases.map((phrase, index) => ({
     phrase,
     icon: icons[index],
-    recommended: recommendations(recommended),
+    recommended: (recommended || [])[0]?.phrase
+      ? recommended
+      : recommendations(recommended),
   }));
 }
 function checkIcon(timeout = 1500) {
@@ -444,6 +446,14 @@ const defaultCommands = {
               );
         }
       };
+    },
+    recommended: () => {
+      return [
+        ...recommendations(
+          Object.keys(store.getState().data.commands).map((e, i) => e),
+          ["delete", 'icon="fa fa-"', 'color="#"', "add", "remove"]
+        ),
+      ];
     },
   },
   reset: {
