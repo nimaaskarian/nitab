@@ -13,6 +13,7 @@ export const Selected = styled.div`
   position: absolute;
   white-space: nowrap;
   overflow: scroll;
+  width: 100%;
   top: 0;
   height: 100%;
   z-index: -1000;

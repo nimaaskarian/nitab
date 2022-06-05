@@ -79,7 +79,7 @@ const App = () => {
         const colorsArray = e.data.split("\n");
 
         console.log(colorsArray[1]);
-        dispatch(setForeground({ color: colorsArray[3], isOvr: true }));
+        dispatch(setForeground({ color: colorsArray[7], isOvr: true }));
         dispatch(addBackground({ cssValue: colorsArray[0] }));
       }
     });
