@@ -451,7 +451,7 @@ const defaultCommands = {
       return [
         ...recommendations(
           Object.keys(store.getState().data.commands).map((e, i) => e),
-          ["delete", 'icon="fa fa-"', 'color="#"', "add", "remove"]
+          ["delete", 'icon:"fa fa-"', 'color:"#"', "add", "remove"]
         ),
       ];
     },
