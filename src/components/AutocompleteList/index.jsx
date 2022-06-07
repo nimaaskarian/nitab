@@ -46,7 +46,7 @@ const Autocomplete = ({ isRtl, scrollLeft }) => {
   }, [selectedIndex, ac]);
   return (
     <>
-      <Selected isRtl={isRtl} /*marginLeft={scrollLeft}*/>
+      <Selected isRtl={isRtl} marginLeft={scrollLeft}>
         {(() => {
           const phrase = (ac[selectedIndex] || {}).phrase || "";
           if (

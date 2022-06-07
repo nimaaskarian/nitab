@@ -24,9 +24,9 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const dispatch = useDispatch();
   const identifier = useSelector(({ data }) => data.terminal.identifier);
   const tempIcon = useSelector(({ ui }) => ui.tempIcon);
-  // const [scrollLeft, setScrollLeft] = useState(
-  //   forwardedRef.current?.scrollLeft || 0
-  // );
+  const [scrollLeft, setScrollLeft] = useState(
+    forwardedRef.current?.scrollLeft || 0
+  );
   const enterOpensNewtab = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
@@ -90,7 +90,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           dir="auto"
           value={term}
           ref={forwardedRef}
-          // onScroll={() => setScrollLeft(forwardedRef.current?.scrollLeft)}
+          onScroll={() => setScrollLeft(forwardedRef.current?.scrollLeft)}
           autoFocus
           onChange={(e) => dispatch(setTerm(e.target.value.trimStart()))}
         />
@@ -98,7 +98,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
           value={[currentColor, color, isOvr, isDark]}
         >
           <CurrentCommandContext.Provider value={currentCommand}>
-            <Autocomplete isRtl={isRtl} /*scrollLeft={scrollLeft}*/ />
+            <Autocomplete isRtl={isRtl} scrollLeft={scrollLeft} />
           </CurrentCommandContext.Provider>
         </CurrentColorContext.Provider>
       </TerminalAutoCompleteWrapper>
