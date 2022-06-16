@@ -3,7 +3,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import CommandsContext from "context/CommandsContext";
 import CurrentCommandContext from "context/CurrentCommandContext";
 import { nanoid } from "nanoid";
-import axios from "axios";
+import autoDetectedCommands from "services/Commands/autoDetectedCommands";
 
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
@@ -29,7 +29,10 @@ const AutocompleteLogic = () => {
     const acHandler = ({ ac }) => {
       setDuckDuckAc(
         ac.map((e) => {
-          if (currentCommand.args && currentCommand.name !== "search")
+          if (
+            currentCommand.args &&
+            !autoDetectedCommands.includes(currentCommand.name)
+          )
             return {
               ...e,
               phrase: `${identifier}${currentCommand.name} ${e.phrase}`,
@@ -84,7 +87,8 @@ const AutocompleteLogic = () => {
   ]);
   useEffect(() => {
     if (
-      (currentCommand.name !== "search" && !currentCommand.args) ||
+      (!autoDetectedCommands.includes(currentCommand.name) &&
+        !currentCommand.args) ||
       currentCommand.recommended
     ) {
       setDuckDuckDisabled(true);
