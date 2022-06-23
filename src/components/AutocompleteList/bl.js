@@ -4,6 +4,7 @@ import CommandsContext from "context/CommandsContext";
 import CurrentCommandContext from "context/CurrentCommandContext";
 import { nanoid } from "nanoid";
 import autoDetectedCommands from "services/Commands/autoDetectedCommands";
+import { fixMistyped } from "services/fixMistyped";
 
 const AutocompleteLogic = () => {
   const currentCommand = useContext(CurrentCommandContext);
@@ -52,31 +53,38 @@ const AutocompleteLogic = () => {
 
   const commandSuggestions = useMemo(() => {
     if (!suggestCommandsEnabled || !term) return [];
-    return Object.keys(commands)
-      .filter((e) => (identifier + e).toLowerCase().includes(term.trim()))
-      .sort()
-      .sort(function (a, b) {
-        if (
-          a.startsWith(term) ||
-          (identifier + a).toLowerCase().startsWith(term)
-        ) {
+    function suggestionFunction(term) {
+      return Object.keys(commands)
+        .filter((e) => (identifier + e).toLowerCase().includes(term.trim()))
+        .sort()
+        .sort(function (a, b) {
           if (
-            b.startsWith(term) ||
+            a.startsWith(term) ||
             (identifier + a).toLowerCase().startsWith(term)
-          )
-            return 0;
-          return -1;
-        }
-        return 1;
-      })
-      .slice(0, suggestCommandsCount)
-      .map((phrase) => {
-        return {
-          phrase: identifier + phrase + " ",
-          icon: commands[phrase].icon || defaultIcon,
-          color: commands[phrase].color || true,
-        };
-      });
+          ) {
+            if (
+              b.startsWith(term) ||
+              (identifier + a).toLowerCase().startsWith(term)
+            )
+              return 0;
+            return -1;
+          }
+          return 1;
+        })
+        .slice(0, suggestCommandsCount)
+        .map((phrase) => {
+          return {
+            phrase: identifier + phrase + " ",
+            icon: commands[phrase].icon || defaultIcon,
+            color: commands[phrase].color || true,
+          };
+        });
+    }
+    let output = suggestionFunction(term);
+    if (/^[\u0600-\u06FF\s]+$/.test(term))
+      output = [...output, ...suggestionFunction(fixMistyped(term))];
+
+    return output;
   }, [
     suggestCommandsCount,
     commands,
