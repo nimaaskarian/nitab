@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "./static/css/main.e22b6400.css",
-    "main.js": "./static/js/main.fd966ecf.js",
+    "main.css": "./static/css/main.01093c3b.css",
+    "main.js": "./static/js/main.d2a48770.js",
     "static/media/do.svg": "./static/media/do.3ecb625b75ec64be4376.svg",
-    "static/media/FiraCode.ttf": "./static/media/FiraCode.befaa34a41917c3493b8.ttf",
     "static/media/rs.svg": "./static/media/rs.9f00a7d8eafa6f593713.svg",
     "static/media/fa-solid-900.woff2": "./static/media/fa-solid-900.4896d4b04430cc3dfb06.woff2",
     "static/media/bo.svg": "./static/media/bo.88ba0b0a7e48ec71eca8.svg",
+    "static/media/Vazir-Code-Hack.woff2": "./static/media/Vazir-Code-Hack.fba99d90d50d1b8860b7.woff2",
     "static/media/fa-brands-400.woff2": "./static/media/fa-brands-400.f77bcc98bb7468c8b15a.woff2",
     "static/media/mx.svg": "./static/media/mx.a17b7ad9eaa85411a1e1.svg",
     "static/media/ea.svg": "./static/media/ea.f1e55aacdee7ad81f5da.svg",
@@ -20,7 +20,6 @@
     "static/media/gs.svg": "./static/media/gs.e6ba1f5421701bbb2304.svg",
     "static/media/hr.svg": "./static/media/hr.89b8c8af46eef412f1cd.svg",
     "static/media/gt.svg": "./static/media/gt.c0bc6c2f50955193f6d9.svg",
-    "static/media/IRANSansWeb_Light.woff": "./static/media/IRANSansWeb_Light.c155096a5b1dc2a8557b.woff",
     "static/media/as.svg": "./static/media/as.8cd74bfb1391d2f07668.svg",
     "static/media/ad.svg": "./static/media/ad.aa31ee0af98d08407676.svg",
     "static/media/ac.svg": "./static/media/ac.e104704cd04bb0cb7c72.svg",
@@ -274,11 +273,11 @@
     "static/media/pl.svg": "./static/media/pl.cd835d05865e496ff6b8.svg",
     "static/media/de.svg": "./static/media/de.6435bf24d148ca7248e7.svg",
     "static/media/bd.svg": "./static/media/bd.0ad8c443ef4d47ea0497.svg",
-    "main.e22b6400.css.map": "./static/css/main.e22b6400.css.map",
-    "main.fd966ecf.js.map": "./static/js/main.fd966ecf.js.map"
+    "main.01093c3b.css.map": "./static/css/main.01093c3b.css.map",
+    "main.d2a48770.js.map": "./static/js/main.d2a48770.js.map"
   },
   "entrypoints": [
-    "static/css/main.e22b6400.css",
-    "static/js/main.fd966ecf.js"
+    "static/css/main.01093c3b.css",
+    "static/js/main.d2a48770.js"
   ]
 }
