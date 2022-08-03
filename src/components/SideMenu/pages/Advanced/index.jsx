@@ -1,9 +1,9 @@
 import { Header } from "components/SideMenu/components/styled";
 import React from "react";
-import CodeEditor from "@uiw/react-textarea-code-editor";
 import { setCustomCss } from "store/actions";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { StyledTextarea } from "./style";
 const Advanced = () => {
   const currentTheme = useSelector(
     ({
@@ -17,15 +17,11 @@ const Advanced = () => {
   return (
     <div>
       <Header>Custom CSS</Header>
-      <CodeEditor
-        placeholder="Please enter some custom css if you know what you're doing..."
-        style={{
-          background: "transparent",
-        }}
-        value={currentTheme.customCss}
-        onChange={(env) => dispatch(setCustomCss(env.target.value))}
-        language="css"
-      />
+      <StyledTextarea
+        onChange={(el) => dispatch(setCustomCss(el.target.value))}
+      >
+        {currentTheme.customCss}
+      </StyledTextarea>
     </div>
   );
 };
