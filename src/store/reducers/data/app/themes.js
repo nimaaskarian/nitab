@@ -4,6 +4,7 @@ class Theme {
   constructor() {
     this.unsplashCollections = "9389477,908506,219941";
     this.foreground = { color: "white", isOvr: false };
+    this.customCss = "";
     this.currentBackground = 0;
     this.font = "VazirCodeHack";
     this.isBackgroundRandom = false;
@@ -138,7 +139,14 @@ function themesReducer(state = INITIAL_STATE, action) {
           clock: { ...theme?.clock, enabled: !theme?.clock?.enabled ?? true },
         }),
       };
-
+    case types.SET_CUSTOM_CSS:
+      return {
+        ...state,
+        list: state.list.replace(index, {
+          ...theme,
+          customCss: action.payload,
+        }),
+      };
     default:
       return state;
   }

@@ -8,6 +8,7 @@
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "@tippyjs/react": "^4.2.6",
+    "@uiw/react-textarea-code-editor": "^2.0.3",
     "axios": "^0.26.1",
     "flag-icons": "^6.1.1",
     "history": "^5.3.0",
@@ -36,7 +37,7 @@
     "eject": "react-scripts eject",
     "build": "INLINE_RUNTIME_CHUNK=false react-app-rewired build",
     "build:ext": "npm run build && cd ./build && web-ext build",
-    "deploy": "gh-pages -b gh-pages -d build"
+    "deploy": "gh-pages -b gh-pages -d build --remote public"
   },
   "eslintConfig": {
     "extends": [

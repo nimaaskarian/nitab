@@ -38,6 +38,13 @@ const App = () => {
   const commands = useCommands();
   const isTermEmpty = useSelector(({ ui }) => !ui.term);
   const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
+  const currentTheme = useSelector(
+    ({
+      data: {
+        themes: { current, list },
+      },
+    }) => list[current]
+  );
   const isBackgroundRandom = useSelector(
     ({
       data: {
@@ -164,6 +171,7 @@ const App = () => {
       <Dropzone setDragMessage={setDragMessage} />
       <Helmet>
         <title>{identifier}Niotab</title>
+        <style>{currentTheme.customCss}</style>
       </Helmet>
       <Background isTerminal={isTerminal} />
       {/* <Visualizer /> */}
