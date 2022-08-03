@@ -18,8 +18,7 @@
     "storage",
     "bookmarks",
     "search",
-    "tabs",
-    "audioCapture"
+    "tabs"
   ],
   "content_security_policy": "script-src 'self' https://duckduckgo.com; object-src 'self'",
   "browser_specific_settings": {
