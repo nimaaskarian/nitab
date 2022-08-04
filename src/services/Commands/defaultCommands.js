@@ -391,7 +391,12 @@ const defaultCommands = {
   un: {
     function(input) {
       const index = (/{\d+}/g.exec(input) || [])[0] || "0";
-      const query = input.replace(/{\d+}/g, "").trim();
+      const size = ((/{\w*}/g.exec(input) || [])[0] || "regular").replace(
+        /{|}/g,
+        ""
+      );
+      const query = input.replace(/{\d*\w*}/g, "").trim();
+
 
       const getAndFetchBackground = async () => {
         const {
@@ -405,7 +410,7 @@ const defaultCommands = {
         if (!urls) return;
         console.log(urls);
         const metas = store.getState().data.backgrounds?.map((e) => e.meta);
-        if (metas?.includes(urls.regular)) return getAndFetchBackground();
+        if (metas?.includes(urls[size])) return;
         store.dispatch(setIsFetchingImage(true));
         let blobResult = await axios.get(urls.regular, {
           responseType: "blob",
@@ -415,7 +420,7 @@ const defaultCommands = {
         });
         store.dispatch(setIsFetchingImage(false));
         store.dispatch(setImageLoaded(0));
-        addBlobAsBackground(blobResult.data, urls.regular);
+        addBlobAsBackground(blobResult.data, urls[size]);
       };
       return () => getAndFetchBackground;
     },
