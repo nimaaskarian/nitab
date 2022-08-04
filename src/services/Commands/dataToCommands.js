@@ -3,19 +3,16 @@ import defaultCommands from "./defaultCommands";
 function mapTermToInnerCommands(commandArray, commands) {
   return commandArray.map((item) => {
     if (!item) return;
-    const usedCommands = /%.+=?.*%/.exec(item) || [];
-    if (usedCommands.length) {
-      usedCommands.forEach((command) => {
-        const [commandName, commandArg] = command.replace(/%/g, "").split("=");
+    const usedCommand = (/%.+=?.*%/.exec(item) || [])[0];
+    if (usedCommand) {
+      const [commandName, commandArg] = usedCommand
+        .replace(/%/g, "")
+        .split("=");
 
-        const func = (
-          commands[commandName] ||
-          defaultCommands[commandName] ||
-          {}
-        ).function;
-        if (func && typeof func(commandArg)() === "string")
-          item = item.replace(command, func(commandArg || "")());
-      });
+      const func = (commands[commandName] || defaultCommands[commandName] || {})
+        .function;
+      if (func && typeof func(commandArg)() === "string")
+        item = item.replace(usedCommand, func(commandArg || "")());
     }
     return item;
   });

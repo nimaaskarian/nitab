@@ -6,7 +6,7 @@ import AutocompleteLogic from "./bl";
 import AutocompleteItem from "components/AutocompleteItem";
 import { Selected, StyledAutocompleteList } from "./style";
 
-const Autocomplete = ({ isRtl }) => {
+const Autocomplete = ({ isRtl, scrollLeft }) => {
   const term = useSelector(({ ui }) => ui.term);
   const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -44,11 +44,15 @@ const Autocomplete = ({ isRtl }) => {
   }, [selectedIndex, ac]);
   return (
     <>
-      <Selected isRtl={isRtl}>
+      <Selected isRtl={isRtl} marginLeft={scrollLeft}>
         {(() => {
           const phrase = (ac[selectedIndex] || {}).phrase || "";
-          if (phrase.startsWith(term)) return phrase;
-          return null;
+          if (
+            (!isRtl && /[\u0600-\u06FF]+/.test(term)) ||
+            !phrase.startsWith(term)
+          )
+            return null;
+          return phrase;
         })()}
       </Selected>
       <StyledAutocompleteList isRtl={isRtl}>

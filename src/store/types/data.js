@@ -43,6 +43,7 @@ const types = {
   SET_UNSPLASH_COLLECTIONS: "set-unsplash-collections",
   SET_FONT: "set-font",
   SET_ISFOREGROUND_AUTO: "set-isforeground-auto",
+  SET_CUSTOM_CSS: "set-custom-css",
 
   IMPORT_DATA: "import-data",
   RESET_STORAGE: "reset-storage",

@@ -27,7 +27,9 @@ function recommendations(phrases = [], recommended, icons = []) {
   return phrases.map((phrase, index) => ({
     phrase,
     icon: icons[index],
-    recommended: recommendations(recommended),
+    recommended: (recommended || [])[0]?.phrase
+      ? recommended
+      : recommendations(recommended),
   }));
 }
 function checkIcon(timeout = 1500) {
@@ -261,15 +263,15 @@ const defaultCommands = {
         const getAndFetchBackground = async () => {
           let {
             data: { urls },
-          } = await unsplash.get("/random", {
+          } = await unsplash.get("/photos/random", {
             params: {
               collections,
             },
           });
           const metas = store.getState().data.backgrounds?.map((e) => e.meta);
-          if (metas?.includes(urls.full)) return getAndFetchBackground();
+          if (metas?.includes(urls.regular)) return getAndFetchBackground();
           store.dispatch(setIsFetchingImage(true));
-          let blobResult = await axios.get(urls.full, {
+          let blobResult = await axios.get(urls.regular, {
             responseType: "blob",
             onDownloadProgress: ({ loaded, total }) => {
               store.dispatch(setImageLoaded(loaded / total));
@@ -278,7 +280,7 @@ const defaultCommands = {
           store.dispatch(setIsFetchingImage(false));
           store.dispatch(setImageLoaded(0));
 
-          addBlobAsBackground(blobResult.data, urls.full);
+          addBlobAsBackground(blobResult.data, urls.regular);
         };
 
         return () => getAndFetchBackground;
@@ -388,6 +390,44 @@ const defaultCommands = {
   },
   un: {
     function(input) {
+      const index = (/{\d+}/g.exec(input) || [])[0] || "0";
+      const size = ((/{\w*}/g.exec(input) || [])[0] || "regular").replace(
+        /{|}/g,
+        ""
+      );
+      const query = input.replace(/{\d*\w*}/g, "").trim();
+
+
+      const getAndFetchBackground = async () => {
+        const {
+          data: { results },
+        } = await unsplash.get("/search/photos", {
+          params: {
+            query,
+          },
+        });
+        const urls = results[index.replace(/{|}/g, "")]?.urls;
+        if (!urls) return;
+        console.log(urls);
+        const metas = store.getState().data.backgrounds?.map((e) => e.meta);
+        if (metas?.includes(urls[size])) return;
+        store.dispatch(setIsFetchingImage(true));
+        let blobResult = await axios.get(urls.regular, {
+          responseType: "blob",
+          onDownloadProgress: ({ loaded, total }) => {
+            store.dispatch(setImageLoaded(loaded / total));
+          },
+        });
+        store.dispatch(setIsFetchingImage(false));
+        store.dispatch(setImageLoaded(0));
+        addBlobAsBackground(blobResult.data, urls[size]);
+      };
+      return () => getAndFetchBackground;
+    },
+    icon: "fab fa-unsplash",
+  },
+  unCol: {
+    function(input) {
       if (input)
         return () => () => {
           store.dispatch(actions.setUnsplashCollections(input));
@@ -444,6 +484,14 @@ const defaultCommands = {
               );
         }
       };
+    },
+    recommended: () => {
+      return [
+        ...recommendations(
+          Object.keys(store.getState().data.commands).map((e, i) => e),
+          ["delete", 'icon:"fa fa-"', 'color:"#"', "add", "remove"]
+        ),
+      ];
     },
   },
   reset: {

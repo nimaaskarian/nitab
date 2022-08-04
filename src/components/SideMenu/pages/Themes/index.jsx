@@ -60,7 +60,7 @@ const Themes = () => {
             <ThemeBackground
               blur={backgroundObject.blur.notTerminal}
               brightness={backgroundObject.br.notTerminal}
-              background={bgUrl || backgroundObject.cssValue}
+              background={bgUrl || backgroundObject?.cssValue}
             />
 
             <ClockWrapper

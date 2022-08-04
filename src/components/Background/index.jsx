@@ -57,7 +57,7 @@ const Background = ({ isTerminal }) => {
       <StyledBackground
         parallax={parallax}
         scale={parallaxEnabled ? 1 + parallaxFactor / 100 : 1}
-        background={backgrounds[currentBackground].cssValue || pictureBlob}
+        background={backgrounds[currentBackground]?.cssValue || pictureBlob}
         blur={
           sideMenuIndex
             ? blur?.setting

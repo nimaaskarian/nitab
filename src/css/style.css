@@ -23,10 +23,6 @@ body {
   src: url(fonts/fa-w3.woff);
 }
 @font-face {
-  font-family: FiraCode;
-  src: url(fonts/FiraCode.ttf);
-}
-@font-face {
-  font-family: IranSans;
-  src: url(fonts/IRANSansWeb_Light.woff);
+  font-family: VazirCodeHack;
+  src: url(fonts/Vazir-Code-Hack.woff2);
 }

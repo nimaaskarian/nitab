@@ -15,6 +15,7 @@ import {
 import Themes from "./pages/Themes";
 import Weather from "./pages/Weather";
 import Overview from "./pages/Overview";
+import Advanced from "./pages/Advanced";
 
 const Navbar = ({ items, enabled, setEnabled }) => {
   return (
@@ -67,7 +68,14 @@ const SideMenu = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <Navbar
-          items={["Edit Taskbar", "To-dos", "Themes", "Weather", "Overview"]}
+          items={[
+            "Edit Taskbar",
+            "To-dos",
+            "Themes",
+            "Weather",
+            "Overview",
+            "Advanced",
+          ]}
           enabled={sideMenuIndex}
           setEnabled={setPage}
         />
@@ -78,6 +86,7 @@ const SideMenu = () => {
           <Themes />
           <Weather />
           <Overview />
+          <Advanced />
         </PagesHandler>
       </StyledSideMenu>
     </SideMenuWrapper>

@@ -69,6 +69,12 @@ export function setFont(font) {
     payload: font,
   };
 }
+export function setCustomCss(customCss) {
+  return {
+    type: types.SET_CUSTOM_CSS,
+    payload: customCss,
+  };
+}
 export function setIdentifier(iden) {
   return {
     type: types.SET_IDENTIFIER,

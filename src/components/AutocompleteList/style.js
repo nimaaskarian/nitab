@@ -9,10 +9,13 @@ export const StyledAutocompleteList = styled.div`
 `;
 export const Selected = styled.div`
   direction: ${({ isRtl }) => (isRtl ? "rtl" : "ltr")};
+  left: -${({ marginLeft }) => marginLeft}px;
   position: absolute;
+  white-space: nowrap;
+  overflow: scroll;
+  width: 100%;
   top: 0;
   height: 100%;
-  width: 100%;
   z-index: -1000;
   pointer-events: none;
   color: inherit !important;
