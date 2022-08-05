@@ -9,6 +9,9 @@
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
+  "chrome_settings_overrides": {
+    "homepage": "./index.html"
+  },
   "chrome_url_overrides": {
     "newtab": "focus.html"
   },
