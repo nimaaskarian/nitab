@@ -53,10 +53,9 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
       const altKey = e.altKey === enterOpensNewtab;
+      window.document.title = `${term} - ${identifier}Niotab`;
+      history.push({ search: "?t=" + term });
       if (typeof onSubmit === "string") {
-        console.log(altKey);
-        window.document.title = `${term} - ${identifier}Niotab`;
-        history.push({ search: "?t=" + term });
         if (altKey) document.location = onSubmit;
         else {
           window.open(onSubmit);

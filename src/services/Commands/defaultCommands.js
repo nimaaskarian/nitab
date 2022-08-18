@@ -23,6 +23,7 @@ import { unsplash } from "apis";
 import axios from "axios";
 import { addBlobAsBackground } from "services/Images";
 import openFilePrompt, { types } from "services/openFilePrompt";
+import { parseSurrounding } from "./dataToCommands";
 function recommendations(phrases = [], recommended, icons = []) {
   return phrases.map((phrase, index) => ({
     phrase,
@@ -456,13 +457,16 @@ const defaultCommands = {
   },
   command: {
     function(input) {
-      let [commandName, ...commandFunctions] = input
+      const { rest, results } = parseSurrounding(input, "%");
+      console.log(rest, results);
+      let [commandName, ...commandFunctions] = rest
         .replace(/icon:".*"/g, "")
         .replace(/color:".*"/g, "")
         .split(/\s/g)
         .filter((e) => !!e);
-      const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
-      const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
+      const icon = (/(?<=icon:")[^"]*(?=")/g.exec(rest) || [])[0];
+      const color = (/(?<=color:")[^"]*(?=")/g.exec(rest) || [])[0];
+      console.log(rest, results);
       return () => {
         switch ((commandFunctions[0] || "").toLowerCase()) {
           case "delete":
@@ -470,7 +474,10 @@ const defaultCommands = {
           case "add":
             return () =>
               store.dispatch(
-                actions.addToCommand(commandName, commandFunctions.delete(0))
+                actions.addToCommand(commandName, [
+                  ...commandFunctions.delete(0),
+                  ...results,
+                ])
               );
           case "remove":
             return () =>
@@ -480,7 +487,12 @@ const defaultCommands = {
           default:
             return () =>
               store.dispatch(
-                actions.addCommand(commandName, commandFunctions, icon, color)
+                actions.addCommand(
+                  commandName,
+                  [...commandFunctions, ...results],
+                  icon,
+                  color
+                )
               );
         }
       };
@@ -488,7 +500,9 @@ const defaultCommands = {
     recommended: () => {
       return [
         ...recommendations(
-          Object.keys(store.getState().data.commands).map((e, i) => e),
+          Object.keys(store.getState().data.commands)
+            .map((e, i) => e)
+            .filter((e) => e.startsWith(argString)),
           ["delete", 'icon:"fa fa-"', 'color:"#"', "add", "remove"]
         ),
       ];
