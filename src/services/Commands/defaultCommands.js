@@ -497,7 +497,7 @@ const defaultCommands = {
         }
       };
     },
-    recommended: () => {
+    recommended: (argString) => {
       return [
         ...recommendations(
           Object.keys(store.getState().data.commands)
