@@ -63,7 +63,7 @@ const EditTaskbar = () => {
           marginLeft,
           marginRight,
         },
-        editTaskbarIndex ? editTaskbarIndex - 1 : 0
+        editTaskbarIndex
       )
     );
     dispatch(setEditTaskbarIndex(editTaskbarIndex + 1));

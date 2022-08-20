@@ -25,29 +25,39 @@ export function getPosition(str, subStr, i = 0) {
     .length;
 }
 
-export function parseSurrounding(term, start, end = start, _results = []) {
-  const firstIndex = getPosition(term, start);
-  if (firstIndex === -1) return { results: _results, closed: true, rest: term };
+export function parseSurrounding(term, start, end = start, _results = [], _between = [], prevLastIndex = -1) {
+  let firstIndex = getPosition(term, start);
+  const output = { results: _results, rest: term, between: _between, closed: true }
+  if (firstIndex === -1) return output;
+  console.log(prevLastIndex)
 
-  const lastIndex = getPosition(term, end, "last");
+  if (prevLastIndex !== -1) {
+    _between.push(term.slice(prevLastIndex + 1, firstIndex));
+    term = term.slice(0, prevLastIndex + 1) + term.slice(firstIndex);
+    firstIndex -= firstIndex - (prevLastIndex + 1);
+  }
+  console.log(_between)
+
+  const lastIndex = getPosition(term, end);
 
   if (lastIndex === -1)
-    return { results: _results, closed: false, rest: term };
+    return { ...output, closed: false };
 
   _results.push(term.slice(firstIndex, lastIndex + 1));
-  term = term.slice(0, firstIndex - 1) + term.slice(lastIndex + 1);
+  console.log(term);
+  term = term.slice(0, firstIndex) + term.slice(lastIndex + 1);
 
-  return parseSurrounding(term, start, end, _results);
+  return parseSurrounding(term, start, end, _results, _between, lastIndex - _results[_results.length - 1].length);
 }
 
 function mapTermToInnerCommands(commandArray, commands) {
   return commandArray.map((item) => {
     if (!item) return;
-    const usedCommand = (/%.+=?.*%/.exec(item) || [])[0];
+    const usedCommand = (/\$\(.+=?.*\)/.exec(item) || [])[0];
     console.log(usedCommand);
     if (usedCommand) {
       const [commandName, commandArg] = usedCommand
-        .replace(/%/g, "")
+        .replace(/\(|\)|\$/g, "")
         .split("=");
 
       const func = (commands[commandName] || defaultCommands[commandName] || {})

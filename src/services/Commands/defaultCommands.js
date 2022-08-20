@@ -457,7 +457,16 @@ const defaultCommands = {
   },
   command: {
     function(input) {
-      const { rest, results } = parseSurrounding(input, "%");
+      const { rest, results, between } = parseSurrounding(input, "$(", ")");
+
+      between.filter(e => e !== " ").forEach((item, index) => {
+        if (item === "%?%") {
+          let ifItem = results[index] + "%?%" + results[index + 1]
+          results.splice(index, 2, ifItem);
+        }
+      })
+      console.log(results)
+
       console.log(rest, results);
       let [commandName, ...commandFunctions] = rest
         .replace(/icon:".*"/g, "")
