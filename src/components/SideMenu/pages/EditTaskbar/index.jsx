@@ -37,6 +37,7 @@ const EditTaskbar = () => {
     ({ data }) => data.taskbar.icons[editTaskbarIndex]
   );
   const [icon, setIcon] = useState(defaultValues.icon);
+  const [isFolder, setIsFolder] = useState(defaultValues.folder);
   const [url, setUrl] = useState(defaultValues.url);
   const [color, setColor] = useState(defaultValues.color);
   const [marginLeft, setMarginLeft] = useState(defaultValues.marginLeft);
@@ -49,6 +50,7 @@ const EditTaskbar = () => {
     setUrl(values.url);
     setColor(values.color || "#cccccc");
     setIsColorForeground(!values.color);
+    setIsFolder(values.folder)
     setMarginLeft(values.marginLeft);
     setMarginRight(values.marginRight);
   }, [iconToEdit]);
@@ -58,6 +60,7 @@ const EditTaskbar = () => {
       addTaskbarIcon(
         {
           icon,
+          folder: isFolder && [],
           url,
           color: isColorForeground ? null : color,
           marginLeft,
@@ -73,6 +76,7 @@ const EditTaskbar = () => {
       addTaskbarIcon(
         {
           icon,
+          folder: isFolder && [],
           url,
           color: isColorForeground ? null : color,
           marginLeft,
@@ -90,6 +94,7 @@ const EditTaskbar = () => {
         editTaskbarIcon(
           {
             icon,
+            folder: isFolder && [],
             url,
             color: isColorForeground ? null : color,
             marginLeft,
@@ -102,6 +107,7 @@ const EditTaskbar = () => {
       dispatch(
         addTaskbarIcon({
           icon,
+          folder: isFolder && [],
           url,
           color: isColorForeground ? null : color,
           marginLeft,
@@ -112,6 +118,17 @@ const EditTaskbar = () => {
   };
   return (
     <StyledEditTaskbar onSubmit={handleSubmit}>
+      <div>
+        <StyledTwoConditionElement enabled={isFolder}>
+          Is Folder?
+          <TodoButton
+            className={
+              isFolder ? "fa fa-circle-check" : "far fa-circle"
+            }
+            onClick={() => setIsFolder(!isFolder)}
+          />
+        </StyledTwoConditionElement>
+      </div>
       <TaskbarIcon
         {...{
           icon,
@@ -129,7 +146,7 @@ const EditTaskbar = () => {
           value={icon}
           label="icon (fontawesome, ex: fa fa-heart)"
         />
-        <TextInput value={url} onChange={setUrl} label="url" />
+        {!isFolder && <TextInput value={url} onChange={setUrl} label="url" />}
       </MultipleInputsWrapper>
       <MultipleInputsWrapper>
         <TextInput

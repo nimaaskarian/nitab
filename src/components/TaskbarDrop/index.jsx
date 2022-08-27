@@ -8,7 +8,7 @@ import {
 } from "store/actions";
 import { StyledButton, StyledTaskbarDrop } from "./style";
 
-const TaskbarDrop = ({ index, children }) => {
+const TaskbarDrop = ({ index, children, visible, onDrop }) => {
   const currentDragging = useSelector(({ ui }) => ui.currentDragging);
   const [isOver, setIsOver] = useState(false);
   const hasPlus = useSelector(
@@ -38,13 +38,14 @@ const TaskbarDrop = ({ index, children }) => {
   };
   return (
     <StyledTaskbarDrop
-      onDrop={handleDrop}
+      onDrop={onDrop ? () => onDrop(currentDragging)  : handleDrop}
       onDragOver={handleOver}
       onDragEnd={() => setIsOver(false)}
       onDragLeave={() => setIsOver(false)}
       isOver={isOver}
       hasPlus={hasPlus}
-      visible={currentDragging !== -1}
+      isFolder={visible}
+      visible={visible || currentDragging !== -1}
       index={index}
     >
       {hasPlus ? (
@@ -56,6 +57,7 @@ const TaskbarDrop = ({ index, children }) => {
           className="fa fa-plus"
         />
       ) : null}
+      {children}
     </StyledTaskbarDrop>
   );
 };

@@ -2,9 +2,11 @@ import isDark from "services/isdark";
 import styled from "styled-components";
 
 export const TaskbarIconWrapper = styled.div`
+  position: relative;
   margin-top: auto;
   margin-bottom: 0;
 `;
+
 export const StyledTaskbarIcon = styled.a`
   color: ${({ color }) => color} !important;
   text-decoration: none;
@@ -18,3 +20,19 @@ export const StyledTaskbarIcon = styled.a`
     filter: ${({ color }) => `brightness(${isDark(color) ? 1.15 : 0.85})`};
   }
 `;
+
+export const StyledFolderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  & > *{
+    padding: 10px 0;
+  }
+  position: absolute;
+  top: -100%;
+  transform: translateY(-50%);
+  width: 100%;
+  transition: all ease-out 0.3s;
+  opacity: ${({ enabled }) => enabled ? 1 : 0};
+  align-items: center;
+`
