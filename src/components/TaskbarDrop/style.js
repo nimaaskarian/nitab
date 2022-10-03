@@ -19,12 +19,6 @@ background-color: black;
     filter: ${({ isOver }) => (isOver ? "brightness(.5)" : "")};
   }
   opacity: ${({ visible, hasPlus }) => (visible || hasPlus ? "1" : "0")};
-  position: ${({ isFolder }) => (isFolder && "absolute")};
-  bottom: ${({ isFolder }) => (isFolder && "0")};
-  width: ${({ isFolder }) => (isFolder && "100%")};
-  height: ${({ isFolder }) => (isFolder && "100%")};
-  background: ${({ isFolder }) => (isFolder && "transparent")};
-  border: ${({ isFolder }) => (isFolder && "none")};
 `;
 export const StyledButton = styled.button`
   background: transparent;

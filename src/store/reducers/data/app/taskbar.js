@@ -26,7 +26,7 @@ export default function taskbarReducer(state = INITIAL_STATE, action) {
     case types.EDIT_TASKBAR_ICON:
       return {
         ...state,
-        icons: state.icons.replace(action.payload.index, { ...state.icons[action.payload.index], ...action.payload.icon }),
+        icons: state.icons.replace(action.payload.index, action.payload.icon),
       };
 
     case types.DELETE_TASKBAR_ICON:
