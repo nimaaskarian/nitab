@@ -48,8 +48,42 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   }, [isOvr, color, currentCommand.color]);
   const isDark = useIsDarkColor(currentColor);
 
+  const [selection, setSelection] = useState()
+
   useEffect(() => {
     const handleSubmit = (e) => {
+      const { start, end } = selection;
+      const length = term.length;
+      if (e.ctrlKey) {
+        switch (e.code) {
+          case "KeyU":
+            e.preventDefault()
+            dispatch(setTerm(""))
+            break;
+          case "KeyH":
+            e.preventDefault()
+            if (e.shiftKey) {
+              forwardedRef.current.setSelectionRange(start ? start - 1 : start, end)
+            } else {
+              if (start !== end) forwardedRef.current.setSelectionRange(start, start)
+              else
+                forwardedRef.current.setSelectionRange(start ? start - 1 : start, end ? end - 1 : end)
+            }
+            break;
+          case "KeyL":
+            e.preventDefault()
+            if (e.shiftKey) {
+              forwardedRef.current.setSelectionRange(start, end === length ? end : end + 1)
+            } else {
+              if (start !== end) forwardedRef.current.setSelectionRange(end, end)
+              else
+                forwardedRef.current.setSelectionRange(start === length ? start : start + 1, end === length ? end : end + 1)
+            }
+            break;
+          default:
+            break;
+        }
+      }
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
       const altKey = e.altKey === enterOpensNewtab;
@@ -71,21 +105,24 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     return () => {
       window.removeEventListener("keydown", handleSubmit);
     };
-  }, [currentCommand, enterOpensNewtab, identifier, term]);
+  }, [currentCommand, enterOpensNewtab, identifier, term, selection]);
 
-  const isRtl = useMemo(
-    () =>
-      (forwardedRef.current &&
-        window.getComputedStyle(forwardedRef.current, null).direction ===
-          "rtl") ??
-      false,
-    [forwardedRef]
-  );
+  const isRtl = (forwardedRef.current &&
+    window.getComputedStyle(forwardedRef.current, null).direction ===
+    "rtl") ?? false
+  const handleSelection = () => {
+    const start = forwardedRef.current.selectionStart;
+    const end = forwardedRef.current.selectionEnd;
+    if (selection.end !== end || selection.start !== start)
+      setSelection({ start, end });
+  }
   return (
     <StyledTerminal color={currentColor} isDark={isDark}>
       <SearchMode />
       <TerminalAutoCompleteWrapper>
         <TerminalInput
+          onSelect={handleSelection}
+          onKeyDown={handleSelection}
           dir="auto"
           value={term}
           ref={forwardedRef}

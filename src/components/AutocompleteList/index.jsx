@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { setTerm } from "store/actions";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import AutocompleteLogic from "./bl";
 import AutocompleteItem from "components/AutocompleteItem";
 import { Selected, StyledAutocompleteList } from "./style";
-import useIsDarkColor from "hooks/useIsDarkColor";
-import CurrentColorContext from "context/CurrentColorContext";
 
 const Autocomplete = ({ isRtl, scrollLeft }) => {
   const term = useSelector(({ ui }) => ui.term);
@@ -21,12 +19,15 @@ const Autocomplete = ({ isRtl, scrollLeft }) => {
     const onKeyDown = (e) => {
       if (ac[selectedIndex])
         switch (e.code) {
+          case "KeyJ":
+            if (!e.ctrlKey) break;
           case "ArrowDown":
             e.preventDefault();
             if (selectedIndex + 1 === ac.length) setSelectedIndex(0);
             else setSelectedIndex(selectedIndex + 1);
             break;
-
+          case "KeyK":
+            if (!e.ctrlKey) break;
           case "ArrowUp":
             e.preventDefault();
             if (selectedIndex) setSelectedIndex(selectedIndex - 1);

@@ -409,7 +409,6 @@ const defaultCommands = {
         });
         const urls = results[index.replace(/{|}/g, "")]?.urls;
         if (!urls) return;
-        console.log(urls);
         const metas = store.getState().data.backgrounds?.map((e) => e.meta);
         if (metas?.includes(urls[size])) return;
         store.dispatch(setIsFetchingImage(true));
@@ -465,9 +464,7 @@ const defaultCommands = {
           results.splice(index, 2, ifItem);
         }
       })
-      console.log(results)
 
-      console.log(rest, results);
       let [commandName, ...commandFunctions] = rest
         .replace(/icon:".*"/g, "")
         .replace(/color:".*"/g, "")
@@ -475,7 +472,6 @@ const defaultCommands = {
         .filter((e) => !!e);
       const icon = (/(?<=icon:")[^"]*(?=")/g.exec(rest) || [])[0];
       const color = (/(?<=color:")[^"]*(?=")/g.exec(rest) || [])[0];
-      console.log(rest, results);
       return () => {
         switch ((commandFunctions[0] || "").toLowerCase()) {
           case "delete":
