@@ -55,6 +55,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       const { start, end } = selection;
       const length = term.length;
       if (e.ctrlKey) {
+        console.log("works")
         switch (e.code) {
           case "KeyU":
             e.preventDefault()
@@ -113,7 +114,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const handleSelection = () => {
     const start = forwardedRef.current.selectionStart;
     const end = forwardedRef.current.selectionEnd;
-    if (selection.end !== end || selection.start !== start)
+    if (selection?.end !== end || selection?.start !== start)
       setSelection({ start, end });
   }
   return (
