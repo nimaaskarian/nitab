@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useContext, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import history from "services/history";
 import Autocomplete from "../AutocompleteList";
 import { termToCommand } from "services/Commands/index.js";
 import { setTerm } from "store/actions";
@@ -17,8 +16,10 @@ import CurrentColorContext from "context/CurrentColorContext";
 import SearchResultList from "components/SearchResultList";
 import SearchMode from "components/SearchMode";
 import useIsDarkColor from "hooks/useIsDarkColor";
+import usePushHistory from "hooks/usePushHistory";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
+  const pushHistory = usePushHistory()
   const commands = useContext(CommandsContext);
   const defaultIcon = useSelector(({ data }) => data.terminal.defaultIcon);
   const dispatch = useDispatch();
@@ -88,8 +89,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
       const altKey = e.altKey === enterOpensNewtab;
-      window.document.title = `${term} - ${identifier}Niotab`;
-      history.push({ search: "?t=" + term });
+      pushHistory()
       if (typeof onSubmit === "string") {
         if (altKey) document.location = onSubmit;
         else {
