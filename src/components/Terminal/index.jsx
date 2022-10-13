@@ -88,7 +88,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       }
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
-      const willOpenInNewtab = e.altKey === enterOpensNewtabDefault;
+      const willOpenInNewtab = e.altKey !== enterOpensNewtabDefault;
       pushHistory()
       if (typeof onSubmit === "string") {
         if (willOpenInNewtab) document.location = onSubmit;
