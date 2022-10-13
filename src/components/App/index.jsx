@@ -33,6 +33,9 @@ import useIsDarkColor from "hooks/useIsDarkColor";
 import axios from "axios";
 
 const App = () => {
+  const enterOpensNewtabDefault = useSelector(
+    ({ data }) => data.terminal.enterOpensNewtab
+  );
   //bookmark === 0, history === 1, nothing === 0
   const commands = useCommands();
   // const isTermEmpty = useSelector(({ ui }) => !ui.term);
@@ -166,7 +169,7 @@ const App = () => {
     <React.Fragment>
       <Dropzone setDragMessage={setDragMessage} />
       <Helmet>
-        <title>{identifier}Niotab</title>
+        <title>{identifier}Niotab{enterOpensNewtabDefault ? " (new)" : ""}</title>
         <style>{currentTheme.customCss}</style>
       </Helmet>
       <Background isTerminal={isTerminal} />

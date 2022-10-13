@@ -28,7 +28,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const [scrollLeft, setScrollLeft] = useState(
     forwardedRef.current?.scrollLeft || 0
   );
-  const enterOpensNewtab = useSelector(
+  const enterOpensNewtabDefault = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
   const { color, isOvr } = useSelector(
@@ -88,16 +88,16 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       }
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
-      const altKey = e.altKey === enterOpensNewtab;
+      const willOpenInNewtab = e.altKey === enterOpensNewtabDefault;
       pushHistory()
       if (typeof onSubmit === "string") {
-        if (altKey) document.location = onSubmit;
+        if (willOpenInNewtab) document.location = onSubmit;
         else {
           window.open(onSubmit);
         }
       } else {
         onSubmit({
-          altKey,
+          willOpenInNewtab,
         });
       }
       return true;
@@ -106,7 +106,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     return () => {
       window.removeEventListener("keydown", handleSubmit);
     };
-  }, [currentCommand, enterOpensNewtab, identifier, term, selection]);
+  }, [currentCommand, enterOpensNewtabDefault, identifier, term, selection]);
 
   const isRtl = (forwardedRef.current &&
     window.getComputedStyle(forwardedRef.current, null).direction ===
