@@ -127,9 +127,9 @@ const defaultCommands = {
         "": "version",
       };
       return () =>
-        async ({ altKey }) => {
+        async (openInNewtab) => {
           const url = "chrome://" + (sums[input] || input);
-          if (altKey) {
+          if (!openInNewtab) {
             chrome?.tabs.getCurrent(({ id, index }) => {
               chrome?.tabs.create({
                 url,
@@ -541,9 +541,9 @@ const defaultCommands = {
     function(text) {
       if (chrome?.search?.query)
         return () =>
-          ({ altKey }) => {
+          (openInNewtab) => {
             chrome?.search?.query({
-              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+              disposition: openInNewtab ? "NEW_TAB" : "CURRENT_TAB",
               text,
             });
           };

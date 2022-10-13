@@ -91,14 +91,14 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
       const willOpenInNewtab = e.altKey !== enterOpensNewtabDefault;
       pushHistory()
       if (typeof onSubmit === "string") {
-        if (willOpenInNewtab) document.location = onSubmit;
+        if (willOpenInNewtab) window.open(onSubmit);
         else {
-          window.open(onSubmit);
+          document.location = onSubmit;
         }
       } else {
-        onSubmit({
+        onSubmit(
           willOpenInNewtab,
-        });
+        );
       }
       return true;
     };
