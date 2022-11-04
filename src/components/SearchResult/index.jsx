@@ -23,7 +23,7 @@ const SearchResult = forwardRef(({ result }, ref) => {
             if (!enterOpensNewtab) document.location = result.url;
             else window.open(result.url);
           } else {
-            result.url(!enterOpensNewtab);
+            result.url(enterOpensNewtab);
           }
         } else {
           const { tabs, windowId } = result;
