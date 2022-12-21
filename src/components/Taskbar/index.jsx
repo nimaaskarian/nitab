@@ -1,18 +1,25 @@
 import { nanoid } from "nanoid";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useContext, useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
+import { termToCommand } from "services/Commands/index.js";
 
 import TaskbarIcon from "../TaskbarIcon";
 import TaskbarDrop from "../TaskbarDrop";
 
 import { StyledTaskbar } from "./style";
 import eventKeyNumber from "services/eventKeyNumber";
+import useCommands from "hooks/useCommands";
 const Taskbar = () => {
   const sideMenuIndex = useSelector(({ ui }) => ui.sideMenuIndex);
   const icons = useSelector(({ data }) => data.taskbar.icons);
 
+  const commands = useCommands();
   const renderedIcons = useMemo(() => {
-    const reduced = icons.reduce((acc, cur, index) => {
+    const reduced = icons.map(e=>{
+      const { name, args } = termToCommand(e.url, "", commands);
+      console.log(commands)
+      return {...e, url:{...commands[name],name,args}}
+    }).reduce((acc, cur, index) => {
       return acc.concat([
         <TaskbarDrop key={nanoid(10)} index={index} />,
         <TaskbarIcon
