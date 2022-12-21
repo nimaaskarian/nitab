@@ -10,8 +10,6 @@ import {
   setSideMenuIndex,
 } from "store/actions";
 
-import defaultCommands from "services/Commands/defaultCommands";
-
 import { StyledTaskbarIcon, TaskbarIconWrapper } from "./style";
 
 const TaskbarIcon = React.forwardRef((props, ref) => {
