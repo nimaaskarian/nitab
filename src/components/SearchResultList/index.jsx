@@ -29,7 +29,7 @@ const SearchResultList = ({ currentCommand, searchCommand, term }) => {
     };
   }, []);
   useEffect(() => {
-    const isNameSearch = currentCommand.name === "search";
+    const isNameSearch = currentCommand.name === "search" || !term;
     function searchSuggest(term) {
       if (!isNameSearch && term)
         return {

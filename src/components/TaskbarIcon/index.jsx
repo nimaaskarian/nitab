@@ -10,8 +10,6 @@ import {
   setSideMenuIndex,
 } from "store/actions";
 
-import defaultCommands from "services/Commands/defaultCommands";
-
 import { StyledTaskbarIcon, TaskbarIconWrapper } from "./style";
 
 const TaskbarIcon = React.forwardRef((props, ref) => {
@@ -58,12 +56,25 @@ const TaskbarIcon = React.forwardRef((props, ref) => {
         marginRight={props.marginRight}
         target={enterOpensNewtab ? "_blank" : "_self"}
         className={props.icon}
-        href={props.url ? defaultCommands.url.function(props.url)() : "#"}
+        // href={props.url ? defaultCommands.url.function(props.url)() : "#"}
         onClick={(e) => {
           if (sideMenuIndex) {
             dispatch(setSideMenuIndex(1));
             e.preventDefault();
             dispatch(setEditTaskbarIndex(props.index));
+          } else {
+            console.log(props.url)
+            const onSubmit = props.url.function(props.url.args)();
+            if (typeof onSubmit === "string") {
+              if (enterOpensNewtab) window.open(onSubmit);
+              else {
+                document.location = onSubmit;
+              }
+            } else {
+              onSubmit(
+                enterOpensNewtab,
+              );
+            }
           }
         }}
         rel="noreferrer"

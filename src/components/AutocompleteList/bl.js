@@ -112,10 +112,20 @@ const AutocompleteLogic = () => {
     () =>
       (
         (typeof currentCommand.recommended === "function" &&
-          currentCommand.recommended()) ||
+          currentCommand.recommended(
+            term
+              .replace(identifier, "")
+              .replace(currentCommand.name, "")
+              .trimStart()
+          )) ||
         currentCommand.recommended ||
         []
       )
+        /*         .filter((e) =>
+          e.phrase.startsWith(
+            term.replace(identifier, "").replace(currentCommand.name, "").trimStart()
+          )
+        ) */
         .flatMap(mapCallback)
         .sort()
         .sort(function (a, b) {

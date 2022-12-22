@@ -30,14 +30,16 @@ import Main from "components/Main";
 import useIsThemeDark from "hooks/useIsThemeDark";
 import SideMenu from "components/SideMenu";
 import useIsDarkColor from "hooks/useIsDarkColor";
-import Visualizer from "components/Visualizer";
 import axios from "axios";
 
 const App = () => {
+  const enterOpensNewtabDefault = useSelector(
+    ({ data }) => data.terminal.enterOpensNewtab
+  );
   //bookmark === 0, history === 1, nothing === 0
   const commands = useCommands();
-  const isTermEmpty = useSelector(({ ui }) => !ui.term);
-  const [isTerminal, setIsTerminal] = useState(!isTermEmpty);
+  // const isTermEmpty = useSelector(({ ui }) => !ui.term);
+  const [isTerminal, setIsTerminal] = useState(false);
   const currentTheme = useSelector(
     ({
       data: {
@@ -85,10 +87,11 @@ const App = () => {
         localStorage.setItem("colors_data", e.data);
         const colorsArray = e.data.split("\n");
 
-        console.log(colorsArray[1]);
         dispatch(setForeground({ color: colorsArray[7], isOvr: true }));
         dispatch(addBackground({ cssValue: colorsArray[0] }));
       }
+    }).catch(() => {
+      console.log("wasn't able to catch colors from '/color' file in extensions directory.")
     });
   }, []);
 
@@ -98,10 +101,6 @@ const App = () => {
     if (lightIndex !== -1 && !isDarkTheme)
       dispatch(setCurrentTheme(lightIndex));
   }, [isDarkTheme, darkIndex, lightIndex]);
-
-  useEffect(() => {
-    setIsTerminal(!isTermEmpty);
-  }, [isTermEmpty]);
 
   useEffect(() => {
     const termFromQuery = new URLSearchParams(window.location.search).get("t");
@@ -114,7 +113,7 @@ const App = () => {
       if (
         mutedKeys.includes(e.key) ||
         (e.ctrlKey && e.shiftKey) ||
-        (termEmptyMuted.includes(e.code) && isTermEmpty)
+        termEmptyMuted.includes(e.code)
       )
         return;
 
@@ -132,7 +131,7 @@ const App = () => {
       if (e.altKey || e.code === "Tab") {
         e.preventDefault();
       }
-      if (e.code === "Escape") {
+      if (e.code === "Escape" || e.key === "Escape") {
         setIsTerminal(false);
 
         if (!isTerminal) dispatch(setSideMenuIndex(5));
@@ -149,7 +148,7 @@ const App = () => {
     return () => {
       window.removeEventListener("keydown", onKeydown);
     };
-  }, [sideMenuIndex, isTermEmpty, isTerminal]);
+  }, [sideMenuIndex, isTerminal]);
 
   const RenderedContent = () => {
     if (!isTerminal)
@@ -170,11 +169,10 @@ const App = () => {
     <React.Fragment>
       <Dropzone setDragMessage={setDragMessage} />
       <Helmet>
-        <title>{identifier}Niotab</title>
+        <title>{identifier}Niotab{enterOpensNewtabDefault ? " (new)" : ""}</title>
         <style>{currentTheme.customCss}</style>
       </Helmet>
       <Background isTerminal={isTerminal} />
-      {/* <Visualizer /> */}
       <AppContainer color={foreground.color} isDark={isDarkColor} font={font}>
         <SideMenu />
         {dragMessage ? <h1>{dragMessage}...</h1> : <RenderedContent />}

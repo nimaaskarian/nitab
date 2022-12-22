@@ -19,12 +19,15 @@ const Autocomplete = ({ isRtl, scrollLeft }) => {
     const onKeyDown = (e) => {
       if (ac[selectedIndex])
         switch (e.code) {
+          case "KeyJ":
+            if (!e.ctrlKey) break;
           case "ArrowDown":
             e.preventDefault();
             if (selectedIndex + 1 === ac.length) setSelectedIndex(0);
             else setSelectedIndex(selectedIndex + 1);
             break;
-
+          case "KeyK":
+            if (!e.ctrlKey) break;
           case "ArrowUp":
             e.preventDefault();
             if (selectedIndex) setSelectedIndex(selectedIndex - 1);

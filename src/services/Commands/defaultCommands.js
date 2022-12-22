@@ -23,6 +23,7 @@ import { unsplash } from "apis";
 import axios from "axios";
 import { addBlobAsBackground } from "services/Images";
 import openFilePrompt, { types } from "services/openFilePrompt";
+import { parseSurrounding } from "./dataToCommands";
 function recommendations(phrases = [], recommended, icons = []) {
   return phrases.map((phrase, index) => ({
     phrase,
@@ -126,9 +127,9 @@ const defaultCommands = {
         "": "version",
       };
       return () =>
-        async ({ altKey }) => {
+        async (openInNewtab) => {
           const url = "chrome://" + (sums[input] || input);
-          if (altKey) {
+          if (!openInNewtab) {
             chrome?.tabs.getCurrent(({ id, index }) => {
               chrome?.tabs.create({
                 url,
@@ -408,7 +409,6 @@ const defaultCommands = {
         });
         const urls = results[index.replace(/{|}/g, "")]?.urls;
         if (!urls) return;
-        console.log(urls);
         const metas = store.getState().data.backgrounds?.map((e) => e.meta);
         if (metas?.includes(urls[size])) return;
         store.dispatch(setIsFetchingImage(true));
@@ -456,13 +456,22 @@ const defaultCommands = {
   },
   command: {
     function(input) {
-      let [commandName, ...commandFunctions] = input
+      const { rest, results, between } = parseSurrounding(input, "$(", ")");
+
+      between.filter(e => e !== " ").forEach((item, index) => {
+        if (item === "%?%") {
+          let ifItem = results[index] + "%?%" + results[index + 1]
+          results.splice(index, 2, ifItem);
+        }
+      })
+
+      let [commandName, ...commandFunctions] = rest
         .replace(/icon:".*"/g, "")
         .replace(/color:".*"/g, "")
         .split(/\s/g)
         .filter((e) => !!e);
-      const icon = (/(?<=icon:")[^"]*(?=")/g.exec(input) || [])[0];
-      const color = (/(?<=color:")[^"]*(?=")/g.exec(input) || [])[0];
+      const icon = (/(?<=icon:")[^"]*(?=")/g.exec(rest) || [])[0];
+      const color = (/(?<=color:")[^"]*(?=")/g.exec(rest) || [])[0];
       return () => {
         switch ((commandFunctions[0] || "").toLowerCase()) {
           case "delete":
@@ -470,7 +479,10 @@ const defaultCommands = {
           case "add":
             return () =>
               store.dispatch(
-                actions.addToCommand(commandName, commandFunctions.delete(0))
+                actions.addToCommand(commandName, [
+                  ...commandFunctions.delete(0),
+                  ...results,
+                ])
               );
           case "remove":
             return () =>
@@ -480,15 +492,22 @@ const defaultCommands = {
           default:
             return () =>
               store.dispatch(
-                actions.addCommand(commandName, commandFunctions, icon, color)
+                actions.addCommand(
+                  commandName,
+                  [...commandFunctions, ...results],
+                  icon,
+                  color
+                )
               );
         }
       };
     },
-    recommended: () => {
+    recommended: (argString) => {
       return [
         ...recommendations(
-          Object.keys(store.getState().data.commands).map((e, i) => e),
+          Object.keys(store.getState().data.commands)
+            .map((e, i) => e)
+            .filter((e) => e.startsWith(argString)),
           ["delete", 'icon:"fa fa-"', 'color:"#"', "add", "remove"]
         ),
       ];
@@ -522,9 +541,9 @@ const defaultCommands = {
     function(text) {
       if (chrome?.search?.query)
         return () =>
-          ({ altKey }) => {
+          (openInNewtab) => {
             chrome?.search?.query({
-              disposition: altKey ? "CURRENT_TAB" : "NEW_TAB",
+              disposition: openInNewtab ? "NEW_TAB" : "CURRENT_TAB",
               text,
             });
           };

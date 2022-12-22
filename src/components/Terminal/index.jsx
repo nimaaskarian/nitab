@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useContext, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import history from "services/history";
 import Autocomplete from "../AutocompleteList";
 import { termToCommand } from "services/Commands/index.js";
 import { setTerm } from "store/actions";
@@ -17,8 +16,10 @@ import CurrentColorContext from "context/CurrentColorContext";
 import SearchResultList from "components/SearchResultList";
 import SearchMode from "components/SearchMode";
 import useIsDarkColor from "hooks/useIsDarkColor";
+import usePushHistory from "hooks/usePushHistory";
 
 const Terminal = React.forwardRef((props, forwardedRef) => {
+  const pushHistory = usePushHistory()
   const commands = useContext(CommandsContext);
   const defaultIcon = useSelector(({ data }) => data.terminal.defaultIcon);
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   const [scrollLeft, setScrollLeft] = useState(
     forwardedRef.current?.scrollLeft || 0
   );
-  const enterOpensNewtab = useSelector(
+  const enterOpensNewtabDefault = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
   const { color, isOvr } = useSelector(
@@ -48,23 +49,56 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
   }, [isOvr, color, currentCommand.color]);
   const isDark = useIsDarkColor(currentColor);
 
+  const [selection, setSelection] = useState()
+
   useEffect(() => {
     const handleSubmit = (e) => {
+      const { start, end } = selection;
+      const length = term.length;
+      if (e.ctrlKey) {
+        console.log("works")
+        switch (e.code) {
+          case "KeyU":
+            e.preventDefault()
+            dispatch(setTerm(""))
+            break;
+          case "KeyH":
+            e.preventDefault()
+            if (e.shiftKey) {
+              forwardedRef.current.setSelectionRange(start ? start - 1 : start, end)
+            } else {
+              if (start !== end) forwardedRef.current.setSelectionRange(start, start)
+              else
+                forwardedRef.current.setSelectionRange(start ? start - 1 : start, end ? end - 1 : end)
+            }
+            break;
+          case "KeyL":
+            e.preventDefault()
+            if (e.shiftKey) {
+              forwardedRef.current.setSelectionRange(start, end === length ? end : end + 1)
+            } else {
+              if (start !== end) forwardedRef.current.setSelectionRange(end, end)
+              else
+                forwardedRef.current.setSelectionRange(start === length ? start : start + 1, end === length ? end : end + 1)
+            }
+            break;
+          default:
+            break;
+        }
+      }
       if (e.code !== "Enter" || !currentCommand.function) return;
       const onSubmit = currentCommand.function(currentCommand.args)();
-      const altKey = e.altKey === enterOpensNewtab;
+      const willOpenInNewtab = e.altKey !== enterOpensNewtabDefault;
+      pushHistory()
       if (typeof onSubmit === "string") {
-        console.log(altKey);
-        window.document.title = `${term} - ${identifier}Niotab`;
-        history.push({ search: "?t=" + term });
-        if (altKey) document.location = onSubmit;
+        if (willOpenInNewtab) window.open(onSubmit);
         else {
-          window.open(onSubmit);
+          document.location = onSubmit;
         }
       } else {
-        onSubmit({
-          altKey,
-        });
+        onSubmit(
+          willOpenInNewtab,
+        );
       }
       return true;
     };
@@ -72,21 +106,24 @@ const Terminal = React.forwardRef((props, forwardedRef) => {
     return () => {
       window.removeEventListener("keydown", handleSubmit);
     };
-  }, [currentCommand, enterOpensNewtab, identifier, term]);
+  }, [currentCommand, enterOpensNewtabDefault, identifier, term, selection]);
 
-  const isRtl = useMemo(
-    () =>
-      (forwardedRef.current &&
-        window.getComputedStyle(forwardedRef.current, null).direction ===
-          "rtl") ??
-      false,
-    [forwardedRef]
-  );
+  const isRtl = (forwardedRef.current &&
+    window.getComputedStyle(forwardedRef.current, null).direction ===
+    "rtl") ?? false
+  const handleSelection = () => {
+    const start = forwardedRef.current.selectionStart;
+    const end = forwardedRef.current.selectionEnd;
+    if (selection?.end !== end || selection?.start !== start)
+      setSelection({ start, end });
+  }
   return (
     <StyledTerminal color={currentColor} isDark={isDark}>
       <SearchMode />
       <TerminalAutoCompleteWrapper>
         <TerminalInput
+          onSelect={handleSelection}
+          onKeyDown={handleSelection}
           dir="auto"
           value={term}
           ref={forwardedRef}
