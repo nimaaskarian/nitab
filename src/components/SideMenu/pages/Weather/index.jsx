@@ -19,6 +19,7 @@ import {
   setWeatherIndex,
   setWeatherIsAutomatic,
   toggleWeatherEnabled,
+  toggleWeatherImperial,
 } from "store/actions";
 import {
   AddedCitiesWrapper,
@@ -35,6 +36,7 @@ const Weather = () => {
   const currentCityIndex = useSelector(({ data }) => data.weather.index);
   const isAutomatic = useSelector(({ data }) => data.weather.isAutomatic);
   const isEnabled = useSelector(({ data }) => data.weather.enabled);
+  const isImperial = useSelector(({ data }) => data.weather.imperial);
   const weatherTime = useSelector(({ data }) => data.weather.data.time);
   const currentTime = useTime().getTime();
   const citiesWithKeys = useMemo(
@@ -75,6 +77,15 @@ const Weather = () => {
       </Text>
       <Header>Settings</Header>
 
+      <TwoConditionElement
+        enabled={isImperial}
+        onClick={() => dispatch(toggleWeatherImperial())}
+      >
+        Imperial Temperature
+        <TodoButton
+          className={isImperial ? "fa fa-check-circle" : "far fa-circle"}
+        />
+      </TwoConditionElement>
       <TwoConditionElement
         enabled={isEnabled}
         onClick={() => dispatch(toggleWeatherEnabled())}

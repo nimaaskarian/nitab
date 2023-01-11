@@ -8,6 +8,7 @@ const types = {
   SET_WEATHER_IS_AUTOMATIC: "set-weather-is-automatic",
   DELETE_WEATHER_CITY: "delete-weather-city",
   TOGGLE_WEATHER_ENABLED: "toggle-weather-enabled",
+  TOGGLE_WEATHER_IMPERIAL: "toggle-weather-imperial",
 
   ADD_COMMAND: "add-command",
   DELETE_COMMAND: "delete-command",

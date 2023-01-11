@@ -53,6 +53,9 @@ const icons = {
 
 const Weather = (props) => {
   const data = useSelector(({ data }) => data.weather.data);
+  const isImperial = useSelector(({ data }) => data.weather.imperial);
+
+  console.log(data)
   const dispatch = useDispatch();
   const alert = useAlert();
   const [error, setError] = useState("");
@@ -104,6 +107,13 @@ const Weather = (props) => {
 
   const spanStyle = { margin: "0 5px" };
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+
+  const convertWeather=(celsiusTemp)=>{
+    if (!isImperial) return celsiusTemp
+    return ((celsiusTemp*9/5 )+32)
+  }
+  console.log("is imperial",isImperial)
+  const temperatureSymbol = "°"+(isImperial?"F":"C")
 
   if (error) {
     return (
@@ -159,7 +169,7 @@ const Weather = (props) => {
             </span>
             <span style={spanStyle}>
               {data.main.feels_like !== data.main.temp
-                ? `Feels Like: ${data.main.feels_like}°C`
+                ? `Feels Like: ${convertWeather(data.main.feels_like)+temperatureSymbol}`
                 : ""}
             </span>
           </div>
@@ -168,7 +178,7 @@ const Weather = (props) => {
         placement="bottom"
       >
         <span onClick={tempVisible ? tempHide : tempShow}>
-          {Math.round(data.main.temp)}&#176;C
+          {Math.round(convertWeather(data.main.temp))+temperatureSymbol}
         </span>
       </StyledTippy>
       <StyledTippy
