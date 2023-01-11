@@ -35,6 +35,8 @@ function themesReducer(state = INITIAL_STATE, action) {
       return { ...state, list: [...state.list, new Theme()] };
     }
     case types.DELETE_THEME: {
+      if (state.list.length <= 1)
+        return state;
       return { ...state, list: state.list.delete(action.payload) };
     }
     case types.SET_CURRENT_THEME: {

@@ -12,6 +12,7 @@ import {
   setSideMenuIndex,
   setForeground,
   addBackground,
+  addTheme,
 } from "store/actions";
 
 import Terminal from "../Terminal";
@@ -33,6 +34,7 @@ import useIsDarkColor from "hooks/useIsDarkColor";
 import axios from "axios";
 
 const App = () => {
+  const dispatch = useDispatch();
   const enterOpensNewtabDefault = useSelector(
     ({ data }) => data.terminal.enterOpensNewtab
   );
@@ -47,6 +49,7 @@ const App = () => {
       },
     }) => list[current]
   );
+  if (!currentTheme) dispatch(addTheme());
   const isBackgroundRandom = useSelector(
     ({
       data: {
@@ -80,7 +83,6 @@ const App = () => {
   const identifier = useSelector(({ data }) => data.terminal.identifier);
 
   useAlert({ isTerminal });
-  const dispatch = useDispatch();
   useEffect(() => {
     axios.get("../colors").then((e) => {
       if (localStorage.getItem("colors_data") !== e.data) {
