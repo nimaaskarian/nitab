@@ -38,6 +38,7 @@ const WEATHER_INITIAL_STATE = {
   isAutomatic: true,
   cities: [],
   enabled: true,
+  imperial: false,
   index: 0,
 };
 function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
@@ -76,6 +77,11 @@ function weatherReducer(state = WEATHER_INITIAL_STATE, action) {
       return {
         ...state,
         enabled: !state.enabled,
+      };
+    case types.TOGGLE_WEATHER_IMPERIAL:
+      return {
+        ...state,
+        imperial: !state.imperial,
       };
     default:
       return state;

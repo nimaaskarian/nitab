@@ -312,6 +312,9 @@ export function toggleDateEnabled() {
 export function toggleWeatherEnabled() {
   return { type: types.TOGGLE_WEATHER_ENABLED };
 }
+export function toggleWeatherImperial() {
+  return { type: types.TOGGLE_WEATHER_IMPERIAL };
+}
 export function setWeatherData(data) {
   return {
     type: types.SET_WEATHER_DATA,
