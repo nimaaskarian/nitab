@@ -64,48 +64,51 @@ function mapTermToInnerCommands(commandArray, commands) {
     return item;
   });
 }
-const dataToCommands = (data) => {
-  let commands = {};
-  Object.keys(data).forEach((command) => {
-    commands[command] = {};
-    const { color, icon } = data[command];
-    commands[command] = { color, icon };
-
-    commands[command].function = (input) => {
-      if (!data[command].args) return;
-      if (data[command].args.length === 1)
-        return () => {
-          let [hasntInput, hasInput] = data[command].args[0]
-            .replace("%input%", input)
-            .split("%?%");
-          [hasntInput, hasInput] = mapTermToInnerCommands(
-            [hasntInput, hasInput],
-            commands
-          );
-
-          if (hasInput) {
-            if (input) return defaultCommands.url.function(hasInput)();
-            return defaultCommands.url.function(hasntInput)();
-          }
-          return defaultCommands.url.function(hasntInput)();
-        };
-      else
-        return () => () => {
-          data[command].args.forEach((element) => {
-            let [hasntInput, hasInput] = element
+export const commandFunction = (command,commands) =>{
+  return (input) => {
+        if (!command.args) return;
+        if (command.args.length === 1)
+          return () => {
+            let [hasntInput, hasInput] = command.args[0]
               .replace("%input%", input)
               .split("%?%");
             [hasntInput, hasInput] = mapTermToInnerCommands(
               [hasntInput, hasInput],
               commands
             );
+
             if (hasInput) {
-              if (input) window.open(defaultCommands.url.function(hasInput)());
-              else window.open(defaultCommands.url.function(hasntInput)());
-            } else window.open(defaultCommands.url.function(hasntInput)());
-          });
-        };
-    };
+              if (input) return defaultCommands.url.function(hasInput)();
+              return defaultCommands.url.function(hasntInput)();
+            }
+            return defaultCommands.url.function(hasntInput)();
+          };
+        else
+          return () => () => {
+            command.args.forEach((element) => {
+              let [hasntInput, hasInput] = element
+                .replace("%input%", input)
+                .split("%?%");
+              [hasntInput, hasInput] = mapTermToInnerCommands(
+                [hasntInput, hasInput],
+                commands
+              );
+              if (hasInput) {
+                if (input) window.open(defaultCommands.url.function(hasInput)());
+                else window.open(defaultCommands.url.function(hasntInput)());
+              } else window.open(defaultCommands.url.function(hasntInput)());
+            });
+          };
+      }
+}
+const dataToCommands = (data) => {
+  let commands = {};
+  Object.keys(data).forEach((command) => {
+    commands[command] = {};
+    const { color, icon } = command;
+    commands[command] = { color, icon };
+
+    commands[command].function = commandFunction(data[command],commands)
   });
   const defaultCommandsCustomized = Object.fromEntries(
     Object.entries(defaultCommands).map(([key, value]) => {
