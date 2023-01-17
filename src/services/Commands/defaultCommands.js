@@ -23,7 +23,7 @@ import { unsplash } from "apis";
 import axios from "axios";
 import { addBlobAsBackground } from "services/Images";
 import openFilePrompt, { types } from "services/openFilePrompt";
-import { parseSurrounding } from "./dataToCommands";
+import { commandFunction, parseSurrounding } from "./dataToCommands";
 function recommendations(phrases = [], recommended, icons = []) {
   return phrases.map((phrase, index) => ({
     phrase,
@@ -548,7 +548,9 @@ const defaultCommands = {
             });
           };
 
-      return defaultCommands.g.function(text);
+      let commands = store.getState().data.commands
+      return commandFunction(commands.g, commands)(text)
+      // return defaultCommands.g.function(text);
     },
     icon: "fa fa-search",
   },
